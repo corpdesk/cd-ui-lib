@@ -14,6 +14,16 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
+    "paths": {
+      "@corpdesk/ui-lib/*": [
+        "projects/ui-lib/*",
+        "projects/ui-lib"
+      ],
+      "@corpdesk/ui-lib": [
+        "dist/ui-lib/*",
+        "dist/ui-lib"
+      ]
+    },
     "target": "es2017",
     "module": "es2020",
     "lib": [
