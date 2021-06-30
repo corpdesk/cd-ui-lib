@@ -1,0 +1,6 @@
+- created organization corpdesk 
+- publish npm package: @corpdesk/ui-lib
+- test consumption of @corpdesk/ui-lib component
+- test consumption of @corpdesk/ui-lib service
+
+
