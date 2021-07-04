@@ -5,6 +5,8 @@
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
+    "strictPropertyInitialization": false,
     "strict": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
@@ -22,6 +24,38 @@
       "@corpdesk/ui-lib": [
         "dist/ui-lib/*",
         "dist/ui-lib"
+      ],
+      "@corpdesk/core/*": [
+        "projects/core/*",
+        "projects/core"
+      ],
+      "@corpdesk/core": [
+        "dist/core/*",
+        "dist/core"
+      ],
+      "@corpdesk/base/*": [
+        "projects/base/*",
+        "projects/base"
+      ],
+      "@corpdesk/base": [
+        "dist/base/base",
+        "dist/base"
+      ],
+      "@corpdesk/user/*": [
+        "projects/user/*",
+        "projects/user"
+      ],
+      "@corpdesk/user": [
+        "dist/user/user",
+        "dist/user"
+      ],
+      "@corpdesk/moduleman/*": [
+        "projects/moduleman/*",
+        "projects/moduleman"
+      ],
+      "@corpdesk/moduleman": [
+        "dist/moduleman/moduleman",
+        "dist/moduleman"
       ]
     },
     "target": "es2017",

@@ -1,6 +1,26 @@
+References :
+- https://tomastrajan.medium.com/the-best-way-to-architect-your-angular-libraries-87959301d3d3
+- https://medium.com/tunaiku-tech/creating-secondary-entry-points-for-your-angular-library-1d5c0e95600a
+- https://newbedev.com/rootdir-is-expected-to-contain-all-source-files
+- https://medium.com/@thearunmalik/angular-monorepo-multiple-libs-and-rootdir-issue-7b8270cbc167
+- https://github.com/ng-packagr/ng-packagr/issues/1841
+- https://stackoverflow.com/questions/51850063/rootdir-is-expected-to-contain-all-source-files
+- https://github.com/robisim74/angular-library-starter
+
 - created organization corpdesk 
 - publish npm package: @corpdesk/ui-lib
 - test consumption of @corpdesk/ui-lib component
 - test consumption of @corpdesk/ui-lib service
+
+- create core library
+- modules:
+    - user
+    - 
+
+
+- peer-dependencies for cd-core
+    protractor
+    moment
+    moment-timezone
 
 
