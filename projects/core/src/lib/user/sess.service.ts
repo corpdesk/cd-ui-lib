@@ -4,10 +4,8 @@ import { map, filter } from 'rxjs/operators';
 
 import * as moment from 'moment';
 
-// import {environment} from '../../environments/environment';
 import { ServerService } from '@corpdesk/core/src/lib/base';
 import { AppStateService } from '@corpdesk/core/src/lib/base';
-// import { UserService } from '../../../../@core/mock/users.service';
 import { UserService } from './user.service';
 
 interface Menu {

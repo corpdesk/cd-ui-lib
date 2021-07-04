@@ -10,7 +10,7 @@
 export * from '@corpdesk/core/src/lib/base';
 export * from '@corpdesk/core/src/lib/guig';
 export * from '@corpdesk/core/src/lib/cd-push';
-// export * from '@corpdesk/core/src/lib/comm';
+export * from '@corpdesk/core/src/lib/comm';
 // export * from '@corpdesk/core/src/lib/sys/inte-ract';
 export * from '@corpdesk/core/src/lib/moduleman';
 export * from '@corpdesk/core/src/lib/user';

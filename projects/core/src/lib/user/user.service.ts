@@ -7,8 +7,7 @@ import { AuthData } from './user-model';
 import { ServerService } from '@corpdesk/core/src/lib/base';
 import { AppStateService } from '@corpdesk/core/src/lib/base';
 // import { MenuService } from '@corpdesk/core/src/lib/moduleman';
-// import { NotificationService } from '../../comm/controllers/notification.service';
-// import { MessagesService } from '../../comm/controllers/messages.service';
+// import { NotificationService, MessagesService } from '@corpdesk/core/src/lib/comm';
 import { User, UserData } from './user-model';
 import { SocketIoService } from '@corpdesk/core/src/lib/cd-push';
 
