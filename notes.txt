@@ -17,6 +17,10 @@ References :
     - user
     - 
 
+setup module with providers:
+https://angular.io/guide/migration-module-with-providers
+https://stackoverflow.com/questions/43529920/passing-environment-variables-to-angular-library
+https://www.usefuldev.com/post/Angular:%20Creating%20configurable%20libraries%20with%20angular%20cli
 
 - peer-dependencies for cd-core
     protractor

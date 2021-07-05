@@ -16,4 +16,45 @@
     </div>
   </div>
 </div> -->
-<cd-c title="Compose Memo" [breadcrumbItems]="breadCrumbItems"></cd-c>
+<!-- <cd-c title="Compose Memo" [breadcrumbItems]="breadCrumbItems"></cd-c> -->
+
+<div class="row">
+  <div class="col-lg-6">
+    <form [formGroup]="fg" (ngSubmit)="login(fg)">
+      <div *ngIf="loginInvalid">
+        {{errMsg}}
+      </div>
+      <div class="input-example">
+        <div>User Name</div>
+        <input matInput formControlName="username" placeholder="Username" (focus)="onFocus()" id="input-username"
+          autocomplete="off" required autofocus>
+        <div class="caption status-danger">
+          Username is required!
+        </div>
+      </div>
+      <div class="input-example">
+        <div>Password</div>
+        <input matInput formControlName="password" (focus)="onFocus()" required autocomplete="off" type="password"
+          id="input-password" placeholder="Password">
+          <div class="caption status-danger">
+            Password is required!
+          </div>
+      </div>
+      <p></p>
+      <div class="input-example">
+        <label>Remember me</label>
+        <!-- <mat-slide-toggle color="primary" [checked]="false" formControlName="rememberMe" *ngIf="rememberMe">
+        </mat-slide-toggle> -->
+      </div>
+      <p></p>
+      <button mat-raised-button [disabled]="submitted || !fg.valid" color="primary">
+        Login
+      </button>
+    </form>
+    <p></p>
+    <p></p>
+    <section class="another-action" aria-label="Register">
+      Don't have an account? <a class="text-link" routerLink="../register">Register</a>
+    </section>
+  </div>
+</div>
