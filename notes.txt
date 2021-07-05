@@ -22,5 +22,20 @@ References :
     protractor
     moment
     moment-timezone
+    ng2-file-upload
+    socket.io-client
+    rxjs-compat
+
+    "moment": "^2.29.1",
+    "moment-timezone": "^0.5.33",
+    "ng2-file-upload": "^1.4.0",
+    "rxjs-compat": "^6.6.7",
+    "socket.io-client": "^4.1.2",
+
+- Testing:
+- login
+- menu::init()
+- memo::init()
+- notif::init()
 
 
