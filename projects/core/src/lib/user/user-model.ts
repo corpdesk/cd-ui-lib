@@ -1,7 +1,14 @@
 export interface AuthData {
-    username: string;
+    user_name: string;
     password: string;
     rememberMe: boolean,
+    consumer_guid: string;
+}
+
+export interface IAuthData {
+    user_name: string;
+    password: string;
+    rememberMe?: boolean,
     consumer_guid: string;
 }
 
@@ -17,12 +24,10 @@ export interface UserData {
     pals: Array<any>;
 }
 
-
-
 export interface User {
     user_id?: any;
     user_guid?: any;
-    username?: any;
+    user_name?: any;
     password?: any;
     email?: any;
     co_id?: any;

@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 // import { CdResponse,EnvConfig, CdFilter } from '@corpdesk/base';
 import { CdResponse,EnvConfig, CdFilter } from '@corpdesk/core/src/lib/base';
 import { CdPushEnvelop } from '@corpdesk/core/src/lib/cd-push';
-import { AuthData } from './user-model';
+import { IAuthData } from './user-model';
 import { ServerService } from '@corpdesk/core/src/lib/base';
 import { AppStateService } from '@corpdesk/core/src/lib/base';
 // import { MenuService } from '@corpdesk/core/src/lib/moduleman';
@@ -70,8 +70,19 @@ export class UserService {
 
   }
 
-  authObsv(authData: AuthData) {
+  // authObsv(authData: AuthData) {
+  //   console.log('authObsv(authData: AuthData)');
+  //   this.setEnvelopeAuth(authData);
+  //   /*
+  //   post login request to server
+  //   */
+  //   console.log('Submit()/this.postData:', JSON.stringify(this.postData))
+  //   return this.svServer.proc(this.postData);
+  // }
+
+  auth$(authData: IAuthData) {
     console.log('authObsv(authData: AuthData)');
+    delete authData.rememberMe;
     this.setEnvelopeAuth(authData);
     /*
     post login request to server
@@ -80,15 +91,20 @@ export class UserService {
     return this.svServer.proc(this.postData);
   }
 
-  setEnvelopeAuth(authData: AuthData) {
+  setEnvelopeAuth(authData: IAuthData) {
     this.postData = {
       ctx: 'Sys',
       m: 'User',
-      c: 'UserController',
+      c: 'User',
       a: 'Login',
       dat: {
-        data: authData
-      },
+        f_vals: [
+            {
+                data: authData
+            }
+        ],
+        token: null
+    },
       args: null
     };
   }

@@ -9,7 +9,16 @@ import { EnvConfig } from '@corpdesk/core/src/lib/base';
   ]
 })
 export class UserModule {
-  static forRoot(env: EnvConfig): ModuleWithProviders<UserModule> {
+  public static forRoot(env: EnvConfig): ModuleWithProviders<UserModule> {
+    return {
+      ngModule: UserModule,
+      providers: [
+        { provide: 'env', useValue: env }
+      ]
+    };
+  }
+
+  public static forChild(env: EnvConfig): ModuleWithProviders<UserModule> {
     return {
       ngModule: UserModule,
       providers: [

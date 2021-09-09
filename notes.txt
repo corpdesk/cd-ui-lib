@@ -19,8 +19,17 @@ References :
 
 setup module with providers:
 https://angular.io/guide/migration-module-with-providers
+https://angular.io/guide/providers
 https://stackoverflow.com/questions/43529920/passing-environment-variables-to-angular-library
 https://www.usefuldev.com/post/Angular:%20Creating%20configurable%20libraries%20with%20angular%20cli
+https://www.freelancermap.com/blog/using-forroot-and-forchild-to-configure-modules-in-angular/
+https://javascript.plainenglish.io/understand-angulars-forroot-and-forchild-f27fbc41cb7b
+
+lazy loading
+http://www.usefuldev.com/post/Angular:%20configurable%20lazy%20loaded%20libraries
+https://github.com/robisim74/angular-library-starter/blob/master/src/modules/arithmetic.module.ts
+https://tomastrajan.medium.com/why-and-how-to-lazy-load-angular-libraries-a3bf1489fe24
+
 
 - peer-dependencies for cd-core
     protractor
@@ -38,8 +47,23 @@ https://www.usefuldev.com/post/Angular:%20Creating%20configurable%20libraries%20
 
 - Testing:
 - login
+- login with cd-push
+- create cd-user remote app
+- use cd-user as remote app to login the route to cd-comm
+
 - menu::init()
 - memo::init()
 - notif::init()
+
+////////////////
+- modify to connect via cd-api (node.js version) from laravel back-end
+    - create a new param in environment: CD_PORT
+    - set CD_PORT = 3000,
+    - modify ServerService::proc() for this.env.apiEndpoint to...
+    - `${this.env.apiEndpoint}:${this.env.CD_PORT || 80}`
+    - this allows library clients to set endpoints with port setting
+    - port setting defaults to 80 when CD_PORT is not set
+    - update 'username' to 'user_name'
+
 
 

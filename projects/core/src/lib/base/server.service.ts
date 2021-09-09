@@ -36,8 +36,14 @@ export class ServerService {
     };
   }
 
+  // proc(params: PostData) {
+  //   return this.http.post(this.env.apiEndpoint, params, this.options);
+  // }
+
   proc(params: PostData) {
-    return this.http.post(this.env.apiEndpoint, params, this.options);
+    // const url: string = `${this.env.apiEndpoint}:${this.env.CD_PORT || 80}`;
+    const url: string = `http://localhost:3001`;
+    return this.http.post(url , params, this.options);
   }
 
   setParams(p: PostData) {

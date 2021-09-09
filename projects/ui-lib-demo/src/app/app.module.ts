@@ -20,14 +20,13 @@ import { MatTreeModule } from '@angular/material/tree';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
 
-import { environment } from '../environments/environment';
-import { UserModule } from '@corpdesk/core/src/lib/user';
-import { CdPushModule } from '@corpdesk/core/src/lib/cd-push';
+// import { environment } from '../environments/environment';
+// import { UserModule } from '@corpdesk/core/src/lib/user';
+// import { CdPushModule } from '@corpdesk/core/src/lib/cd-push';
 
 
 // import { FeatureCModule } from '@corpdesk/ui-lib/src/lib/feature-c';
 import { FeatureCModule } from '@corpdesk/ui-lib';
-
 import { AppComponent } from './app.component';
 
 @NgModule({
@@ -52,8 +51,8 @@ import { AppComponent } from './app.component';
     MatFormFieldModule,
     BrowserModule,
     FeatureCModule,
-    UserModule.forRoot(environment),
-    CdPushModule.forRoot(environment),
+    // UserModule.forRoot(environment),
+    // CdPushModule.forRoot(environment),
   ],
   providers: [],
   bootstrap: [AppComponent],

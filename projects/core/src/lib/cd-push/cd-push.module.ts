@@ -15,4 +15,13 @@ export class CdPushModule {
       ]
     };
   }
+
+  static forChild(env: EnvConfig): ModuleWithProviders<CdPushModule> {
+    return {
+      ngModule: CdPushModule,
+      providers: [
+        { provide: 'env', useValue: env }
+      ]
+    };
+  }
 }
