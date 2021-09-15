@@ -24,6 +24,7 @@
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.33",
     "ng2-file-upload": "^1.4.0",
+    "ngx-webstorage": "^8.0.0",
     "protractor": "^7.0.0",
     "rxjs": "~6.6.0",
     "rxjs-compat": "^6.6.7",

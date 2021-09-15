@@ -18,7 +18,8 @@
 </div> -->
 <!-- <cd-c title="Compose Memo" [breadcrumbItems]="breadCrumbItems"></cd-c> -->
 
-<div class="row">
+
+<!-- <div class="row">
   <div class="col-lg-6">
     <form [formGroup]="fg" (ngSubmit)="login(fg)">
       <div *ngIf="loginInvalid">
@@ -43,8 +44,6 @@
       <p></p>
       <div class="input-example">
         <label>Remember me</label>
-        <!-- <mat-slide-toggle color="primary" [checked]="false" formControlName="rememberMe" *ngIf="rememberMe">
-        </mat-slide-toggle> -->
       </div>
       <p></p>
       <button mat-raised-button [disabled]="submitted || !fg.valid" color="primary">
@@ -57,4 +56,14 @@
       Don't have an account? <a class="text-link" routerLink="../register">Register</a>
     </section>
   </div>
-</div>
+</div> -->
+
+<h1>
+  <p>User is working</p>
+</h1>
+
+<button routerLink="/customers">Customers</button>
+<button routerLink="/orders">Orders</button>
+<button routerLink="">Home</button>
+
+<router-outlet></router-outlet>

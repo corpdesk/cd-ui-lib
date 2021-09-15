@@ -1,41 +1,41 @@
 export interface AuthData {
-    user_name: string;
+    userName: string;
     password: string;
     rememberMe: boolean,
-    consumer_guid: string;
+    consumerGuid: string;
 }
 
 export interface IAuthData {
-    user_name: string;
+    userName: string;
     password: string;
     rememberMe?: boolean,
-    consumer_guid: string;
+    consumerGuid: string;
 }
 
 export interface UserData {
     acoid: any;
-    calnd_summ: Array<any>;
+    calndSumm: Array<any>;
     contacts: Array<any>;
-    memo_summ: Array<any>;
-    menu_data: Array<any>;
-    notif_data: Array<any>;
-    notif_summ: Array<any>;
-    user_data: Array<any>;
+    memoSumm: Array<any>;
+    menuData: Array<any>;
+    notifData: Array<any>;
+    notifSumm: Array<any>;
+    userData: Array<any>;
     pals: Array<any>;
 }
 
 export interface User {
-    user_id?: any;
-    user_guid?: any;
-    user_name?: any;
+    userId?: any;
+    userGuid?: any;
+    userName?: any;
     password?: any;
     email?: any;
-    co_id?: any;
-    doc_id?: any;
+    coId?: any;
+    docId?: any;
     mobile?: any;
     gender?: any;
     dateobirth?: any;
-    postal_addr?: any;
+    postalAddr?: any;
     fname?: any;
     mname?: any;
     lname?: any;

@@ -65,5 +65,53 @@ https://tomastrajan.medium.com/why-and-how-to-lazy-load-angular-libraries-a3bf14
     - port setting defaults to 80 when CD_PORT is not set
     - update 'username' to 'user_name'
 
+//////////
+npm portal for @corpdesk/core:
+    - branding
+    - documentation
+    - associated links
+
+- route guard
+- set routing to test guard:
+    - https://angular.io/guide/lazy-loading-ngmodules
+
+- upgrade canActivate() to check
+    - active session
+    - session timeout
+    - acl
+
+session timeout:
+    - https://www.npmjs.com/package/session-expiration-alert
+    - https://www.npmjs.com/package/idle-session-timeout
+
+localStorage, indexedDB:
+    - https://www.npmjs.com/package/idb
+    - (page 197): file:///Users/goremo/Downloads/Pro%20TypeScript%20Application-Scale%20JavaScript%20Development%20(%20PDFDrive%20).pdf
+
+Angular router query parameters:
+    - https://www.digitalocean.com/community/tutorials/angular-query-parameters
+
+//////////////
+- view menuData on login
+
+15/09/2021
+- use back-end menu
+        - library/moduleman/menuservice/getMenu$()
+        - on login, library/session/createSession()
+            - getMenu$()
+            - use socket.io to sendMenu() to shell/sidebar
+        - shell/sidebar listen to 'push-menu'
+        - confirm menu is available on shell/sidebar
+        
+09/09/2021
+- modify to connect via cd-api (node.js version) from laravel back-end
+    - create a new param in environment: CD_PORT
+    - set CD_PORT = 3000,
+    - modify ServerService::proc() for this.env.apiEndpoint to...
+    - `${this.env.apiEndpoint}:${this.env.CD_PORT || 80}`
+    - this allows library clients to set endpoints with port setting
+    - port setting defaults to 80 when CD_PORT is not set
+    - update 'username' to 'user_name'
+
 
 

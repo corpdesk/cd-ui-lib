@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { AppRoutingModule } from './app-routing.module';
 // import { MatModule } from './material-module';
 
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -20,8 +21,8 @@ import { MatTreeModule } from '@angular/material/tree';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
 
-// import { environment } from '../environments/environment';
-// import { UserModule } from '@corpdesk/core/src/lib/user';
+import { environment } from '../environments/environment';
+import { UserModule } from '@corpdesk/core/src/lib/user';
 // import { CdPushModule } from '@corpdesk/core/src/lib/cd-push';
 
 
@@ -33,6 +34,7 @@ import { AppComponent } from './app.component';
   declarations: [AppComponent],
   imports: [
     RouterModule.forRoot([]),
+    AppRoutingModule,
     ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
@@ -51,7 +53,7 @@ import { AppComponent } from './app.component';
     MatFormFieldModule,
     BrowserModule,
     FeatureCModule,
-    // UserModule.forRoot(environment),
+    UserModule.forRoot(environment),
     // CdPushModule.forRoot(environment),
   ],
   providers: [],

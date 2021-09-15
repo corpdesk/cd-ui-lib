@@ -27,13 +27,31 @@ export class MenuModel {
   cd_obj_type_guid?: string;
   last_modification_date?: string;
   parent_module_guid?: string;
-  title?:string;
+  title?: string;
+}
+
+export class MenuItem {
+  badge: string | null;
+  children: any;
+  icon: string | null;
+  isLayout: string | null;
+  isTitle: boolean | number | null;
+  menuId: number | null;
+  menuLable: string | null;
+  menuParentId: number | null;
+  path: string | null;
 }
 
 export interface SubMenu {
   title?: string;
   link?: string;
   enabled?: boolean;
+}
+
+export enum MenuCollection {
+  cdDemoMenu = 'cdDemoMenu',
+  nazoxDemo = 'nazoxDemo',
+  cdMenu = 'cdMenu'
 }
 
 export interface ModuleMenu {
@@ -74,5 +92,5 @@ export interface ModuleMenu {
   enabled?: boolean,
   icon_type?: string
   group?: boolean;
-  
+
 }

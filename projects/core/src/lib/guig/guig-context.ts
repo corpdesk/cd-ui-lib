@@ -40,7 +40,7 @@ export class GuigContextService {
             info: 'the initial modification including cd-auth and cd-menu',
             changableTheme: false,
             logoMode: 1,
-            active: true
+            active: false
         },
         {
             name: 'cd-demo',
@@ -48,6 +48,13 @@ export class GuigContextService {
             changableTheme: false,
             logoMode: 1,
             active: false
+        },
+        {
+            name: 'nazox-demo',
+            info: 'use nazox-demo',
+            changableTheme: false,
+            logoMode: 1,
+            active: true
         }
     ];
     constructor() {

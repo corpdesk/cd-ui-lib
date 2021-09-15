@@ -1,12 +1,18 @@
-import { Injectable, HostListener } from '@angular/core';
+import { Injectable, HostListener, Output, EventEmitter } from '@angular/core';
 import { Observable, fromEvent, of } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
 import * as moment from 'moment';
+// import Dexie from 'dexie';
+
 
 import { ServerService } from '@corpdesk/core/src/lib/base';
-import { AppStateService } from '@corpdesk/core/src/lib/base';
-import { UserService } from './user.service';
+import { AppStateService, IAppState } from '@corpdesk/core/src/lib/base';
+import { SocketIoService } from '@corpdesk/core/src/lib/cd-push';
+// import { CdPushEnvelop } from '@corpdesk/core';
+// import { MenuService } from '../moduleman';
+// import { UserService } from './user.service';
+// import { ISessResp } from '../base/IBase';
 
 interface Menu {
   items: any;
@@ -30,13 +36,29 @@ export class SessService {
   };
   isActive = false;
   activeModules$: Observable<Menu> = new Observable<Menu>();
+  appState: IAppState = {
+    success: false,
+    info: {
+      messages: [],
+      code: null,
+      app_msg: ''
+    },
+    sess: null,
+    cache: {}
+  };
+
+  // @Output() emittMenu = new EventEmitter<any>();
+  pushRecepients: any = [];
 
   constructor(
     private svAppState: AppStateService,
     private svServer: ServerService,
+    private svSocket: SocketIoService,
   ) {
 
   }
+
+
 
   /*
   Every time successfull response come from server,
@@ -44,28 +66,93 @@ export class SessService {
   NB: svUseris not injected here but input as an argument
   ...otherwise cyclic error will be thrown
   */
-  createSess(res: any, svUser: UserService) {
+  createSess(res: any ,svMenu: any) {
     console.log('starting SessService::createSess(res,svUser: UserService)');
     this.token = res.app_state.sess.cd_token;
-    this.setSess(res);
+    this.setSess(res ,svMenu);
     // svUser.getUserData(res);
     this.svServer.token = res.app_state.sess.cd_token;
     this.isActive = true;
     this.setModulesData();
   }
 
-  setSess(res: any) {
-    const sess = res.app_state.sess;
-    const ttl = sess.ttl;
-    this.maxDistance = Number(ttl) * 1000;
-    localStorage.setItem('maxDistance-' + this.token, this.maxDistance);
-    localStorage.setItem('sess-' + this.token, JSON.stringify(sess));
-    localStorage.setItem('ExprTime-' + this.token, this.getExprTime(ttl));
+  setSess(res: any,svMenu: any) {
+    console.log('starting setSess(res: any)');
+    this.isActive = true;
+    this.appState = res.app_state;
+    // this.maxDistance = Number(ttl) * 1000;
+    // localStorage.setItem('maxDistance-' + this.token, this.maxDistance);
+    // localStorage.setItem('sess-' + this.token, JSON.stringify(sess));
+    // localStorage.setItem('ExprTime-' + this.token, this.getExprTime(ttl));
 
-    if (this.config.countdown) {
-      this.countDown(this.getExprTime(ttl));
+    // if (this.config.countdown) {
+    //   this.countDown(this.getExprTime(ttl));
+    // }
+    console.log('SessService::setSess()/res.data:' ,res.data)
+    const token = res.app_state.sess.cd_token;
+    svMenu.getMenu$('cdMenu', res.data.menuData)
+    .subscribe((menu: any) => {
+      console.log('SessionService::setSess(res: any,svMenu: any)/menu:', menu);
+      // event emitter to parent (shell)
+      // this.emittMenu.emit(menu);
+
+      const sub: any = {
+        user_id: res.data.userData.userId,
+        sub_type_id: 7
+      };
+      this.pushRecepients.push(sub);
+      const pushEnvelop = {
+        pushRecepients: this.pushRecepients,
+        triggerEvent: 'login',
+        emittEvent: 'push-menu',
+        pushData: menu,
+        req: this.setEnvelopeAuth(res.app_state.sess.cd_token),
+        resp: res
+      };
+      this.pushData('send-menu',pushEnvelop);
+      /**
+       * emittEvent is null because the purpose is to
+       * register user socket on successfull login.
+       * At the time of this note, no broadcast event is set
+       */
+      //  const pushEnvelop: CdPushEnvelop = {
+      //   pushRecepients: null,
+      //   emittEvent: null,
+      //   triggerEvent: 'login',
+      //   req: null,
+      //   resp: userDataResp
+      // };
+      // this.emitLogin(pushEnvelop);
+    })
+    
+    svMenu.init(res);
+    localStorage.setItem(token, JSON.stringify(res.app_state));
+  }
+
+  pushData(pushEvent:any, data:any) {
+    switch (pushEvent) {
+      case 'send-menu':
+        this.svSocket.emit(pushEvent, data);
+        break;
     }
+  }
 
+  setEnvelopeAuth(cdToken: string) {
+    return {
+      ctx: 'Sys',
+      m: 'User',
+      c: 'User',
+      a: 'Login',
+      dat: {
+        f_vals: [
+            {
+                data: null
+            }
+        ],
+        token: cdToken
+    },
+      args: null
+    };
   }
 
   resetExprTime(ttl: any) {
@@ -195,9 +282,9 @@ export class SessService {
   Every time successfull response come from server, 
   it needs to update the client session to extend the Expiration time
   */
-  renewSess(res: any) {
+  renewSess(res: any,svMenu: any) {
     console.log('starting renewSess(res)');
-    this.setSess(res);
+    this.setSess(res,svMenu);
   }
 
   countDown(endTime: any) {

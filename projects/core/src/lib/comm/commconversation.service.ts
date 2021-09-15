@@ -188,7 +188,7 @@ export class CommconversationService {
           .subscribe((ret: any) => {
             console.log('subscribe/ret:', ret);
             console.log('this.svUser.currentUser;:', this.svUser.currentUser);
-            this.UserData = this.svUser.currentUser.user_data[0];
+            this.UserData = this.svUser.currentUser.userData;
             this.selectedMessage = ret.data.conversation;
             if(options.commconversation_id){
               this.clickedCommConversationID = options.commconversation_id;
@@ -206,7 +206,7 @@ export class CommconversationService {
           .subscribe((ret: any) => {
             console.log('getConversationObsv/subscribe/ret:', ret);
             console.log('this.svUser.currentUser;:', this.svUser.currentUser);
-            this.UserData = this.svUser.currentUser.user_data[0];
+            this.UserData = this.svUser.currentUser.userData;
             this.selectedMessage = ret.data.conversation;
             if(options.commconversation_id){
               this.clickedCommConversationID = options.commconversation_id;

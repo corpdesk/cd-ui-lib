@@ -1,15 +1,8 @@
 import { Injectable, Inject, OnChanges } from '@angular/core';
 import { Observable } from 'rxjs';
-// import { CdResponse,EnvConfig, CdFilter } from '@corpdesk/base';
-import { CdResponse,EnvConfig, CdFilter } from '@corpdesk/core/src/lib/base';
-import { CdPushEnvelop } from '@corpdesk/core/src/lib/cd-push';
-import { IAuthData } from './user-model';
-import { ServerService } from '@corpdesk/core/src/lib/base';
-import { AppStateService } from '@corpdesk/core/src/lib/base';
-// import { MenuService } from '@corpdesk/core/src/lib/moduleman';
-// import { NotificationService, MessagesService } from '@corpdesk/core/src/lib/comm';
-import { User, UserData } from './user-model';
-import { SocketIoService } from '@corpdesk/core/src/lib/cd-push';
+import { AppStateService, CdResponse,EnvConfig, CdFilter, ServerService } from '@corpdesk/core/src/lib/base';
+import { User, UserData, IAuthData } from './user-model';
+import { SocketIoService, CdPushEnvelop } from '@corpdesk/core/src/lib/cd-push';
 
 
 @Injectable({
@@ -28,9 +21,9 @@ export class UserService {
   currentUser: any;
   currentProfile: any = { name: 'Login/Register', picture: 'assets/cd/branding/coop/avatarCircle.svg' };
   pals: any;
-  public usersData$: Observable<UserData[]> = new Observable<UserData[]>();
+  public usersData$: Observable<UserData[]>;
   // CdResponse
-  public userDataResp$: Observable<any> = new Observable<any>();
+  public userDataResp$: Observable<any>;
   isInvalidSelUsers = true;
   selectedUsers: User[] = [];
 
@@ -59,11 +52,11 @@ export class UserService {
       // { name: 'Login/Register', picture: 'assets/cd/branding/coop/avatarCircle.svg' }
       this.currentUser = res.data;
       // this.currentUser.name = 'Login/Register';
-      this.currentProfile.name = res.data.user_data[0].username;
-      this.cuid = res.data.user_data[0].user_id;
+      this.currentProfile.name = res.data.userData.username;
+      this.cuid = res.data.userData.user_id;
       this.pals = res.data.pals;
       // this.currentUser.picture = 'assets/cd/branding/coop/avatarCircle.svg';
-      const avatarUrl = `${this.env.HOST}/user-resources/${res.data.user_data[0].user_guid}/avatar-01/a.jpg`;
+      const avatarUrl = `${this.env.HOST}/user-resources/${res.data.userData.user_guid}/avatar-01/a.jpg`;
       console.log('avatarUrl:', avatarUrl);
       this.currentProfile.picture = avatarUrl;
     }
@@ -81,7 +74,7 @@ export class UserService {
   // }
 
   auth$(authData: IAuthData) {
-    console.log('authObsv(authData: AuthData)');
+    console.log('auth$(authData: AuthData)');
     delete authData.rememberMe;
     this.setEnvelopeAuth(authData);
     /*

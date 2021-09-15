@@ -35,9 +35,9 @@ export class AppComponent {
     });
   }
 
-  ngOnInit() {
-    // this.breadCrumbItems = [{ label: 'comm' }, { label: 'memo-compose' + this.svC.cAdd(3, 4), active: true }];
-  }
+  // ngOnInit() {
+  //   // this.breadCrumbItems = [{ label: 'comm' }, { label: 'memo-compose' + this.svC.cAdd(3, 4), active: true }];
+  // }
 
   login(fg: any) {
     let authData: AuthData = fg.value;
@@ -57,7 +57,7 @@ export class AppComponent {
   }
 
   initSession(authData: AuthData) {
-    this.svUser.authObsv(authData).subscribe((res: any) => {
+    this.svUser.auth$(authData).subscribe((res: any) => {
       if (res.app_state.success === 1) {
         /*
         create a session on successfull authentication.
@@ -65,14 +65,17 @@ export class AppComponent {
         use renewSess(res);
         */
         if (res.app_state.sess.cd_token !== null) {
-          this.svSess.createSess(res, this.svUser);
+          this.svSess.createSess(res);
           console.log('login_res:', res);
           this.svUser.currentUser = { name: `${res.data[0].username}`, picture: `${environment.HOST}/user-resources/${res.data[0].user_guid}/avatar-01/a.jpg` };
           this.svNav.userMenu = [
             { title: 'Profile', link: '/pages/cd-auth/register' },
             { title: 'Log out', link: '/pages/cd-auth/logout' }
           ];
-          this.route.navigate(['/pages/dashboard']);
+          // this.route.navigate(['/pms']);
+          const params = { queryParams: { token: res.app_state.sess.cd_token } };
+          console.log('AppComponent::initSession(authData: AuthData)/params:', params);
+          this.route.navigate(['/comm'], params);
         }
 
 
@@ -85,8 +88,8 @@ export class AppComponent {
 
   }
 
-  onFocus() {
-    this.errMsg = "";
-    // this.loginInvalid = false;
-  }
+  // onFocus() {
+  //   this.errMsg = "";
+  //   // this.loginInvalid = false;
+  // }
 }
