@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 
+import { HtmlCtx } from './models/html.model';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -8,11 +10,11 @@ export class HtmlElemService {
   constructor() { }
 
   getByClass(cls: any) {
-    return document.getElementsByClassName(cls);
-    // var result = "document.getElementsByClassName('orange juice')";
-    // for (var i = 0, len = allOrangeJuiceByClass.length | 0; i < len; i = i + 1 | 0) {
-    //   result += "\n  " + allOrangeJuiceByClass[i].textContent;
-    // }
+    if (cls) {
+      return document.getElementsByClassName(cls);
+    } else {
+      return null;
+    }
   }
   // mat element is checked
   isChecked(control: HTMLInputElement): any {
@@ -27,21 +29,28 @@ export class HtmlElemService {
     } else {
       console.log('cannot determine checkbox type')
     }
-
   }
 
   getElem(selector: any) {
-    return document.getElementById(selector.id) as HTMLInputElement;
+    if (selector) {
+      return document.getElementById(selector.id) as HTMLInputElement;
+    } else {
+      return null;
+    }
   }
 
   addClassByID(id: any, cls: any) {
     const elem = document.getElementById(id) as HTMLElement;
-    elem.classList.add(cls);
+    if (elem) {
+      elem.classList.add(cls);
+    }
   }
 
   removeClassByID(id: any, cls: any) {
     const elem = document.getElementById(id) as HTMLElement;
-    elem.classList.remove(cls);
+    if (elem) {
+      elem.classList.remove(cls);
+    }
   }
 
   isMat(control: HTMLInputElement) {
@@ -56,26 +65,53 @@ export class HtmlElemService {
   }
 
   getHTMLContent(elem: any) {
-    console.log(elem.innerHTML);
-    return elem.innerHTML;
+    if (elem) {
+      return elem.innerHTML;
+    } else {
+      return null;
+    }
   }
 
   getHTMLInputVal(id: any) {
     const elem = document.getElementById(id) as HTMLInputElement;
-    console.log(elem.value);
-    return elem.value;
+    if (elem) {
+      return elem.value;
+    } else {
+      return null;
+    }
   }
 
   setHTMLInputVal(id: any, val: any) {
     const elem = document.getElementById(id) as HTMLInputElement;
-    elem.value = val;
+    if (elem) {
+      elem.value = val;
+    }
   }
 
+  /**
+   * To depricate...use append(htmlCtx)
+   * 'beforebegin': Before the element itself.
+     'afterbegin': Just inside the element, before its first child.
+     'beforeend': Just inside the element, after its last child.
+     'afterend': After the element itself
+   * @param elementRef 
+   * @param selector 
+   * @param srtHtml 
+   */
   appendHtml(elementRef: any, selector: any, srtHtml: any) {
     const parent = elementRef.nativeElement.querySelector(selector) as HTMLElement;
-    parent.insertAdjacentHTML('afterbegin', srtHtml);
+    if (parent) {
+      parent.insertAdjacentHTML('afterbegin', srtHtml);
+    }
   }
 
-  
-
+  async append(htmlCtx: HtmlCtx): Promise<boolean> {
+    const parent = htmlCtx.elementRef.nativeElement.querySelector(htmlCtx.selector) as HTMLElement;
+    if (parent) {
+      parent.insertAdjacentHTML(htmlCtx.position, htmlCtx.srtHtml);
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

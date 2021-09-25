@@ -1,6 +1,5 @@
 import { ExtraOptions, RouterModule, Routes, Router } from '@angular/router';
 // import { RouterGuardService } from '@corpdesk/core/src/lib/guig/router-guard.service';
-import { RouterGuardService } from '@corpdesk/core/src/lib/guig';
 import { NgModule } from '@angular/core';
 
 export const routes: Routes = [
@@ -15,10 +14,10 @@ export const routes: Routes = [
     loadChildren: () => import('./modules/pms/pms.module')
       .then(m => m.PmsModule),
   },
-  // { path: 'customers', loadChildren: () => import('./customers/customers.module').then(m => m.CustomersModule) },
-  // { path: 'orders', loadChildren: () => import('./orders/orders.module').then(m => m.OrdersModule) },
-  // { path: '', redirectTo: 'comm', pathMatch: 'full' },
-  // { path: '**', redirectTo: 'comm' },
+  { path: 'customers', loadChildren: () => import('./customers/customers.module').then(m => m.CustomersModule) },
+  { path: 'orders', loadChildren: () => import('./orders/orders.module').then(m => m.OrdersModule) },
+  { path: '', redirectTo: 'comm', pathMatch: 'full' },
+  { path: '**', redirectTo: 'comm' },
 ];
 
 // const config: ExtraOptions = {

@@ -56,6 +56,14 @@
       "@corpdesk/moduleman": [
         "dist/moduleman/moduleman",
         "dist/moduleman"
+      ],
+      "@corpdesk/naz/*": [
+        "projects/naz/*",
+        "projects/naz"
+      ],
+      "@corpdesk/naz": [
+        "dist/naz/*",
+        "dist/naz"
       ]
     },
     "target": "es2017",

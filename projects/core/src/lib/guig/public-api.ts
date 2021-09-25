@@ -3,6 +3,8 @@ export * from './guig.service';
 export * from './guig.model';
 export * from './guig-context';
 export * from './nav.service';
-export * from './router-guard.service';
-
-
+export * from './html-elem.service';
+export * from './models/html.model';
+export * from './idle-timeout.service';
+// export * from './idle-timeout.component';
+// export * from './router-guard.service';

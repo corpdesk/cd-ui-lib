@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-// import { NazComponent } from 'projects/naz/src/public-api';
+import { Component, OnInit, Input } from '@angular/core';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+// import { TData, Transaction } from 'src/app/pages/dashboard/dashboard.model';
 
-const transactions2 = {
+const transactions = {
   fields: [
     { title: 'Order ID', name: 'orderid', type: 'string'},
     { title: 'Date', name: 'date', type: 'string' },
@@ -63,17 +64,30 @@ const transactions2 = {
 };
 
 @Component({
-  selector: 'app-customers',
-  templateUrl: './customers.component.html',
-  styleUrls: ['./customers.component.scss']
+  selector: 'naz-table-adv',
+  templateUrl: './table-adv.component.html',
+  styleUrls: ['./table-adv.component.scss']
 })
-export class CustomersComponent implements OnInit {
-  dSource;
+export class TableAdvComponent implements OnInit {
+  @Input() dSource: any;
+  tData: any;
+  tFields: any;
+  term: any;
+  stringField = (f:any) => f.type === 'string';
+  booleanField = (f:any) => f.type === 'boolean';
+  actionField = (f:any) => f.type === 'action';
+  statusField = (f:any) => f.type === 'status';
+  // @Input() breadcrumbItems;
+  // @Input() title: string;
+
   constructor() { 
-    this.dSource = transactions2;
+
   }
 
   ngOnInit(): void {
+    this.tData = this.dSource.data;
+    this.tFields = this.dSource.fields;
   }
 
+  
 }

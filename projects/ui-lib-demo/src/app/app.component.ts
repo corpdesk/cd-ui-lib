@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { environment } from '../environments/environment';
-import { UserService, AuthData, SessService, NavService } from '@corpdesk/core';
+import { UserService, AuthData, SessService, NavService, MenuService } from '@corpdesk/core';
 
 @Component({
   selector: 'app-root',
@@ -25,6 +25,7 @@ export class AppComponent {
   constructor(
     private svUser: UserService,
     private svSess: SessService,
+    private svMenu: MenuService,
     private svNav: NavService,
     private route: Router,
   ) {
@@ -65,7 +66,7 @@ export class AppComponent {
         use renewSess(res);
         */
         if (res.app_state.sess.cd_token !== null) {
-          this.svSess.createSess(res);
+          this.svSess.createSess(res, this.svMenu);
           console.log('login_res:', res);
           this.svUser.currentUser = { name: `${res.data[0].username}`, picture: `${environment.HOST}/user-resources/${res.data[0].user_guid}/avatar-01/a.jpg` };
           this.svNav.userMenu = [

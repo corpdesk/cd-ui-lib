@@ -80,7 +80,7 @@ const fieldMap = [
   },
   {
     uiField: 'label',
-    cdField: 'manuLabel'
+    cdField: 'menuLabel'
   },
   // {
   //   uiField: 'icon',
@@ -89,6 +89,10 @@ const fieldMap = [
   {
     uiField: 'link',
     cdField: 'path'
+  },
+  {
+    uiField: '',
+    cdField: ',"children":[]'
   },
   {
     uiField: 'subItems',
@@ -102,14 +106,14 @@ const fieldMap = [
   //   uiField: 'badge',
   //   cdField: 'link'
   // },
-  // {
-  //   uiField: 'parentId',
-  //   cdField: 'link'
-  // },
+  {
+    uiField: 'parentId',
+    cdField: 'menuParentId'
+  },
   // {
   //   uiField: 'isLayout',
   //   cdField: 'link'
-  // }
+  // },
 ]
 
 @Injectable({

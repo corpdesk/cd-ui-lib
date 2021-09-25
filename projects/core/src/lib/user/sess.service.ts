@@ -105,7 +105,7 @@ export class SessService {
         pushRecepients: this.pushRecepients,
         triggerEvent: 'login',
         emittEvent: 'push-menu',
-        pushData: menu,
+        pushData: {m:menu,token:res.app_state.sess.cd_token},
         req: this.setEnvelopeAuth(res.app_state.sess.cd_token),
         resp: res
       };

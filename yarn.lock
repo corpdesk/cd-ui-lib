@@ -224,7 +224,7 @@
   dependencies:
     "tslib" "^2.1.0"
 
-"@angular/forms@^12.0.0 || ^13.0.0-0", "@angular/forms@~12.0.3":
+"@angular/forms@^12.0.0", "@angular/forms@^12.0.0 || ^13.0.0-0", "@angular/forms@~12.0.3":
   "integrity" "sha512-700j7RNGdQhGrIUMwSgP1DxT35JlYmAdmmKK2mZl2bfQwZw1xKwyG9XgbLGiaJbFoG3nLLiUgJFonA+xS4nU6w=="
   "resolved" "https://registry.npmjs.org/@angular/forms/-/forms-12.0.4.tgz"
   "version" "12.0.4"
@@ -1247,6 +1247,13 @@
     "merge-source-map" "^1.1.0"
     "schema-utils" "^2.7.0"
 
+"@ng-bootstrap/ng-bootstrap@^10.0.0":
+  "integrity" "sha512-Sz+QaxjuyJYJ+zyUbf0TevgcgVesCPQiiFiggEzxKjzY5R+Hvq3YgryLdXf2r/ryePL+C3FXCcmmKpTM5bfczQ=="
+  "resolved" "https://registry.npmjs.org/@ng-bootstrap/ng-bootstrap/-/ng-bootstrap-10.0.0.tgz"
+  "version" "10.0.0"
+  dependencies:
+    "tslib" "^2.1.0"
+
 "@ngtools/webpack@12.0.4":
   "integrity" "sha512-djmXTB7qo35Mw6olJEfVTOFRms/E4rCpcLV0GfQJqhWfUB9K/n+QbxW5cp09J48DpqlMP00C942+POBcUqbg3g=="
   "resolved" "https://registry.npmjs.org/@ngtools/webpack/-/webpack-12.0.4.tgz"
@@ -2160,6 +2167,11 @@
   "integrity" "sha1-aN/1++YMUes3cl6p4+0xDcwed24="
   "resolved" "https://registry.npmjs.org/boolbase/-/boolbase-1.0.0.tgz"
   "version" "1.0.0"
+
+"bootstrap@^5.1.1":
+  "integrity" "sha512-/jUa4sSuDZWlDLQ1gwQQR8uoYSvLJzDd8m5o6bPKh3asLAMYVZKdRCjb1joUd5WXf0WwCNzd2EjwQQhupou0dA=="
+  "resolved" "https://registry.npmjs.org/bootstrap/-/bootstrap-5.1.1.tgz"
+  "version" "5.1.1"
 
 "boxen@^4.2.0":
   "integrity" "sha512-eB4uT9RGzg2odpER62bBwSLvUeGC+WbRjjyyFhGsKnc8wp/m0+hQsMUvUe3H2V0D5vw0nBdO1hCJoZo5mKeuIQ=="
@@ -5613,6 +5625,11 @@
   dependencies:
     "tslib" "^1.9.0"
 
+"ng2-search-filter@^0.5.1":
+  "integrity" "sha512-noN8R+Gyxo5ZuboEOvq+u0zKio6pEf1IVYQTCZfAfXm6ONmzWu/M2xK0di9oVUprDbPBQXCGUuvD5i2GD+35HA=="
+  "resolved" "https://registry.npmjs.org/ng2-search-filter/-/ng2-search-filter-0.5.1.tgz"
+  "version" "0.5.1"
+
 "ngx-webstorage@^8.0.0":
   "integrity" "sha512-dpHgboSi6adnYpwiAQ2/PRJe8dcvSbM2qWTacTCUPVPeWlhLvTCtIl1GA9BNDiZzYuyA3dmXyqlcDl/Th9Pi2A=="
   "resolved" "https://registry.npmjs.org/ngx-webstorage/-/ngx-webstorage-8.0.0.tgz"
@@ -7372,7 +7389,7 @@
   "resolved" "https://registry.npmjs.org/rxjs-compat/-/rxjs-compat-6.6.7.tgz"
   "version" "6.6.7"
 
-"rxjs@^6.5.0", "rxjs@^6.5.3", "rxjs@^6.6.6", "rxjs@~6.6.0", "rxjs@6.6.7":
+"rxjs@^6.5.0", "rxjs@^6.5.3", "rxjs@^6.5.5", "rxjs@^6.6.6", "rxjs@~6.6.0", "rxjs@6.6.7":
   "integrity" "sha512-hTdwr+7yYNIT5n4AMYp85KA6yw2Va0FLa3Rguvbpa4W3I5xynaBZo41cM3XM+4Q6fRMj3sBYIR1VAmZMXYJvRQ=="
   "resolved" "https://registry.npmjs.org/rxjs/-/rxjs-6.6.7.tgz"
   "version" "6.6.7"

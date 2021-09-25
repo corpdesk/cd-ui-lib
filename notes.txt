@@ -92,7 +92,54 @@ Angular router query parameters:
     - https://www.digitalocean.com/community/tutorials/angular-query-parameters
 
 //////////////
-- view menuData on login
+- use back-end menu
+        - library/moduleman/menuservice/getMenu$()
+        - on login, library/session/createSession()
+            - getMenu$()
+            - use socket.io to sendMenu() to shell/sidebar
+        - shell/sidebar listen to 'push-menu'
+        - confirm menu is available on shell/sidebar
+
+////////////////////
+- set icons for cdMenu
+
+- Issues with some gui pages
+    - on screen change: "ERROR TypeError: this.minHandleElement is undefined"
+    - Ecommerce:
+        - products
+        - orders
+        - checkouts
+        - All product
+    - Email
+        - read email
+    - Kanban
+    - UI Elements
+        - progress bar
+        - range slider
+    - Forms
+        - forms advanced
+    - Tables
+        - Advanced tables
+
+- Issue: installing ng-bootstrap
+        - solution: npm i --save @ng-bootstrap/ng-bootstrap --legacy-peer-deps
+        
+- test raw and simple bootstrap templates 
+    - 
+- set up guig/idleTimeout()
+    - set config (timeoutValue, callback())
+
+
+- develop idletimeout in @corpdesk/core
+- create @corpdesk/naz library 
+- develop consumable table in @corpdesk/naz 
+- test moduleman with table from @corpdesk/naz library
+
+25/09/2021
+- develop idletimeout in @corpdesk/core
+- create @corpdesk/naz library 
+- develop consumable table in @corpdesk/naz 
+- test moduleman with table from @corpdesk/naz library
 
 15/09/2021
 - use back-end menu
@@ -102,7 +149,7 @@ Angular router query parameters:
             - use socket.io to sendMenu() to shell/sidebar
         - shell/sidebar listen to 'push-menu'
         - confirm menu is available on shell/sidebar
-        
+
 09/09/2021
 - modify to connect via cd-api (node.js version) from laravel back-end
     - create a new param in environment: CD_PORT

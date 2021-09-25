@@ -1,0 +1,56 @@
+<div class="card">
+  <div class="card-body">
+    <div class="dropdown float-right" ngbDropdown>
+      <a href="javascript: void(0);" class="dropdown-toggle arrow-none card-drop" ngbDropdownToggle
+        data-toggle="dropdown" aria-expanded="false">
+        <i class="mdi mdi-dots-vertical"></i>
+      </a>
+      <div class="dropdown-menu dropdown-menu-right" ngbDropdownMenu>
+        <!-- item-->
+        <a href="javascript:void(0);" class="dropdown-item">Sales Report</a>
+        <!-- item-->
+        <a href="javascript:void(0);" class="dropdown-item">Export Report</a>
+        <!-- item-->
+        <a href="javascript:void(0);" class="dropdown-item">Profit</a>
+        <!-- item-->
+        <a href="javascript:void(0);" class="dropdown-item">Action</a>
+      </div>
+    </div>
+    <h4 class="card-title mb-4">Latest Transactions</h4>
+    <div class="row">
+      <div class="col-sm-12 col-md-12">
+        <div id="tickets-table_filter" class="dataTables_filter text-md-right"><label
+            class="d-inline-flex align-items-center">Search:
+            <input type="text" name="searchTerm" class="form-control form-control-sm ml-2" aria-controls="tickets-table"
+              [(ngModel)]="term" /></label></div>
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-centered">
+        <thead class="thead-light">
+          <tr>
+            <ng-container *ngFor="let f of tFields">
+              <th>{{f.title}}</th>
+            </ng-container>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of tData|filter:term">
+            <ng-container *ngFor="let f of tFields">
+              <td *ngIf="stringField(f)">{{item[f.name]}}</td>
+              <td *ngIf="statusField(f)">
+                <div class="badge font-size-12" [ngClass]="item[f.name].class">{{item[f.name].value}}</div>
+              </td>
+              <td *ngIf="actionField(f)">
+                <a href="javascript:void(0);" class="mr-3 text-primary" ngbTooltip="Edit"><i
+                    class="mdi mdi-pencil font-size-18"></i></a>
+                <a href="javascript:void(0);" class="text-danger" ngbTooltip="Delete"><i
+                    class="mdi mdi-trash-can font-size-18"></i></a>
+              </td>
+            </ng-container>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
