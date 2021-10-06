@@ -114,4 +114,18 @@ export class HtmlElemService {
       return false;
     }
   }
+
+  // set element html
+  async html(htmlCtx: HtmlCtx){
+    const parent = htmlCtx.elementRef.nativeElement.querySelector(htmlCtx.selector) as HTMLElement;
+    if (parent) {
+      parent.innerHTML = htmlCtx.srtHtml;
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
+
+// Experimental: allow jquery users to apply HtmlElemService like jquery api
+export const $ = new HtmlElemService();

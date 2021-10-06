@@ -4,8 +4,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { AppRoutingModule } from './app-routing.module';
-// import { MatModule } from './material-module';
-
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -23,12 +21,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 
 import { environment } from '../environments/environment';
 import { UserModule } from '@corpdesk/core/src/lib/user';
-// import { CdPushModule } from '@corpdesk/core/src/lib/cd-push';
-
-
-
-// import { FeatureCModule } from '@corpdesk/ui-lib/src/lib/feature-c';
-import { FeatureCModule } from '@corpdesk/ui-lib';
 import { AppComponent } from './app.component';
 
 @NgModule({
@@ -53,7 +45,6 @@ import { AppComponent } from './app.component';
     MatTreeModule,
     MatFormFieldModule,
     BrowserModule,
-    FeatureCModule,
     UserModule.forRoot(environment),
     // CdPushModule.forRoot(environment),
   ],

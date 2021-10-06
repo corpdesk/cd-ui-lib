@@ -1,6 +1,7 @@
-import { NgModule } from '@angular/core';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
+import { EnvConfig } from './IBase';
 
 @NgModule({
   declarations: [],
@@ -9,4 +10,22 @@ import { HttpClientModule } from '@angular/common/http';
     HttpClientModule,
   ],
 })
-export class BaseModule {}
+export class BaseModule {
+  static forRoot(env: EnvConfig): ModuleWithProviders<BaseModule> {
+    return {
+      ngModule: BaseModule,
+      providers: [
+        { provide: 'env', useValue: env }
+      ]
+    };
+  }
+
+  static forChild(env: EnvConfig): ModuleWithProviders<BaseModule> {
+    return {
+      ngModule: BaseModule,
+      providers: [
+        { provide: 'env', useValue: env }
+      ]
+    };
+  }
+}

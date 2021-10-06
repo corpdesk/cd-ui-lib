@@ -7,7 +7,7 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter';
 
 import { CustomersRoutingModule } from './customers-routing.module';
 import { CustomersComponent } from './customers.component';
-import { NazModule } from '@corpdesk/naz';
+import { NazUiModule, NazTableModule } from '@corpdesk/naz';
 
 
 
@@ -21,7 +21,8 @@ import { NazModule } from '@corpdesk/naz';
     NgbNavModule, NgbDropdownModule, NgbTooltipModule,
     Ng2SearchPipeModule,
     CustomersRoutingModule,
-    NazModule
+    NazUiModule,
+    NazTableModule
   ],
   exports:[CustomersComponent],
   schemas:[CUSTOM_ELEMENTS_SCHEMA]

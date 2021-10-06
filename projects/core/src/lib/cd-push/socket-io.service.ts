@@ -12,6 +12,7 @@ import { Injectable, Inject } from '@angular/core';
 import { io } from 'socket.io-client';
 import { Observable } from 'rxjs';
 import { EnvConfig } from '@corpdesk/core/src/lib/base';
+// import { EnvConfig } from '@corpdesk/core';
 
 
 @Injectable({

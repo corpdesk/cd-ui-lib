@@ -132,8 +132,52 @@ Angular router query parameters:
 
 - develop idletimeout in @corpdesk/core
 - create @corpdesk/naz library 
+- use --legacy-peer-deps flag for installations of @corpdesk/naz
 - develop consumable table in @corpdesk/naz 
 - test moduleman with table from @corpdesk/naz library
+
+- BaseService to depend on envinronment for 'env' data
+- remove unused projects besides core, naz and ui-lib-demo
+- move html menu construction methods from shell/sidbar to @corpdesk/naz/menu
+- transform above from specific menu to generic 'tree'
+
+- test naz-table with live modue data
+- develop naz adaptor that feeds cd-data to naz-table
+- pagination
+        - total rows
+        - rows per page
+        - number of pages
+        - maximum pages to show in paginator
+        - current page
+        - move to next page
+        - move to previous page
+        - scroll display pages
+
+//////////////////////
+- move naz-table from test bed in cd-moduleman to cd-ui-lib/naz
+
+06/10/2021
+- create @corpdesk/naz library 
+- use --legacy-peer-deps flag for installations of @corpdesk/naz
+- develop consumable table in @corpdesk/naz 
+- test moduleman with table from @corpdesk/naz library
+
+- BaseService to depend on envinronment for 'env' data
+- remove unused projects besides core, naz and ui-lib-demo
+- move html menu construction methods from shell/sidbar to @corpdesk/naz/menu
+- transform above from specific menu to generic 'tree'
+
+- test naz-table with live modue data
+- develop naz adaptor that feeds cd-data to naz-table
+- pagination
+        - total rows
+        - rows per page
+        - number of pages
+        - maximum pages to show in paginator
+        - current page
+        - move to next page
+        - move to previous page
+        - scroll display pages
 
 25/09/2021
 - develop idletimeout in @corpdesk/core

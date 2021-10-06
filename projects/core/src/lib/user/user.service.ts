@@ -77,9 +77,6 @@ export class UserService {
     console.log('auth$(authData: AuthData)');
     delete authData.rememberMe;
     this.setEnvelopeAuth(authData);
-    /*
-    post login request to server
-    */
     console.log('Submit()/this.postData:', JSON.stringify(this.postData))
     return this.svServer.proc(this.postData);
   }

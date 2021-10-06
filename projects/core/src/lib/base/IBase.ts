@@ -5,6 +5,69 @@
  * @clsName // class name
  * @action // class method to invoke
  */
+
+ export interface EnvConfig {
+    production: boolean;
+    apiEndpoint: string;
+    consumerToken: string;// current company consumer
+    USER_RESOURCES: string;
+    HOST: string;
+    CD_PORT?: number; // optional setting for apiEndpoint
+    consumer: string;
+    clientAppId: number; // this client application identifies itself to the server with this id
+    SOCKET_IO_PORT: number; // push server port
+}
+
+export interface CdResponse {
+    app_state: {
+        success: number;
+        info: {
+            messages: string;
+            code: number;
+            app_msg: any;
+        };
+        sess: {
+            cd_token: string;
+            jwt: string;
+            p_sid: string;
+            ttl: number;
+        };
+        cache: object;
+    };
+    data: [];
+}
+
+
+// cd request format
+export interface CdRequest {
+    ctx: string;
+    m: string;
+    c: string;
+    a: string;
+    dat: object;
+    args: object;
+}
+
+// cd response format
+export interface CdResponse {
+    app_state: {
+        success: number;
+        info: {
+            messages: string;
+            code: number;
+            app_msg: any;
+        };
+        sess: {
+            cd_token: string;
+            jwt: string;
+            p_sid: string;
+            ttl: number;
+        };
+        cache: object;
+    };
+    data: [];
+}
+
 export interface IControllerContext {
     path: string;
     clsName: string;
@@ -113,6 +176,13 @@ export interface IAclCtx {
     moduleName: string;
     currentUser: any,
     module: any,
+}
+
+export interface IQuery{
+    select: string [];
+    where: object;
+    take: number;
+    skip: number;
 }
 
 

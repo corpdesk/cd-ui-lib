@@ -19,18 +19,6 @@ export interface CdFilter {
 
 export const ENDPOINT_APPS = `http://${window.location.host}/`;
 
-export interface EnvConfig {
-    production: boolean;
-    apiEndpoint: string;
-    consumerToken: string;// current company consumer
-    USER_RESOURCES: string;
-    HOST: string;
-    CD_PORT?: number; // optional setting for apiEndpoint
-    consumer: string;
-    clientAppId: number; // this client application identifies itself to the server with this id
-    SOCKET_IO_PORT: number; // push server port
-}
-
 export interface PostData {
     ctx: string;
     m: string;
@@ -56,52 +44,4 @@ export interface PostData {
 //     data: [];
 // }
 
-export interface CdResponse {
-    app_state: {
-        success: number;
-        info: {
-            messages: string;
-            code: number;
-            app_msg: any;
-        };
-        sess: {
-            cd_token: string;
-            jwt: string;
-            p_sid: string;
-            ttl: number;
-        };
-        cache: object;
-    };
-    data: [];
-}
 
-
-// cd request format
-export interface CdRequest {
-    ctx: string;
-    m: string;
-    c: string;
-    a: string;
-    dat: object;
-    args: object;
-}
-
-// cd response format
-export interface CdResponse {
-    app_state: {
-        success: number;
-        info: {
-            messages: string;
-            code: number;
-            app_msg: any;
-        };
-        sess: {
-            cd_token: string;
-            jwt: string;
-            p_sid: string;
-            ttl: number;
-        };
-        cache: object;
-    };
-    data: [];
-}

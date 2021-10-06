@@ -18,4 +18,4 @@ import { TableAdvComponent } from './table-adv.component';
   ],
   exports: [TableAdvComponent]
 })
-export class NazModule { }
+export class NazTableModule { }

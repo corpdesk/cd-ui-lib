@@ -1,0 +1,31 @@
+<div class="card">
+  <div [id]="cardBodyId" class="card-body">
+    <div class="dropdown float-right" ngbDropdown>
+      <a href="javascript: void(0);" class="dropdown-toggle arrow-none card-drop" ngbDropdownToggle
+        data-toggle="dropdown" aria-expanded="false">
+        <i class="mdi mdi-dots-vertical"></i>
+      </a>
+      <div class="dropdown-menu dropdown-menu-right" ngbDropdownMenu>
+        <!-- item-->
+        <a href="javascript:void(0);" class="dropdown-item">Sales Report</a>
+        <!-- item-->
+        <a href="javascript:void(0);" class="dropdown-item">Export Report</a>
+        <!-- item-->
+        <a href="javascript:void(0);" class="dropdown-item">Profit</a>
+        <!-- item-->
+        <a href="javascript:void(0);" class="dropdown-item">Action</a>
+      </div>
+    </div>
+    <h4 class="card-title mb-4">{{cardTitle}}</h4>
+    <div class="row">
+      <div class="col-sm-12 col-md-12">
+        <div id="tickets-table_filter" class="dataTables_filter text-md-right"><label
+            class="d-inline-flex align-items-center">Search:
+            <input type="text" name="searchTerm" class="form-control form-control-sm ml-2" aria-controls="tickets-table"
+              [(ngModel)]="term" /></label></div>
+      </div>
+    </div>
+    <!-- start table -->
+    <!-- end table -->
+  </div>
+</div>
