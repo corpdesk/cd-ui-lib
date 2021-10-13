@@ -7,7 +7,6 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter';
 
 import { CustomersRoutingModule } from './customers-routing.module';
 import { CustomersComponent } from './customers.component';
-import { NazUiModule, NazTableModule } from '@corpdesk/naz';
 
 
 

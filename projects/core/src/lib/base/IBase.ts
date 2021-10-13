@@ -1,12 +1,14 @@
 // import { Observable } from 'rxjs';
 
+import { Validators } from "@angular/forms";
+
 /**
  * @path // the path of the controller relative to the BaseService file
  * @clsName // class name
  * @action // class method to invoke
  */
 
- export interface EnvConfig {
+export interface EnvConfig {
     production: boolean;
     apiEndpoint: string;
     consumerToken: string;// current company consumer
@@ -96,10 +98,10 @@ export interface ICdResponse {
 }
 
 export interface IAppState {
-        success: boolean;
-        info: IRespInfo | null;
-        sess: ISessResp | null;
-        cache: object | null;
+    success: boolean;
+    info: IRespInfo | null;
+    sess: ISessResp | null;
+    cache: object | null;
 }
 
 export interface ISessResp {
@@ -111,7 +113,7 @@ export interface ISessResp {
 export interface IRespInfo {
     messages: string[];
     code: string | null;
-    app_msg: string  | null;
+    app_msg: string | null;
 }
 
 export interface ICdPushEnvelop {
@@ -178,11 +180,25 @@ export interface IAclCtx {
     module: any,
 }
 
-export interface IQuery{
-    select: string [];
+export interface IQuery {
+    select?: string[];
+    update?: object;
     where: object;
-    take: number;
-    skip: number;
+    take?: number;
+    skip?: number;
+}
+
+export const controlFormatt = {
+    text: ['', [Validators.required]],
+    textDisabled: ['', [Validators.required]],
+    email: ['', [Validators.required, Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$')]],
+    url: ['', [Validators.required, Validators.pattern('https?://.+')]],
+    digits: ['', [Validators.required, Validators.pattern('[0-9]+')]],
+    number: ['', [Validators.required, Validators.pattern('[0-9]+')]],
+    alphanum: ['', [Validators.required, Validators.pattern('[a-zA-Z0-9]+')]],
+    textarea: ['', [Validators.required]],
+    password: ['', [Validators.required, Validators.minLength(6)]],
+    confirmpwd: ['', Validators.required]
 }
 
 

@@ -1,18 +1,12 @@
-import { Injectable, HostListener, Output, EventEmitter } from '@angular/core';
-import { Observable, fromEvent, of } from 'rxjs';
-import { map, filter } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 import * as moment from 'moment';
-// import Dexie from 'dexie';
 
 
 import { ServerService } from '@corpdesk/core/src/lib/base';
 import { AppStateService, IAppState } from '@corpdesk/core/src/lib/base';
 import { SocketIoService } from '@corpdesk/core/src/lib/cd-push';
-// import { CdPushEnvelop } from '@corpdesk/core';
-// import { MenuService } from '../moduleman';
-// import { UserService } from './user.service';
-// import { ISessResp } from '../base/IBase';
 
 interface Menu {
   items: any;

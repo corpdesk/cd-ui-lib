@@ -155,6 +155,12 @@ Angular router query parameters:
 
 //////////////////////
 - move naz-table from test bed in cd-moduleman to cd-ui-lib/naz
+- implement update for module
+- hide/show column
+
+13/10/2021
+- move naz-table from test bed in cd-moduleman to cd-ui-lib/naz
+- implement update for module
 
 06/10/2021
 - create @corpdesk/naz library 
