@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ServerService, IQuery } from '@corpdesk/core/src/lib/base';
-import { CdRequest } from '@corpdesk/core/src/lib/base';
+import { ServerService, IQuery, CdRequest } from '@corpdesk/core/src/lib/base';
 
 @Injectable({
   providedIn: 'root',

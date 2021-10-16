@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { from } from 'rxjs';
-
 import { GuigContextService } from '@corpdesk/core/src/lib/guig';
-import { ServerService } from '@corpdesk/core/src/lib/base';
+import { ServerService, IQuery, CdRequest } from '@corpdesk/core/src/lib/base';
 import { SessService } from '@corpdesk/core/src/lib/user';
 import { ModuleMenu, MenuCollection } from './menu.model';
 // import { CdResponse } from 'dist/base/public-api';
@@ -252,7 +251,6 @@ export class MenuService {
       );
   }
 
-
   async cdMenu(menuData: any) {
     return await this.mapMenu(menuData);
   }
@@ -381,6 +379,54 @@ export class MenuService {
 
   setRespRegMenu(data: any) {
     console.log(data);
+  }
+
+  getMenuList$(q: IQuery, cdToken: string) {
+    this.setEnvelopeModules(q, cdToken);
+    console.log('getMenuList$()/this.postData:', JSON.stringify(this.postData))
+    return this.svServer.proc(this.postData);
+  }
+
+  setEnvelopeModules(q: IQuery, cdToken: string) {
+    this.postData = {
+      ctx: 'Sys',
+      m: 'Moduleman',
+      c: 'Menu',
+      a: 'GetCount',
+      dat: {
+        f_vals: [
+          {
+            query: q
+          }
+        ],
+        token: cdToken
+      },
+      args: {}
+    };
+  }
+
+  updateModules$(q: IQuery, cdToken: string) {
+    this.setEnvelopeUpdate(q, cdToken);
+    console.log('getMenu()/this.postData:', JSON.stringify(this.postData))
+    return this.svServer.proc(this.postData);
+  }
+
+  setEnvelopeUpdate(q: IQuery, cdToken: string) {
+    this.postData = {
+      ctx: 'Sys',
+      m: 'Moduleman',
+      c: 'Menu',
+      a: 'Update',
+      dat: {
+        f_vals: [
+          {
+            query: q
+          }
+        ],
+        token: cdToken
+      },
+      args: {}
+    };
   }
 
 

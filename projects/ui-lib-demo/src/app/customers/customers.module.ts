@@ -20,8 +20,6 @@ import { CustomersComponent } from './customers.component';
     NgbNavModule, NgbDropdownModule, NgbTooltipModule,
     Ng2SearchPipeModule,
     CustomersRoutingModule,
-    NazUiModule,
-    NazTableModule
   ],
   exports:[CustomersComponent],
   schemas:[CUSTOM_ELEMENTS_SCHEMA]

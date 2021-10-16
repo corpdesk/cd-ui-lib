@@ -180,14 +180,6 @@ export interface IAclCtx {
     module: any,
 }
 
-export interface IQuery {
-    select?: string[];
-    update?: object;
-    where: object;
-    take?: number;
-    skip?: number;
-}
-
 export const controlFormatt = {
     text: ['', [Validators.required]],
     textDisabled: ['', [Validators.required]],
@@ -199,6 +191,14 @@ export const controlFormatt = {
     textarea: ['', [Validators.required]],
     password: ['', [Validators.required, Validators.minLength(6)]],
     confirmpwd: ['', Validators.required]
+}
+
+export interface IQuery {
+    select?: string[];
+    update?: object;
+    where: object;
+    take?: number;
+    skip?: number;
 }
 
 
