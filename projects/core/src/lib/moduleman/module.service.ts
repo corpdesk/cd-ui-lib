@@ -42,7 +42,7 @@ export class ModuleService {
 
   updateModules$(q: IQuery, cdToken: string) {
     this.setEnvelopeUpdate(q, cdToken);
-    console.log('getModules()/this.postData:', JSON.stringify(this.postData))
+    console.log('updateModules$()/this.postData:', JSON.stringify(this.postData))
     return this.svServer.proc(this.postData);
   }
 
@@ -52,6 +52,30 @@ export class ModuleService {
       m: 'Moduleman',
       c: 'Module',
       a: 'Update',
+      dat: {
+        f_vals: [
+          {
+            query: q
+          }
+        ],
+        token: cdToken
+      },
+      args: {}
+    };
+  }
+
+  deleteModules$(q: IQuery, cdToken: string) {
+    this.setEnvelopeDelete(q, cdToken);
+    console.log('deleteModules$()/this.postData:', JSON.stringify(this.postData))
+    return this.svServer.proc(this.postData);
+  }
+
+  setEnvelopeDelete(q: IQuery, cdToken: string) {
+    this.postData = {
+      ctx: 'Sys',
+      m: 'Moduleman',
+      c: 'Module',
+      a: 'Delete',
       dat: {
         f_vals: [
           {
