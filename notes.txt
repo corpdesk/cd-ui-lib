@@ -161,6 +161,9 @@ Angular router query parameters:
 - delete item
 - hide/show column
 
+03/11/2021
+- support for create component
+
 17/10/2021
 - move naz-table from test bed in cd-moduleman to cd-ui-lib/naz
 - implement update for module

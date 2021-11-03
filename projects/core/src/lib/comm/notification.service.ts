@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
-import { ServerService, CdFilter } from '@corpdesk/core/src/lib/base';
+import { ServerService } from '@corpdesk/core/src/lib/base';
 import { UserService, SessService } from '@corpdesk/core/src/lib/user';
-/* avoid due to circular dependency */ //
-// import { UserService } from '../../user/controllers/user.service';
-import { SocketIoService } from '@corpdesk/core/src/lib/cd-push';
+import { SocketIoService, CdPushEnvelop } from '@corpdesk/core/src/lib/cd-push';
 
 @Injectable({
   providedIn: 'root'
@@ -13,17 +11,13 @@ export class NotificationService {
   constructor(
     private svServer: ServerService,
     private svSess: SessService,
-    // private svSocket: SocketIoService,
+    private svSocket: SocketIoService,
   ) { }
 
   init(res: any) {
 
   }
 
-  /**
-   * Array of custom sql-like filters.
-   * @param f: CdFilter[]
-   */
   getByUserObsv(svUser: UserService) {
     console.log('starting NotificationService::getByUserObsv()');
     this.setEnvelopeGetByUser(svUser);
@@ -80,5 +74,18 @@ export class NotificationService {
       },
       args: null
     };
+  }
+
+  //  Sample:
+  //  const pushEnvelop: CdPushEnvelop = {
+  //     pushRecepients: null,
+  //     emittEvent: null,
+  //     triggerEvent: 'send-notif',
+  //     req: null,
+  //     resp: userDataResp
+  //  };
+  emitNotif(cdEnvelop: CdPushEnvelop) {
+    console.log('startng NotificationService::emitNotif()')
+    this.svSocket.emit('send-notif', cdEnvelop);
   }
 }

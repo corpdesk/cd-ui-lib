@@ -405,7 +405,7 @@ export class MenuService {
     };
   }
 
-  updateModules$(q: IQuery, cdToken: string) {
+  updateMenu$(q: IQuery, cdToken: string) {
     this.setEnvelopeUpdate(q, cdToken);
     console.log('getMenu()/this.postData:', JSON.stringify(this.postData))
     return this.svServer.proc(this.postData);
@@ -417,6 +417,30 @@ export class MenuService {
       m: 'Moduleman',
       c: 'Menu',
       a: 'Update',
+      dat: {
+        f_vals: [
+          {
+            query: q
+          }
+        ],
+        token: cdToken
+      },
+      args: {}
+    };
+  }
+
+  deleteMenu$(q: IQuery, cdToken: string) {
+    this.setEnvelopeDelete(q, cdToken);
+    console.log('deleteMenu$()/this.postData:', JSON.stringify(this.postData))
+    return this.svServer.proc(this.postData);
+  }
+
+  setEnvelopeDelete(q: IQuery, cdToken: string) {
+    this.postData = {
+      ctx: 'Sys',
+      m: 'Moduleman',
+      c: 'Menu',
+      a: 'Delete',
       dat: {
         f_vals: [
           {

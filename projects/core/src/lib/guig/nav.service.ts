@@ -20,6 +20,15 @@ export class NavService {
     this.rout.navigateByUrl(path);
   }
 
+  sNavigate(iClient: any, location: string): void {
+    const params = {
+      queryParams: { token: iClient.sess.cd_token },
+      skipLocationChange: true,
+      replaceUrl: false
+    };
+    iClient.router.navigate([location], params);
+  }
+
   /**
    * deduce the module and controller from path
    */

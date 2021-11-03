@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
+import { ControlType } from './guig.model';
 import { FileDetector } from 'protractor';
+import { AWizardStep } from './guig.model';
 
 interface Rule {
   minChars?: number;
@@ -26,8 +28,6 @@ interface FvOutput {
   valid: boolean;
   errMsg: string;
 }
-
-
 
 @Injectable({
   providedIn: 'root'
@@ -215,6 +215,77 @@ export class FormsService {
 
   reset() {
     this.fFields = [];
+  }
+
+  useSelect(controlType: ControlType) {
+    return controlType === ControlType.select;
+  }
+
+  useSearchDropDown(controlType: ControlType) {
+    return controlType === ControlType.searchDropDown;
+  }
+
+  useSelectMultiple(controlType: ControlType) {
+    return controlType === ControlType.selectMultiple;
+  }
+
+  useTextArea(controlType: ControlType) {
+    return controlType === ControlType.textArea;
+  }
+
+  useText(controlType: ControlType) {
+    return controlType === ControlType.text;
+  }
+
+  useUpload(controlType: ControlType) {
+    return controlType === ControlType.upload;
+  }
+
+  useToggleSwitch(controlType: ControlType) {
+    return controlType === ControlType.toggleSwitch;
+  }
+
+  useNgToggle(controlType: ControlType) {
+    return controlType === ControlType.ngToggle;
+  }
+
+  useDualSwitch(controlType: ControlType) {
+    return controlType === ControlType.dualSwitch;
+  }
+
+  useDualRadio(controlType: ControlType) {
+    return controlType === ControlType.dualRaido;
+  }
+
+  useAction(controlType: ControlType) {
+    return controlType === ControlType.action;
+  }
+
+  ////////////////////////////////////
+  // STEPPER METHODS
+  canStepBack(index: number, step: AWizardStep){
+    return index > 0;
+  }
+
+  /**
+   * 
+   * @param index 
+   * @param steps 
+   * @param cb // optional callback that can be used to validate foward movement
+   * @returns 
+   */
+  canStepFoward(index: number, steps: AWizardStep[], cb: any = null ){
+    let ret = false;
+    if(cb){
+      ret = cb();
+    } else {
+      ret = index < (steps.length -1);
+    }
+    return ret;
+  }
+
+  isLastStep(index: number, steps: AWizardStep[] ){
+    return index === (steps.length -1);
   }
 
 }

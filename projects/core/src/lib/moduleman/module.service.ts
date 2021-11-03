@@ -11,18 +11,18 @@ export class ModuleService {
   ) { }
 
   getModules(q: IQuery, cdToken: string) {
-    this.setEnvelopeModules(q, cdToken);
+    this.setEnvelopeModule(q, cdToken);
     console.log('getModules()/this.postData:', JSON.stringify(this.postData))
     return this.svServer.proc(this.postData);
   }
 
-  getModules$(q: IQuery, cdToken: string) {
-    this.setEnvelopeModules(q, cdToken);
+  getModule$(q: IQuery, cdToken: string) {
+    this.setEnvelopeModule(q, cdToken);
     console.log('getModules$()/this.postData:', JSON.stringify(this.postData))
     return this.svServer.proc(this.postData);
   }
 
-  setEnvelopeModules(q: IQuery, cdToken: string) {
+  setEnvelopeModule(q: IQuery, cdToken: string) {
     this.postData = {
       ctx: 'Sys',
       m: 'Moduleman',
@@ -40,7 +40,7 @@ export class ModuleService {
     };
   }
 
-  updateModules$(q: IQuery, cdToken: string) {
+  updateModule$(q: IQuery, cdToken: string) {
     this.setEnvelopeUpdate(q, cdToken);
     console.log('updateModules$()/this.postData:', JSON.stringify(this.postData))
     return this.svServer.proc(this.postData);
@@ -80,6 +80,52 @@ export class ModuleService {
         f_vals: [
           {
             query: q
+          }
+        ],
+        token: cdToken
+      },
+      args: {}
+    };
+  }
+
+  /**
+   * 
+   * @param newModule 
+   * {
+        "ctx": "Sys",
+        "m": "Moduleman",
+        "c": "Module",
+        "a": "Create",
+        "dat": {
+            "f_vals": [
+                {
+                    "data": {
+                        "moduleName": "xxx30102021",
+                        "isSysModule": false
+                    }
+                }
+            ],
+            "token": "3ffd785f-e885-4d37-addf-0e24379af338"
+        },
+        "args": {}
+    }
+   */
+  createModule$(newModule:any, cdToken: string){
+    this.setEnvelopeCreateModule(newModule, cdToken);
+    console.log('createModule$()/this.postData:', JSON.stringify(this.postData))
+    return this.svServer.proc(this.postData);
+  }
+
+  setEnvelopeCreateModule(data: any, cdToken: string) {
+    this.postData = {
+      ctx: data.ctx,
+      m: 'Moduleman',
+      c: 'Module',
+      a: 'Create',
+      dat: {
+        f_vals: [
+          {
+            data: data.savables
           }
         ],
         token: cdToken

@@ -118,12 +118,12 @@ export class HtmlElemService {
   // set element html
   async html(htmlCtx: HtmlCtx){
     const parent = htmlCtx.elementRef.nativeElement.querySelector(htmlCtx.selector) as HTMLElement;
+    let ret = false;
     if (parent) {
       parent.innerHTML = htmlCtx.srtHtml;
-      return true;
-    } else {
-      return false;
-    }
+      ret = true;
+    } 
+    return await ret;
   }
 }
 

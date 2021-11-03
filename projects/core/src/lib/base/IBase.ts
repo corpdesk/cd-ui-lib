@@ -20,25 +20,41 @@ export interface EnvConfig {
     SOCKET_IO_PORT: number; // push server port
 }
 
+// export interface CdResponse {
+//     app_state: {
+//         success: number;
+//         info: {
+//             messages: string;
+//             code: number;
+//             app_msg: any;
+//         };
+//         sess: {
+//             cd_token: string;
+//             jwt: string;
+//             p_sid: string;
+//             ttl: number;
+//         };
+//         cache: object;
+//     };
+//     data: [];
+// }
+
 export interface CdResponse {
-    app_state: {
-        success: number;
-        info: {
-            messages: string;
-            code: number;
-            app_msg: any;
-        };
-        sess: {
-            cd_token: string;
-            jwt: string;
-            p_sid: string;
-            ttl: number;
-        };
-        cache: object;
-    };
-    data: [];
+    app_state: IAppState;
+    data: any[];
 }
 
+export interface ICdResponse {
+    app_state: IAppState;
+    data: any[];
+}
+
+export interface IAppState {
+    success: boolean;
+    info: IRespInfo | null;
+    sess: ISessResp | null;
+    cache: object | null;
+}
 
 // cd request format
 export interface CdRequest {
@@ -51,24 +67,24 @@ export interface CdRequest {
 }
 
 // cd response format
-export interface CdResponse {
-    app_state: {
-        success: number;
-        info: {
-            messages: string;
-            code: number;
-            app_msg: any;
-        };
-        sess: {
-            cd_token: string;
-            jwt: string;
-            p_sid: string;
-            ttl: number;
-        };
-        cache: object;
-    };
-    data: [];
-}
+// export interface CdResponse {
+//     app_state: {
+//         success: number;
+//         info: {
+//             messages: string;
+//             code: number;
+//             app_msg: any;
+//         };
+//         sess: {
+//             cd_token: string;
+//             jwt: string;
+//             p_sid: string;
+//             ttl: number;
+//         };
+//         cache: object;
+//     };
+//     data: [];
+// }
 
 export interface IControllerContext {
     path: string;
@@ -92,23 +108,28 @@ export interface ICdRequest {
     args: object;
 }
 
-export interface ICdResponse {
-    app_state: IAppState;
-    data: object;
+export enum ModuleScope{
+    Sys = 0,
+    App = 1,
 }
 
-export interface IAppState {
-    success: boolean;
-    info: IRespInfo | null;
-    sess: ISessResp | null;
-    cache: object | null;
-}
+
+
+
+
+// export interface ISessResp {
+//     cd_token?: string | null;
+//     jwt?: string | null;
+//     ttl: number;
+// }
 
 export interface ISessResp {
-    cd_token?: string | null;
-    jwt?: string | null;
+    cd_token?: string;
+    userId?: number | null;
+    jwt?: string;
     ttl: number;
 }
+
 
 export interface IRespInfo {
     messages: string[];
@@ -126,6 +147,7 @@ export interface ICdPushEnvelop {
 }
 
 export interface IServiceInput {
+    svInstance: any;
     serviceModel: any;
     serviceModelInstance?: any;
     docName?: string;
@@ -199,6 +221,37 @@ export interface IQuery {
     where: object;
     take?: number;
     skip?: number;
+}
+
+export enum FieldType {
+    number = 0,
+    string = 1,
+    boolean = 2,
+    date = 3,
+    json = 4,
+    enum = 5,
+    action = 6,
+    geoLocation = 7,
+    decimal = 8,
+    any = 9,
+}
+
+export const INIT_CD_RESP = {
+    app_state: {
+        success: false,
+        info: {
+            messages: [],
+            code: '',
+            app_msg: '',
+        },
+        sess: {
+            cd_token: null,
+            jwt: '',
+            ttl: 0,
+        },
+        cache: {}
+    },
+    data: null
 }
 
 

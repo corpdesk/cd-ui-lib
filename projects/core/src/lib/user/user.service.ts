@@ -128,6 +128,7 @@ export class UserService {
        */
       const pushEnvelop: CdPushEnvelop = {
         pushRecepients: null,
+        pushData: null,
         emittEvent: null,
         triggerEvent: 'login',
         req: null,
@@ -150,7 +151,7 @@ export class UserService {
       a: 'GetModuleUserData',
       dat: {
         fields: null,
-        token: loginResp.app_state.sess.cd_token
+        token: loginResp.app_state.sess!.cd_token
       },
       args: null
     }

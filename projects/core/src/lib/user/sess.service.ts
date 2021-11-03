@@ -60,17 +60,17 @@ export class SessService {
   NB: svUseris not injected here but input as an argument
   ...otherwise cyclic error will be thrown
   */
-  createSess(res: any ,svMenu: any) {
+  createSess(res: any, svMenu: any) {
     console.log('starting SessService::createSess(res,svUser: UserService)');
     this.token = res.app_state.sess.cd_token;
-    this.setSess(res ,svMenu);
+    this.setSess(res, svMenu);
     // svUser.getUserData(res);
     this.svServer.token = res.app_state.sess.cd_token;
     this.isActive = true;
     this.setModulesData();
   }
 
-  setSess(res: any,svMenu: any) {
+  setSess(res: any, svMenu: any) {
     console.log('starting setSess(res: any)');
     this.isActive = true;
     this.appState = res.app_state;
@@ -82,48 +82,48 @@ export class SessService {
     // if (this.config.countdown) {
     //   this.countDown(this.getExprTime(ttl));
     // }
-    console.log('SessService::setSess()/res.data:' ,res.data)
+    console.log('SessService::setSess()/res.data:', res.data)
     const token = res.app_state.sess.cd_token;
     svMenu.getMenu$('cdMenu', res.data.menuData)
-    .subscribe((menu: any) => {
-      console.log('SessionService::setSess(res: any,svMenu: any)/menu:', menu);
-      // event emitter to parent (shell)
-      // this.emittMenu.emit(menu);
+      .subscribe((menu: any) => {
+        console.log('SessionService::setSess(res: any,svMenu: any)/menu:', menu);
+        // event emitter to parent (shell)
+        // this.emittMenu.emit(menu);
 
-      const sub: any = {
-        user_id: res.data.userData.userId,
-        sub_type_id: 7
-      };
-      this.pushRecepients.push(sub);
-      const pushEnvelop = {
-        pushRecepients: this.pushRecepients,
-        triggerEvent: 'login',
-        emittEvent: 'push-menu',
-        pushData: {m:menu,token:res.app_state.sess.cd_token},
-        req: this.setEnvelopeAuth(res.app_state.sess.cd_token),
-        resp: res
-      };
-      this.pushData('send-menu',pushEnvelop);
-      /**
-       * emittEvent is null because the purpose is to
-       * register user socket on successfull login.
-       * At the time of this note, no broadcast event is set
-       */
-      //  const pushEnvelop: CdPushEnvelop = {
-      //   pushRecepients: null,
-      //   emittEvent: null,
-      //   triggerEvent: 'login',
-      //   req: null,
-      //   resp: userDataResp
-      // };
-      // this.emitLogin(pushEnvelop);
-    })
-    
+        const sub: any = {
+          user_id: res.data.userData.userId,
+          sub_type_id: 7
+        };
+        this.pushRecepients.push(sub);
+        const pushEnvelop = {
+          pushRecepients: this.pushRecepients,
+          triggerEvent: 'login',
+          emittEvent: 'push-menu',
+          pushData: { m: menu, token: res.app_state.sess.cd_token },
+          req: this.setEnvelopeAuth(res.app_state.sess.cd_token),
+          resp: res
+        };
+        this.pushData('send-menu', pushEnvelop);
+        /**
+         * emittEvent is null because the purpose is to
+         * register user socket on successfull login.
+         * At the time of this note, no broadcast event is set
+         */
+        //  const pushEnvelop: CdPushEnvelop = {
+        //   pushRecepients: null,
+        //   emittEvent: null,
+        //   triggerEvent: 'login',
+        //   req: null,
+        //   resp: userDataResp
+        // };
+        // this.emitLogin(pushEnvelop);
+      })
+
     svMenu.init(res);
     localStorage.setItem(token, JSON.stringify(res.app_state));
   }
 
-  pushData(pushEvent:any, data:any) {
+  pushData(pushEvent: any, data: any) {
     switch (pushEvent) {
       case 'send-menu':
         this.svSocket.emit(pushEvent, data);
@@ -139,12 +139,12 @@ export class SessService {
       a: 'Login',
       dat: {
         f_vals: [
-            {
-                data: null
-            }
+          {
+            data: null
+          }
         ],
         token: cdToken
-    },
+      },
       args: null
     };
   }
@@ -276,9 +276,40 @@ export class SessService {
   Every time successfull response come from server, 
   it needs to update the client session to extend the Expiration time
   */
-  renewSess(res: any,svMenu: any) {
+  renewSess(res: any, svMenu: any) {
     console.log('starting renewSess(res)');
-    this.setSess(res,svMenu);
+    this.setSess(res, svMenu);
+  }
+
+  // initComponent(params: any, iClient: any) {
+  //   this.setCSess(params.token, iClient);
+  //   const asStr = localStorage.getItem(iClient.token);
+  //   if (asStr) {
+  //     iClient.jAppState = JSON.parse(asStr);
+  //     iClient.sess = iClient.jAppState.sess!;
+  //     iClient.rowId = params.rowId;
+  //     iClient.rowData = JSON.parse(params.rowData);
+  //     iClient.fields = JSON.parse(params.fields);
+  //     const nameField = iClient.fields.filter((f: any) => f.isNameField);
+  //     iClient.title = nameField[0].title;
+  //     iClient.initForms();
+  //   } else {
+  //     const params = {
+  //       queryParams: { msg: 'You need to login with privileges to access' },
+  //       skipLocationChange: true,
+  //       replaceUrl: false
+  //     };
+  //     iClient.router.navigate(['/user/login'], params);
+  //   }
+  //   //});
+  // }
+
+  setCSess(token: string, iClient: any) {
+    iClient.token = token;
+  }
+
+  getCSess(iClient: any) {
+    return iClient.token;
   }
 
   countDown(endTime: any) {
