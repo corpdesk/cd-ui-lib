@@ -14,5 +14,6 @@ export * from '@corpdesk/core/src/lib/comm';
 // export * from '@corpdesk/core/src/lib/sys/inte-ract';
 export * from '@corpdesk/core/src/lib/moduleman';
 export * from '@corpdesk/core/src/lib/user';
+export * from '@corpdesk/core/src/lib/fa';
 // export * from '@corpdesk/core/src/lib/scheduler';
 

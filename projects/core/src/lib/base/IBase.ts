@@ -46,7 +46,7 @@ export interface CdResponse {
 
 export interface ICdResponse {
     app_state: IAppState;
-    data: any[];
+    data: any;
 }
 
 export interface IAppState {

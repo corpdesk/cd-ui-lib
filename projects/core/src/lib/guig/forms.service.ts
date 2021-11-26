@@ -1,7 +1,10 @@
-import { Injectable } from '@angular/core';
+import { ElementRef, Injectable } from '@angular/core';
 import { ControlType } from './guig.model';
 import { FileDetector } from 'protractor';
-import { AWizardStep } from './guig.model';
+import { AWizardStep, ValidationError } from './guig.model';
+import { FormGroup, ValidationErrors } from '@angular/forms';
+import { fromEvent } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
 
 interface Rule {
   minChars?: number;
@@ -57,15 +60,30 @@ export class FormsService {
     });
   }
 
+  debounceInput$(elemInput: HTMLInputElement) {
+    return fromEvent(elemInput, 'keyup')
+      .pipe(
+        // get value
+        map((event: any) => {
+          return event.target.value;
+        })
+        // if character length greater then 2
+        , filter(res => res.length > 2 || res.length === 0)
+        // , filter(res => res.length > 2)
+        // Time in milliseconds between key events
+        , debounceTime(1000)
+        // If previous query is diffent from current   
+        , distinctUntilChanged()
+        // subscription for response
+      )
+  }
+
   getInpuVal(inputID: string) {
-    console.log('starting getInpuVal()');
-    console.log('inputID:', inputID);
     const elem = document.getElementById(inputID) as HTMLInputElement;
     return elem.value;
   }
 
   validateForm() {
-    console.log('starting validateForm()');
     this.vOutput = [];
     this.fFields.forEach(field => {
       this.validateField(field);
@@ -73,7 +91,6 @@ export class FormsService {
   }
 
   validateField(field: any) {
-    console.log('starting validateField()');
     for (const rule of Object.keys(field.rules)) {
       const ret = this.runRules(field, rule);
       this.vOutput.push({ fName: field.fieldName, valid: ret.valid, errMsg: ret.errMsg });
@@ -81,7 +98,6 @@ export class FormsService {
   }
 
   runRules(field: any, rule: any): FvOutput {
-    console.log('starting runRules()');
     const ruleValue = field.rules[rule];
     let ret: any = {
       fName: field.fieldName,
@@ -96,17 +112,9 @@ export class FormsService {
         ret = this.maxChars(field, rule);
         break;
       case 'mustChars':
-        console.log('switch/rule>>');
-        console.log(rule);
-        console.log('switch/field>>');
-        console.log(field);
         ret = this.mustChars(field);
         break;
       case 'minSelItems':
-        console.log('switch/rule>>');
-        console.log(rule);
-        console.log('switch/field>>');
-        console.log(field);
         ret = this.minSelItems(field, rule);
         break;
       default:
@@ -116,14 +124,7 @@ export class FormsService {
   }
 
   minChars(field: any, rule: any) {
-    console.log('starting minChars()');
-    console.log('field>>');
-    console.log(field);
-    console.log('rule>>');
-    console.log(rule);
     const ruleValue = field.rules[rule];
-    console.log('ruleValue>>');
-    console.log(ruleValue);
     let ret: any = {
       fName: field.name,
       valid: true,
@@ -141,7 +142,6 @@ export class FormsService {
   }
 
   maxChars(field: any, rule: any) {
-    console.log('starting maxChars()');
     const ruleValue = field.rules[rule];
     let ret = {
       fName: field.name,
@@ -183,7 +183,6 @@ export class FormsService {
   }
 
   minSelItems(field: any, rule: any) {
-    console.log('starting minSelItems()');
     const ruleValue = field.rules[rule];
     let ret = {
       fName: field.name,
@@ -261,9 +260,21 @@ export class FormsService {
     return controlType === ControlType.action;
   }
 
+  useDdlCountries(controlType: ControlType) {
+    return controlType === ControlType.ddlCountries;
+  }
+
+  useDdlIcons(controlType: ControlType) {
+    return controlType === ControlType.ddlIcons;
+  }
+
+  useDdlNotifications(controlType: ControlType) {
+    return controlType === ControlType.ddlNotifications;
+  }
+
   ////////////////////////////////////
   // STEPPER METHODS
-  canStepBack(index: number, step: AWizardStep){
+  canStepBack(index: number, step: AWizardStep) {
     return index > 0;
   }
 
@@ -274,18 +285,35 @@ export class FormsService {
    * @param cb // optional callback that can be used to validate foward movement
    * @returns 
    */
-  canStepFoward(index: number, steps: AWizardStep[], cb: any = null ){
+  canStepFoward(index: number, steps: AWizardStep[], cb: any = null) {
     let ret = false;
-    if(cb){
+    if (cb) {
       ret = cb();
     } else {
-      ret = index < (steps.length -1);
+      ret = index < (steps.length - 1);
     }
     return ret;
   }
 
-  isLastStep(index: number, steps: AWizardStep[] ){
-    return index === (steps.length -1);
+  isLastStep(index: number, steps: AWizardStep[]) {
+    return index === (steps.length - 1);
+  }
+
+  getFormValidationErrors(form: FormGroup): ValidationError[] {
+    const result: any = [];
+    Object.keys(form.controls).forEach(key => {
+      const controlErrors: ValidationErrors = form.get(key)!.errors!;
+      if (controlErrors) {
+        Object.keys(controlErrors).forEach(keyError => {
+          result.push({
+            'control': key,
+            'error': keyError,
+            'value': controlErrors[keyError]
+          });
+        });
+      }
+    });
+    return result;
   }
 
 }

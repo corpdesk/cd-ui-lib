@@ -34,10 +34,10 @@ export class IdleTimeoutComponent implements OnInit {
       observableArray$.push(fromEvent(x[0], x[1]))
     })
     this.mergedObservable$ = merge(...observableArray$);
-    this.createObserable();
+    this.createObsevable();
   }
-  createObserable(): void {
-    console.log('starting IdleTimeoutComponent::createObserable()')
+  createObsevable(): void {
+    console.log('starting IdleTimeoutComponent::createObsevable()')
     this._ngZone.runOutsideAngular(() => {
       this.observeable$ = this.mergedObservable$
         .pipe(
@@ -85,7 +85,7 @@ export class IdleTimeoutComponent implements OnInit {
 
   startTimer($event: any) {
     console.log('starting IdleTimeoutComponent::startTimer()')
-    this.createObserable();
+    this.createObsevable();
     console.log('subscription started');
   }
   stopTimer(event: any) {

@@ -162,6 +162,31 @@ export class MenuService {
     }
   }
 
+  createMenu$(newMenu:any, cdToken: string){
+    this.setEnvelopeCreateMenu(newMenu, cdToken);
+    console.log('createMenu$()/this.postData:', JSON.stringify(this.postData))
+    return this.svServer.proc(this.postData);
+  }
+
+  setEnvelopeCreateMenu(newMenu: any, cdToken: string) {
+    this.postData = {
+      ctx: newMenu.ctx,
+      m: 'Moduleman',
+      c: 'Menu',
+      a: 'Create',
+      dat: {
+        f_vals: [
+          {
+            cdObj: newMenu.cdObj,
+            data: newMenu.data
+          }
+        ],
+        token: cdToken
+      },
+      args: {}
+    };
+  }
+
   setMenuData(menuData: any) {
     console.log('setMenuData(menuData)/this.menuData:', menuData);
     this.menuData = menuData;

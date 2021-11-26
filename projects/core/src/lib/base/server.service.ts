@@ -3,7 +3,7 @@ import { shareReplay } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FileUploader } from 'ng2-file-upload';
 import { Observable } from 'rxjs';
-import { CdRequest, EnvConfig } from './IBase';
+import { CdRequest, EnvConfig, ICdResponse } from './IBase';
 
 @Injectable({
   providedIn: 'root'
@@ -46,7 +46,7 @@ export class ServerService {
   //   return this.http.post(url , params, this.options);
   // }
 
-  proc(params: CdRequest) {
+  proc(params: CdRequest){
     return this.http.post(this.env.apiEndpoint, params, this.options);
   }
 

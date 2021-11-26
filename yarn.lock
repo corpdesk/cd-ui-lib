@@ -183,7 +183,7 @@
     "symbol-observable" "4.0.0"
     "uuid" "8.3.2"
 
-"@angular/common@*", "@angular/common@^12.0.0", "@angular/common@^12.0.0 || ^13.0.0-0", "@angular/common@^12.0.3", "@angular/common@~12.0.3", "@angular/common@12.0.4":
+"@angular/common@*", "@angular/common@^12.0.0", "@angular/common@^12.0.0 || ^13.0.0-0", "@angular/common@^13.0.0", "@angular/common@~12.0.3", "@angular/common@12.0.4":
   "integrity" "sha512-P0l5OcDdJhsURakJXxV9tGbicY8a6fEBsB+9f4iTEm36Q1FO0/7RhMMlwUDBlNK37P1oi7pEUA0mRcFIx9TOLA=="
   "resolved" "https://registry.npmjs.org/@angular/common/-/common-12.0.4.tgz"
   "version" "12.0.4"
@@ -217,7 +217,7 @@
   dependencies:
     "tslib" "^2.1.0"
 
-"@angular/core@*", "@angular/core@^12.0.0", "@angular/core@^12.0.0 || ^13.0.0-0", "@angular/core@^12.0.3", "@angular/core@~12.0.3", "@angular/core@12.0.4":
+"@angular/core@*", "@angular/core@^12.0.0", "@angular/core@^12.0.0 || ^13.0.0-0", "@angular/core@^13.0.0", "@angular/core@~12.0.3", "@angular/core@12.0.4":
   "integrity" "sha512-KYFcFDot89F65CN3MzMEFoUPCVEZUkSQCLyxWfJAJT56Vtik6r91w6qwprFJ2wRk7SJ7018NLFwjZQIElj0s8A=="
   "resolved" "https://registry.npmjs.org/@angular/core/-/core-12.0.4.tgz"
   "version" "12.0.4"
@@ -1212,14 +1212,6 @@
   dependencies:
     "@babel/helper-validator-identifier" "^7.14.5"
     "to-fast-properties" "^2.0.0"
-
-"@corpdesk/core@^0.0.6":
-  "integrity" "sha512-uAbPWCTtmO4Sn0Y+j4RQspMbOxc0jEkxm9J411l3D3XGPjl4w5DCpC8P4JmH/lWgOaEqzPCHmL6dT228zRpmLg=="
-  "resolved" "https://registry.npmjs.org/@corpdesk/core/-/core-0.0.6.tgz"
-  "version" "0.0.6"
-  dependencies:
-    "moment" "^2.29.1"
-    "tslib" "^2.1.0"
 
 "@csstools/convert-colors@^1.4.0":
   "integrity" "sha512-5a6wqoJV/xEdbRNKVo6I4hO3VjyDq//8q2f9I6PBAvMesJHFauXDorcNCsr9RzvsZnaWi5NYCcfyqP1QeFHFbw=="
@@ -5630,6 +5622,13 @@
   "resolved" "https://registry.npmjs.org/ng2-search-filter/-/ng2-search-filter-0.5.1.tgz"
   "version" "0.5.1"
 
+"ngx-cookie-service@^13.0.0":
+  "integrity" "sha512-UGYFZ8izWqVTTq5M6j7dR59uYQTmKUn9ReI8O7PhzSSUrkvN/GNNpfq/P6QanTcpQeqdlgIq88EyzMM7dPRepQ=="
+  "resolved" "https://registry.npmjs.org/ngx-cookie-service/-/ngx-cookie-service-13.0.0.tgz"
+  "version" "13.0.0"
+  dependencies:
+    "tslib" "^2.0.0"
+
 "ngx-webstorage@^8.0.0":
   "integrity" "sha512-dpHgboSi6adnYpwiAQ2/PRJe8dcvSbM2qWTacTCUPVPeWlhLvTCtIl1GA9BNDiZzYuyA3dmXyqlcDl/Th9Pi2A=="
   "resolved" "https://registry.npmjs.org/ngx-webstorage/-/ngx-webstorage-8.0.0.tgz"
@@ -5910,6 +5909,11 @@
   "version" "5.5.0"
   dependencies:
     "is-wsl" "^1.1.0"
+
+"option@^0.2.4":
+  "integrity" "sha1-/Udc35jcq7PLOXo7pShP60Xtv+Q="
+  "resolved" "https://registry.npmjs.org/option/-/option-0.2.4.tgz"
+  "version" "0.2.4"
 
 "ora@^5.1.0":
   "integrity" "sha512-5b6Y85tPxZZ7QytO+BQzysW31HJku27cRIlkbAXaNx+BdcVi+LlRFmVXzeF6a7JCwJpyw5c4b+YSVImQIrBpuQ=="

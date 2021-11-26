@@ -1,6 +1,7 @@
 import { Type } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { FieldType, IQuery } from '@corpdesk/core/src/lib/base';
+import { Observable } from 'rxjs';
 
 export enum ControlType {
   input = 0,
@@ -11,22 +12,26 @@ export enum ControlType {
   selectMultiple = 5,
   dropDown = 6,
   searchDropDown = 7,
-  radioButton = 8,
-  dualRaido = 9,
-  dualSwitch = 10,
-  checkBox = 11,
-  toggleSwitch = 12,
-  ngToggle = 13,
-  rangeInput = 14,
-  dateSelector = 15,
-  upload = 16,
-  action = 17,
-  status = 18,
+  ddlCountries = 8,
+  ddlIcons = 9,
+  ddlNotifications = 10,
+  radioButton = 11,
+  dualRaido = 12,
+  dualSwitch = 13,
+  checkBox = 14,
+  toggleSwitch = 15,
+  ngToggle = 16,
+  rangeInput = 17,
+  dateSelector = 18,
+  upload = 19,
+  action = 20,
+  status = 21,
 }
 
 export interface FieldInfo {
   title: string;
   name: string;
+  primaryField?: string;
   type?: FieldType;
   index?: boolean;
   dbName?: string;
@@ -36,6 +41,7 @@ export interface FieldInfo {
   disabled?: boolean;
   show?: boolean;
   controlType: ControlType;
+  ddlInfo?: DdlInfo;
   controlData?: any[];
   formatt?: string;
   isNameField?: boolean;
@@ -46,6 +52,53 @@ export interface FieldInfo {
 export interface SelectData {
   value: string;
   text: string;
+}
+
+export interface DdlInfo {
+  config?: any;
+  header?: {
+    title: { lable: string; cls: string; action: any },
+    sideLink: { lable: string; cls: string; action: any },
+  };
+  footer?: { label: string; icon: string; action: any; };
+  selData$: Observable<any>;
+  selValueField: string;
+  selIndex: string;
+  selPlaceholder?: string;
+  ddlIconId?: string;
+  searchInputId?: string;
+  searchInputName?: string;
+  selectedValue?: string;
+  iconButtonId?: string;
+}
+
+export interface DdlIconItem {
+  cls: string;
+  action?: any;
+  numericLabel?: number;
+  icon: { cls: string; },
+  text: string;
+  id?: number;
+  tags: string;
+}
+
+export interface FaDbItem {
+  attributes: {
+    id: string;
+    membership: {
+      free: string[];
+      pro: string[];
+    },
+    styles: string[];
+    unicode: string;
+    voted: boolean;
+  },
+  id: string;
+  links: {
+    self: string;
+  },
+  type: string;
+  tags?: string;
 }
 
 interface PageElement { elemId: string; pageNumber: number; valid: boolean; }
@@ -110,11 +163,23 @@ export const DEFAULT_TPD: TPD = {
   activePage: 1,
 };
 
+/**
+ * will require refinement
+ * see NazTableService::hDdl(iClient: any)
+ *  menuName and menuGuid are freeks
+ */
 export interface DdlData {
-  menuName: string;
-  menuGuid: string;
-  navLocation: string;
-  actionType: ActionType;
+  config?: { suppressScrollX: boolean; wheelSpeed: any };
+  header?: {
+    title: { lable: 'Notifications', cls: '', action: null },
+    sideLink: { lable: 'View All', cls: '', action: null },
+  },
+  footer?: { label: 'View All', icon: '', action: null },
+  data?: any[],
+  menuName?: string;
+  menuGuid?: string;
+  navLocation?: string;
+  actionType?: ActionType;
   fn?: string;
 }
 
@@ -163,11 +228,18 @@ export interface AWizardModel {
 
 export interface AWizardStep {
   stepTitle: string;
+  stepItems: { prevButtonId?: string; nextButtonId?: string, lastButtonId?: string },
   tabPaneId: string;
   cardTitle: string;
   cardTitleDesc: string;
   module: string;
   controller: string;
   fields: FieldInfo[];
-  formGroup: FormGroup|null;
+  formGroup: FormGroup | null;
+}
+
+export interface ValidationError {
+  control: string;
+  error: string;
+  value: string;
 }

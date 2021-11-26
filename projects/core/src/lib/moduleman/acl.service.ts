@@ -6,42 +6,47 @@ import { SessService } from '@corpdesk/core/src/lib/user';
     providedIn: 'root',
 })
 export class AclService {
+    debug = true;
     postData: CdRequest;
     constructor(
         private svSess: SessService,
     ) { }
 
     async initComponent(params: any, iClient: any) {
-        console.log('starting AclService::initComponent()')
+        this.log('01','initComponent')
         this.svSess.setCSess(params.token, iClient);
-        console.log('AclService::initComponent()/01')
+        this.log('02','initComponent')
         const asStr = localStorage.getItem(iClient.token);
-        console.log('AclService::initComponent()/02')
+        this.log('03','initComponent')
         let ret = false;
         if (asStr) {
-            console.log('AclService::initComponent()/04')
+            this.log('04','initComponent')
             iClient.jAppState = JSON.parse(asStr);
+            this.log('05','initComponent')
             iClient.sess = iClient.jAppState.sess!;
-            if ('rowId' in iClient) {
+            this.log('06','initComponent')
+            if ('rowId' in params) {
+                this.log('07','initComponent')
                 iClient.rowId = params.rowId;
             }
-            console.log('AclService::initComponent()/05')
+            this.log('08','initComponent')
+            this.log('09','initComponent')
             if ('rowData' in params) {
+                this.log('01','initComponent')
                 iClient.rowData = JSON.parse(params.rowData);
             }
-            console.log('AclService::initComponent()/06')
+            this.log('10','initComponent')
             if ('fields' in params) {
-                console.log('AclService::initComponent()/07')
+                this.log('11','initComponent')
                 iClient.fields = JSON.parse(params.fields);
-                console.log('AclService::initComponent()/08')
-                console.log('AclService::initComponent()/09')
+                this.log('12','initComponent')
                 const nameField = iClient.fields.filter((f: any) => f.isNameField);
-                console.log('AclService::initComponent()/10')
+                this.log('13','initComponent')
                 iClient.title = nameField[0].title;
-                console.log('AclService::initComponent()/11')
+                this.log('14','initComponent')
             }
+            this.log('15','initComponent')
             ret = true;
-            console.log('AclService::initComponent()/12')
         } else {
             const params = {
                 queryParams: { msg: 'You need to login with privileges to access' },
@@ -51,7 +56,13 @@ export class AclService {
             iClient.router.navigate(['/user/login'], params);
             ret = false
         }
-        console.log('AclService::initComponent()/05')
         return await ret;
     }
+
+    log(msg:string, fx:string){
+        if(this.debug){
+            console.log(`cd-ui-lib/AclService::${fx}()/${msg}:`)
+        }
+    }
+    
 }

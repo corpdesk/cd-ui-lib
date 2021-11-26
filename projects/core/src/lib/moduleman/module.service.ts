@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ServerService, IQuery, CdRequest } from '@corpdesk/core/src/lib/base';
+import { ServerService, IQuery, CdRequest, ICdResponse } from '@corpdesk/core/src/lib/base';
 
 @Injectable({
   providedIn: 'root',
@@ -9,6 +9,52 @@ export class ModuleService {
   constructor(
     private svServer: ServerService
   ) { }
+
+  /**
+   * 
+   * @param newModule 
+   * {
+        "ctx": "Sys",
+        "m": "Moduleman",
+        "c": "Module",
+        "a": "Create",
+        "dat": {
+            "f_vals": [
+                {
+                    "data": {
+                        "moduleName": "xxx30102021",
+                        "isSysModule": false
+                    }
+                }
+            ],
+            "token": "3ffd785f-e885-4d37-addf-0e24379af338"
+        },
+        "args": {}
+    }
+   */
+  createModule$(newModule: any, cdToken: string) {
+    this.setEnvelopeCreateModule(newModule, cdToken);
+    console.log('createModule$()/this.postData:', JSON.stringify(this.postData))
+    return this.svServer.proc(this.postData);
+  }
+
+  setEnvelopeCreateModule(data: any, cdToken: string) {
+    this.postData = {
+      ctx: data.ctx,
+      m: 'Moduleman',
+      c: 'Module',
+      a: 'Create',
+      dat: {
+        f_vals: [
+          {
+            data: data.savables
+          }
+        ],
+        token: cdToken
+      },
+      args: {}
+    };
+  }
 
   getModules(q: IQuery, cdToken: string) {
     this.setEnvelopeModule(q, cdToken);
@@ -80,52 +126,6 @@ export class ModuleService {
         f_vals: [
           {
             query: q
-          }
-        ],
-        token: cdToken
-      },
-      args: {}
-    };
-  }
-
-  /**
-   * 
-   * @param newModule 
-   * {
-        "ctx": "Sys",
-        "m": "Moduleman",
-        "c": "Module",
-        "a": "Create",
-        "dat": {
-            "f_vals": [
-                {
-                    "data": {
-                        "moduleName": "xxx30102021",
-                        "isSysModule": false
-                    }
-                }
-            ],
-            "token": "3ffd785f-e885-4d37-addf-0e24379af338"
-        },
-        "args": {}
-    }
-   */
-  createModule$(newModule:any, cdToken: string){
-    this.setEnvelopeCreateModule(newModule, cdToken);
-    console.log('createModule$()/this.postData:', JSON.stringify(this.postData))
-    return this.svServer.proc(this.postData);
-  }
-
-  setEnvelopeCreateModule(data: any, cdToken: string) {
-    this.postData = {
-      ctx: data.ctx,
-      m: 'Moduleman',
-      c: 'Module',
-      a: 'Create',
-      dat: {
-        f_vals: [
-          {
-            data: data.savables
           }
         ],
         token: cdToken

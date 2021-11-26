@@ -7,5 +7,6 @@ export * from './html-elem.service';
 export * from './models/html.model';
 export * from './idle-timeout.service';
 export * from './forms.service';
+export * from './language.service';
 // export * from './idle-timeout.component';
 // export * from './router-guard.service';

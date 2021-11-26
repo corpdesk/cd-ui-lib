@@ -161,6 +161,12 @@ Angular router query parameters:
 - delete item
 - hide/show column
 
+26/11/2021
+- enhance form builder for create menu
+- validation for save module
+- set form validation messages
+- save menu
+
 03/11/2021
 - support for create component
 
