@@ -28,6 +28,25 @@ export enum ControlType {
   status = 21,
 }
 
+/**
+ * define where a field item can be applied
+ * eg a field item can be applied on create form but
+ * is not applicable for table generation
+ */
+export enum FieldFor {
+  createForm = 0,
+  tableDisplay = 1,
+  editForm = 2,
+  deleteForm = 3,
+}
+
+export interface ControlFor {
+  fieldFor: FieldFor;
+  controlType: ControlType;
+}
+
+
+
 export interface FieldInfo {
   title: string;
   name: string;
@@ -40,7 +59,7 @@ export interface FieldInfo {
   savable?: boolean;
   disabled?: boolean;
   show?: boolean;
-  controlType: ControlType;
+  controls: ControlFor[];
   ddlInfo?: DdlInfo;
   controlData?: any[];
   formatt?: string;
@@ -195,7 +214,7 @@ export interface GuigTableCol {
   tField?: string; // the field name used for updating base table
   dataType?: string;
   icon?: string;
-  controlType: string;
+  controlTytypepe: string;
   action?: string;
   editable?: boolean;
   disabled?: boolean;
@@ -243,3 +262,5 @@ export interface ValidationError {
   error: string;
   value: string;
 }
+
+

@@ -1,6 +1,5 @@
-import { ElementRef, Injectable } from '@angular/core';
-import { ControlType } from './guig.model';
-import { FileDetector } from 'protractor';
+import { Injectable } from '@angular/core';
+import { ControlFor, FieldFor, FieldInfo, ControlType } from './guig.model';
 import { AWizardStep, ValidationError } from './guig.model';
 import { FormGroup, ValidationErrors } from '@angular/forms';
 import { fromEvent } from 'rxjs';
@@ -216,61 +215,117 @@ export class FormsService {
     this.fFields = [];
   }
 
-  useSelect(controlType: ControlType) {
-    return controlType === ControlType.select;
+  useSelect(controls: ControlFor[]) {
+    return this.createFormControl(controls) === ControlType.select;
   }
 
-  useSearchDropDown(controlType: ControlType) {
-    return controlType === ControlType.searchDropDown;
+  useSearchDropDown(controls: ControlFor[]) {
+    return this.createFormControl(controls) === ControlType.searchDropDown;
   }
 
-  useSelectMultiple(controlType: ControlType) {
-    return controlType === ControlType.selectMultiple;
+  useSelectMultiple(controls: ControlFor[]) {
+    return this.createFormControl(controls) === ControlType.selectMultiple;
   }
 
-  useTextArea(controlType: ControlType) {
-    return controlType === ControlType.textArea;
+  useTextArea(controls: ControlFor[]) {
+    return this.createFormControl(controls) === ControlType.textArea;
   }
 
-  useText(controlType: ControlType) {
-    return controlType === ControlType.text;
+  useText(controls: ControlFor[]) {
+    return this.createFormControl(controls) === ControlType.text;
   }
 
-  useUpload(controlType: ControlType) {
-    return controlType === ControlType.upload;
+  useUpload(controls: ControlFor[]) {
+    return this.createFormControl(controls) === ControlType.upload;
   }
 
-  useToggleSwitch(controlType: ControlType) {
-    return controlType === ControlType.toggleSwitch;
+  useToggleSwitch(controls: ControlFor[]) {
+    return this.createFormControl(controls) === ControlType.toggleSwitch;
   }
 
-  useNgToggle(controlType: ControlType) {
-    return controlType === ControlType.ngToggle;
+  useNgToggle(controls: ControlFor[]) {
+    return this.createFormControl(controls) === ControlType.ngToggle;
   }
 
-  useDualSwitch(controlType: ControlType) {
-    return controlType === ControlType.dualSwitch;
+  useDualSwitch(controls: ControlFor[]) {
+    return this.createFormControl(controls) === ControlType.dualSwitch;
   }
 
-  useDualRadio(controlType: ControlType) {
-    return controlType === ControlType.dualRaido;
+  useDualRadio(controls: ControlFor[]) {
+    return this.createFormControl(controls) === ControlType.dualRaido;
   }
 
-  useAction(controlType: ControlType) {
-    return controlType === ControlType.action;
+  useAction(controls: ControlFor[]) {
+    return this.createFormControl(controls) === ControlType.action;
   }
 
-  useDdlCountries(controlType: ControlType) {
-    return controlType === ControlType.ddlCountries;
+  useDdlCountries(controls: ControlFor[]) {
+    return this.createFormControl(controls) === ControlType.ddlCountries;
   }
 
-  useDdlIcons(controlType: ControlType) {
-    return controlType === ControlType.ddlIcons;
+  useDdlIcons(controls: ControlFor[]) {
+    return this.createFormControl(controls) === ControlType.ddlIcons;
   }
 
-  useDdlNotifications(controlType: ControlType) {
-    return controlType === ControlType.ddlNotifications;
+  useDdlNotifications(controls: ControlFor[]) {
+    return this.createFormControl(controls) === ControlType.ddlNotifications;
   }
+
+  // useSelect(controlType: ControlType) {
+  //   return controlType === ControlType.select;
+  // }
+
+  // useSearchDropDown(controlType: ControlType) {
+  //   return controlType === ControlType.searchDropDown;
+  // }
+
+  // useSelectMultiple(controlType: ControlType) {
+  //   return controlType === ControlType.selectMultiple;
+  // }
+
+  // useTextArea(controlType: ControlType) {
+  //   return controlType === ControlType.textArea;
+  // }
+
+  // useText(controlType: ControlType) {
+  //   return controlType === ControlType.text;
+  // }
+
+  // useUpload(controlType: ControlType) {
+  //   return controlType === ControlType.upload;
+  // }
+
+  // useToggleSwitch(controlType: ControlType) {
+  //   return controlType === ControlType.toggleSwitch;
+  // }
+
+  // useNgToggle(controlType: ControlType) {
+  //   return controlType === ControlType.ngToggle;
+  // }
+
+  // useDualSwitch(controlType: ControlType) {
+  //   return controlType === ControlType.dualSwitch;
+  // }
+
+  // useDualRadio(controlType: ControlType) {
+  //   return controlType === ControlType.dualRaido;
+  // }
+
+  // useAction(controlType: ControlType) {
+  //   return controlType === ControlType.action;
+  // }
+
+  // useDdlCountries(controlType: ControlType) {
+  //   return controlType === ControlType.ddlCountries;
+  // }
+
+  // useDdlIcons(controlType: ControlType) {
+  //   return controlType === ControlType.ddlIcons;
+  // }
+
+  // useDdlNotifications(controlType: ControlType) {
+  //   return controlType === ControlType.ddlNotifications;
+  // }
 
   ////////////////////////////////////
   // STEPPER METHODS
@@ -314,6 +369,64 @@ export class FormsService {
       }
     });
     return result;
+  }
+
+  filterByFieldFor(model: FieldInfo[], ff: FieldFor){
+    // return model.filter(f => f.controls.every(c => c.fieldFor === ff));
+    return model.filter(f => model.filter(f => this.isFieldFor(f,FieldFor.createForm)))
+  }
+
+  isFieldFor(field:FieldInfo, ff: FieldFor){
+    return field.controls.filter(c => c.fieldFor === ff).length > 0;
+  }
+
+/**
+ * extract fields required for create form
+ * @param model 
+ * @returns 
+ */
+  createFields(model: FieldInfo[]): FieldInfo[] {
+    // return model.filter(f => f.controls.filter(cf => cf.fieldFor === FieldFor.createForm));
+    return this.filterByFieldFor(model, FieldFor.createForm)
+  }
+
+  tableDisplayFields(model: FieldInfo[]): FieldInfo[] {
+    // return model.filter(f => f.controls.filter(cf => cf.fieldFor === FieldFor.createForm));
+    return this.filterByFieldFor(model, FieldFor.tableDisplay)
+  }
+
+  isTableDisplayField(field: FieldInfo){
+    return field.controls.filter(c => c.fieldFor === FieldFor.tableDisplay).length > 0;
+  }
+
+  editFields(model: FieldInfo[]): FieldInfo[] {
+    // return model.filter(f => f.controls.filter(cf => cf.fieldFor === FieldFor.createForm));
+    return this.filterByFieldFor(model, FieldFor.editForm)
+  }
+
+  deleteFields(model: FieldInfo[]): FieldInfo[] {
+    // return model.filter(f => f.controls.filter(cf => cf.fieldFor === FieldFor.createForm));
+    return this.filterByFieldFor(model, FieldFor.deleteForm)
+  }
+
+  tableDisplayControl(controls: ControlFor[]) {
+    return controls.filter(c => c.fieldFor === FieldFor.tableDisplay)
+      .map(c => c.controlType)[0];
+  }
+
+  createFormControl(controls: ControlFor[]): ControlType {
+    return controls.filter(c => c.fieldFor === FieldFor.createForm)
+      .map(c => c.controlType)[0];
+  }
+
+  editFormControl(controls: ControlFor[]): ControlType {
+    return controls.filter(c => c.fieldFor === FieldFor.editForm)
+      .map(c => c.controlType)[0];
+  }
+
+  deleteFormControl(controls: ControlFor[]): ControlType {
+    return controls.filter(c => c.fieldFor === FieldFor.deleteForm)
+      .map(c => c.controlType)[0];
   }
 
 }

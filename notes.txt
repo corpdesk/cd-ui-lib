@@ -161,6 +161,12 @@ Angular router query parameters:
 - delete item
 - hide/show column
 
+29/11/2021
+- set field filter for different dispplays
+        eg this.fields = svForms.filterByFieldFor(ModuleModel,FieldFor.createForm)
+- set up menu - CRUD
+        - automate setting of next, prev, finnish buttons
+
 26/11/2021
 - enhance form builder for create menu
 - validation for save module
