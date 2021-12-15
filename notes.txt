@@ -161,6 +161,9 @@ Angular router query parameters:
 - delete item
 - hide/show column
 
+15/12/2021
+- optimize modules CRUD
+
 29/11/2021
 - set field filter for different dispplays
         eg this.fields = svForms.filterByFieldFor(ModuleModel,FieldFor.createForm)

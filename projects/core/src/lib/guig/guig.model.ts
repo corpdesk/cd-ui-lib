@@ -1,6 +1,6 @@
 import { Type } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { FieldType, IQuery } from '@corpdesk/core/src/lib/base';
+import { AbstractControlOptions, FormBuilder, FormGroup } from '@angular/forms';
+import { FieldType, IQuery, IAppState, ISessResp } from '@corpdesk/core/src/lib/base';
 import { Observable } from 'rxjs';
 
 export enum ControlType {
@@ -57,6 +57,7 @@ export interface FieldInfo {
   searchable?: boolean;
   fetchable?: boolean;
   savable?: boolean;
+  updateable?: boolean;
   disabled?: boolean;
   show?: boolean;
   controls: ControlFor[];
@@ -66,11 +67,13 @@ export interface FieldInfo {
   isNameField?: boolean;
   ActionType?: ActionType;
   Fn?: string;
-}
-
-export interface SelectData {
-  value: string;
-  text: string;
+  /**
+   * formControlsConfig:
+   * used by angular formBuilder to output the form group
+   * the data also controlls form validation
+   * - the type defined below is taken from angular input for form builder
+   */
+  formControlsConfig?: { [key: string]: any; }, options?: AbstractControlOptions | null | undefined;
 }
 
 export interface DdlInfo {
@@ -91,6 +94,16 @@ export interface DdlInfo {
   iconButtonId?: string;
 }
 
+export interface SelectData {
+  value: string;
+  text: string;
+}
+
+export interface EmittedDdlSelection {
+  step: AWizardStep | null;
+  controlName: string;
+}
+
 export interface DdlIconItem {
   cls: string;
   action?: any;
@@ -100,6 +113,16 @@ export interface DdlIconItem {
   id?: number;
   tags: string;
 }
+
+export interface DdlCtx {
+  getFn$: Observable<any> | null;
+  selIndex: string;
+  selValueField: string;
+  controlName: string;
+  fetchFields: string[];
+  step: AWizardStep | null;
+  token: string | null;
+};
 
 export interface FaDbItem {
   attributes: {
@@ -261,6 +284,84 @@ export interface ValidationError {
   control: string;
   error: string;
   value: string;
+}
+
+const f: FieldInfo[] = [{
+  name: '',
+  title: '',
+  type: FieldType.any,
+  controls: []
+}];
+
+const ws: AWizardStep = {
+  stepTitle: '',
+  stepItems: {},
+  tabPaneId: '',
+  cardTitle: '',
+  cardTitleDesc: '',
+  module: '',
+  controller: '',
+  formGroup: null,
+  fields: []
+};
+
+const wm: AWizardModel = {
+  name: '',
+  steps: []
+}
+
+const fb = new FormBuilder();
+const frm: FormGroup = fb.group({});
+const bc = [{ label: '' }, { label: '', active: true }]
+
+const d = {
+  title: '',
+  subTitle: '',
+  fields: f,
+  step: ws,
+  wizardModel: wm,
+  rowId: 0,
+  rowData: null,
+  form: frm
+}
+
+const s: ISessResp = {
+  cd_token: '',
+  ttl: 600,
+  userId: null,
+  jwt: '',
+}
+
+const as: IAppState = {
+  success: false,
+  info: null,
+  sess: null,
+  cache: null,
+}
+
+/**
+ * for use in base model
+ * to contain common items
+ * whether component is
+ * create, list, edit, or delet
+ */
+export interface BaseModelCtx{
+  create?: object,
+  list?: object,
+  edit?: object,
+  delete?: object
+}
+
+export class BaseModel {
+  token = '';
+  jAppState = as;
+  sess = s;
+  data = d;
+  breadCrumbItems: Array<{}> = bc;
+  ctx:BaseModelCtx;
+  constructor(){
+
+  }
 }
 
 

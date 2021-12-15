@@ -74,10 +74,10 @@ export class UserService {
   // }
 
   auth$(authData: IAuthData) {
-    console.log('auth$(authData: AuthData)');
+    // console.log('auth$(authData: AuthData)');
     delete authData.rememberMe;
     this.setEnvelopeAuth(authData);
-    console.log('Submit()/this.postData:', JSON.stringify(this.postData))
+    // console.log('Submit()/this.postData:', JSON.stringify(this.postData))
     return this.svServer.proc(this.postData);
   }
 
@@ -101,18 +101,18 @@ export class UserService {
 
 
   getUserData(loginResp: CdResponse) {
-    console.log('starting UserService::getUserData()');
-    console.log('UserService::getUserData()/loginResp:', loginResp);
+    // console.log('starting UserService::getUserData()');
+    // console.log('UserService::getUserData()/loginResp:', loginResp);
     this.setUserData(loginResp);
   }
 
   setUserData(loginResp: any) {
-    console.log('starting UserService::setUserData(loginResp)');
-    console.log('UserService::setUserData(res)/loginResp:', loginResp);
+    // console.log('starting UserService::setUserData(loginResp)');
+    // console.log('UserService::setUserData(res)/loginResp:', loginResp);
     this.setEnvelopUserDataPost(loginResp);
-    console.log('UserService::setUserData(res)/this.postData:', JSON.stringify(this.postData));
+    // console.log('UserService::setUserData(res)/this.postData:', JSON.stringify(this.postData));
     this.svServer.proc(this.postData).subscribe((userDataResp: any) => {
-      console.log('UserService::setUserData(res)/userDataResp:', userDataResp);
+      // console.log('UserService::setUserData(res)/userDataResp:', userDataResp);
       // this.svMenu.init(userDataResp);
       this.init(userDataResp);
       // this.svNotif.init(userDataResp);
@@ -139,8 +139,8 @@ export class UserService {
   }
 
   setEnvelopUserDataPost(loginResp: CdResponse) {
-    console.log('starting UserService::setUserDataPost()');
-    console.log('setEnvelopUserDataPost/loginResp:', loginResp.app_state)
+    // console.log('starting UserService::setUserDataPost()');
+    // console.log('setEnvelopUserDataPost/loginResp:', loginResp.app_state)
     /*
     set post data
     */
@@ -160,9 +160,9 @@ export class UserService {
   
 
   getUsersObsv(f: CdFilter[] | null) {
-    console.log('starting getUsersObsv()');
+    // console.log('starting getUsersObsv()');
     this.setEnvelopeUsers(f);
-    console.log('this.postData:', JSON.stringify(this.postData));
+    // console.log('this.postData:', JSON.stringify(this.postData));
     /*
     post request to server and return observable
     */

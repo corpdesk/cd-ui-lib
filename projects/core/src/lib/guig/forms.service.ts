@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { ControlFor, FieldFor, FieldInfo, ControlType } from './guig.model';
+import { ControlFor, FieldFor, FieldInfo, ControlType, AWizardModel } from './guig.model';
 import { AWizardStep, ValidationError } from './guig.model';
 import { FormGroup, ValidationErrors } from '@angular/forms';
 import { fromEvent } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
+// import { AWizardModel } from '@corpdesk/core';
 
 interface Rule {
   minChars?: number;
@@ -371,62 +372,146 @@ export class FormsService {
     return result;
   }
 
-  filterByFieldFor(model: FieldInfo[], ff: FieldFor){
+  /**
+   * filter fields: FieldInfo[] by FieldFor
+   * @param model 
+   * @param ff 
+   * @returns 
+   */
+  filterByFieldFor(model: FieldInfo[], ff: FieldFor) {
+    // console.log('starting FormService::filterByFieldFor()')
     // return model.filter(f => f.controls.every(c => c.fieldFor === ff));
-    return model.filter(f => model.filter(f => this.isFieldFor(f,FieldFor.createForm)))
+    return model.filter(f => model.filter((f: FieldInfo) => {
+      const isFF = this.isFieldFor(f, ff);
+      console.log()
+      if (isFF) {
+        switch (ff) {
+          case FieldFor.createForm:
+            // console.log('ff = FieldFor.createForm')
+            // console.log('FormService::isFieldFor/ff:', ff)
+            // console.log('FormService::isFieldFor/f.name:', f.name)
+            // console.log('FormService::isFieldFor/f.controls:', f.controls)
+            break;
+          case FieldFor.tableDisplay:
+            // console.log('ff = FieldFor.tableDisplay')
+            // console.log('FormService::isFieldFor/ff:', ff)
+            // console.log('FormService::isFieldFor/f.name:', f.name)
+            // console.log('FormService::isFieldFor/f.controls:', f.controls)
+            break;
+        }
+        return f;
+      } else {
+        return false;
+      }
+    }))
+    
   }
 
-  isFieldFor(field:FieldInfo, ff: FieldFor){
-    return field.controls.filter(c => c.fieldFor === ff).length > 0;
+  isFieldFor(field: FieldInfo, ff: FieldFor) {
+    // console.log('FormService::isFieldFor/field:', field)
+    // console.log('FormService::isFieldFor/ff:', ff)
+    // switch (ff) {
+    //   case FieldFor.createForm:
+    //     console.log('ff = FieldFor.createForm')
+    //     console.log('FormService::isFieldFor/field.name:', field.name)
+    //     console.log('FormService::isFieldFor/field.controls:', field.controls)
+    //     break;
+    //   case FieldFor.tableDisplay:
+    //     console.log('ff = FieldFor.tableDisplay')
+    //     console.log('FormService::isFieldFor/field.name:', field.name)
+    //     console.log('FormService::isFieldFor/field.controls:', field.controls)
+    //     break;
+    // }
+    const result = field.controls.filter(
+      (c: any) => {
+        if (c.fieldFor === ff) {
+          // console.log('FormService::isFieldFor/field.name:', field.name)
+          // console.log('FormService::isFieldFor/c.fieldFor:', c.fieldFor)
+          // console.log('FormService::isFieldFor/ff:', ff)
+          return c;
+        }
+      });
+    // console.log('FormService::isFieldFor/result:', result)
+    return result.length > 0;
   }
 
-/**
- * extract fields required for create form
- * @param model 
- * @returns 
- */
-  createFields(model: FieldInfo[]): FieldInfo[] {
-    // return model.filter(f => f.controls.filter(cf => cf.fieldFor === FieldFor.createForm));
-    return this.filterByFieldFor(model, FieldFor.createForm)
+  filterByAttribute(model: { [key: string]: any }[], attr: string) {
+    return model.filter((f => f[attr])).map(f => f.name)
   }
 
-  tableDisplayFields(model: FieldInfo[]): FieldInfo[] {
-    // return model.filter(f => f.controls.filter(cf => cf.fieldFor === FieldFor.createForm));
-    return this.filterByFieldFor(model, FieldFor.tableDisplay)
-  }
+  // /**
+  //  * extract fields required for create form
+  //  * @param model 
+  //  * @returns 
+  //  */
+  //   createFields(model: FieldInfo[]): FieldInfo[] {
+  //     // return model.filter(f => f.controls.filter(cf => cf.fieldFor === FieldFor.createForm));
+  //     return this.filterByFieldFor(model, FieldFor.createForm)
+  //   }
 
-  isTableDisplayField(field: FieldInfo){
-    return field.controls.filter(c => c.fieldFor === FieldFor.tableDisplay).length > 0;
-  }
+  //   tableDisplayFields(model: FieldInfo[]): FieldInfo[] {
+  //     // return model.filter(f => f.controls.filter(cf => cf.fieldFor === FieldFor.createForm));
+  //     return this.filterByFieldFor(model, FieldFor.tableDisplay)
+  //   }
 
-  editFields(model: FieldInfo[]): FieldInfo[] {
-    // return model.filter(f => f.controls.filter(cf => cf.fieldFor === FieldFor.createForm));
-    return this.filterByFieldFor(model, FieldFor.editForm)
-  }
+  //   isTableDisplayField(field: FieldInfo){
+  //     return field.controls.filter(c => c.fieldFor === FieldFor.tableDisplay).length > 0;
+  //   }
 
-  deleteFields(model: FieldInfo[]): FieldInfo[] {
-    // return model.filter(f => f.controls.filter(cf => cf.fieldFor === FieldFor.createForm));
-    return this.filterByFieldFor(model, FieldFor.deleteForm)
-  }
+  //   editFields(model: FieldInfo[]): FieldInfo[] {
+  //     // return model.filter(f => f.controls.filter(cf => cf.fieldFor === FieldFor.createForm));
+  //     return this.filterByFieldFor(model, FieldFor.editForm)
+  //   }
 
-  tableDisplayControl(controls: ControlFor[]) {
-    return controls.filter(c => c.fieldFor === FieldFor.tableDisplay)
-      .map(c => c.controlType)[0];
-  }
+  //   deleteFields(model: FieldInfo[]): FieldInfo[] {
+  //     // return model.filter(f => f.controls.filter(cf => cf.fieldFor === FieldFor.createForm));
+  //     return this.filterByFieldFor(model, FieldFor.deleteForm)
+  //   }
+
+  //   tableDisplayControl(controls: ControlFor[]) {
+  //     return controls.filter(c => c.fieldFor === FieldFor.tableDisplay)
+  //       .map(c => c.controlType)[0];
+  //   }
 
   createFormControl(controls: ControlFor[]): ControlType {
     return controls.filter(c => c.fieldFor === FieldFor.createForm)
       .map(c => c.controlType)[0];
   }
 
-  editFormControl(controls: ControlFor[]): ControlType {
-    return controls.filter(c => c.fieldFor === FieldFor.editForm)
+  // editFormControl(controls: ControlFor[]): ControlType {
+  //   return controls.filter(c => c.fieldFor === FieldFor.editForm)
+  //     .map(c => c.controlType)[0];
+  // }
+
+  filterControlsByFieldFor(controls: ControlFor[], ff: FieldFor): ControlType {
+    return controls.filter(c => c.fieldFor === ff)
       .map(c => c.controlType)[0];
   }
 
-  deleteFormControl(controls: ControlFor[]): ControlType {
-    return controls.filter(c => c.fieldFor === FieldFor.deleteForm)
-      .map(c => c.controlType)[0];
+  filterStepsByController(wizardModel: AWizardModel, controllerName: string): AWizardStep[] {
+    return wizardModel.steps!.filter(s => s.controller === controllerName)
   }
+
+  /**
+   * Extract formControlConfiguration from fields data
+   * @param model 
+   * @returns 
+   */
+  getFormControlConfig(model: FieldInfo[]): { [key: string]: any } {
+    const formControlsConfig = model
+      .filter(f => f.formControlsConfig)
+      .map(f => { return { field: f.name, value: f.formControlsConfig }; });
+    const modForm: { [key: string]: any } = {};
+    formControlsConfig
+      .forEach((config) => {
+        modForm[config.field] = config.value;
+      })
+    return modForm;
+  }
+
+  //   deleteFormControl(controls: ControlFor[]): ControlType {
+  //     return controls.filter(c => c.fieldFor === FieldFor.deleteForm)
+  //       .map(c => c.controlType)[0];
+  //   }
 
 }

@@ -155,8 +155,8 @@ export class MenuService {
   init(userDataResp: any) {
     if (userDataResp) {
       this.userData = userDataResp;
-      console.log('MenuService::init()/dat:', userDataResp);
-      console.log('MenuService::init()/res.data.menuData:', userDataResp.data.menuData);
+      // console.log('MenuService::init()/dat:', userDataResp);
+      // console.log('MenuService::init()/res.data.menuData:', userDataResp.data.menuData);
       this.menuData = userDataResp.data.menuData;
       this.processMenu(userDataResp.data.menuData);
     }
@@ -164,7 +164,7 @@ export class MenuService {
 
   createMenu$(newMenu:any, cdToken: string){
     this.setEnvelopeCreateMenu(newMenu, cdToken);
-    console.log('createMenu$()/this.postData:', JSON.stringify(this.postData))
+    // console.log('createMenu$()/this.postData:', JSON.stringify(this.postData))
     return this.svServer.proc(this.postData);
   }
 
@@ -188,13 +188,13 @@ export class MenuService {
   }
 
   setMenuData(menuData: any) {
-    console.log('setMenuData(menuData)/this.menuData:', menuData);
+    // console.log('setMenuData(menuData)/this.menuData:', menuData);
     this.menuData = menuData;
   }
 
   async processMenu(menuData: any) {
-    console.log('starting processMenu()');
-    console.log('PagesComponent::processMenu()/svMenu.menuData', this.menuData);
+    // console.log('starting processMenu()');
+    // console.log('PagesComponent::processMenu()/svMenu.menuData', this.menuData);
     /**
      * set the menu as per @cd/guig/guig-context setting
      * - allowing us to run the project in different modes
@@ -206,7 +206,7 @@ export class MenuService {
     let filteredMenu: any;
     let menuFeed;
     let ctx = this.gc.getMode().name;
-    console.log('MenuService::processMenu(menuData: any)/ctx:', ctx);
+    // console.log('MenuService::processMenu(menuData: any)/ctx:', ctx);
     switch (ctx) {
       case 'ngx-admin-original':
         activeMenu = this.ngxMenuOrig() as any; //use original template menu by ngx-admin
@@ -249,7 +249,7 @@ export class MenuService {
             menuData[i].children = await menu.children;
           }
         });
-        console.log('menuData', await menuData);
+        // console.log('menuData', await menuData);
         // debugger;
         activeMenu = await menuData; // usc filterable menu
         // activeMenu = menuData;
@@ -259,7 +259,7 @@ export class MenuService {
         break;
     }
 
-    console.log('MenuService::processMenu(menuData: any)/activeMenu:', JSON.stringify(activeMenu));
+    // console.log('MenuService::processMenu(menuData: any)/activeMenu:', JSON.stringify(activeMenu));
     this.menu = await activeMenu;
     // return this.menu;
   }

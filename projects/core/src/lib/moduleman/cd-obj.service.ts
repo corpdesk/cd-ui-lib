@@ -4,7 +4,7 @@ import { ServerService, IQuery, CdRequest, ICdResponse } from '@corpdesk/core/sr
 @Injectable({
   providedIn: 'root',
 })
-export class ModuleService {
+export class CdObjService {
   postData: CdRequest;
   constructor(
     private svServer: ServerService
@@ -32,9 +32,9 @@ export class ModuleService {
         "args": {}
     }
    */
-  createModule$(newModule: any, cdToken: string) {
-    this.setEnvelopeCreateModule(newModule, cdToken);
-    // console.log('createModule$()/this.postData:', JSON.stringify(this.postData))
+  createCdObj$(newCdObj: any, cdToken: string) {
+    this.setEnvelopeCreateModule(newCdObj, cdToken);
+    console.log('createCdObj$()/this.postData:', JSON.stringify(this.postData))
     return this.svServer.proc(this.postData);
   }
 
@@ -42,7 +42,7 @@ export class ModuleService {
     this.postData = {
       ctx: data.ctx,
       m: 'Moduleman',
-      c: 'Module',
+      c: 'CdObj',
       a: 'Create',
       dat: {
         f_vals: [
@@ -56,23 +56,29 @@ export class ModuleService {
     };
   }
 
-  getModules(q: IQuery, cdToken: string) {
-    this.setEnvelopeModule(q, cdToken);
-    // console.log('getModules()/this.postData:', JSON.stringify(this.postData))
+  getCdObj(q: IQuery, cdToken: string) {
+    this.setEnvelopeCdObj(q, cdToken);
+    console.log('getCdObj()/this.postData:', JSON.stringify(this.postData))
     return this.svServer.proc(this.postData);
   }
 
-  getModule$(q: IQuery, cdToken: string) {
-    this.setEnvelopeModule(q, cdToken);
-    // console.log('getModules$()/this.postData:', JSON.stringify(this.postData))
+  getCdObj$(q: IQuery, cdToken: string) {
+    this.setEnvelopeCdObj(q, cdToken);
+    console.log('getCdObj$()/this.postData:', JSON.stringify(this.postData))
     return this.svServer.proc(this.postData);
   }
 
-  setEnvelopeModule(q: IQuery, cdToken: string) {
+  getCdObjType$(q: IQuery, cdToken: string) {
+    this.setEnvelopeCdObjType(q, cdToken);
+    console.log('getCdObj$()/this.postData:', JSON.stringify(this.postData))
+    return this.svServer.proc(this.postData);
+  }
+
+  setEnvelopeCdObj(q: IQuery, cdToken: string) {
     this.postData = {
       ctx: 'Sys',
       m: 'Moduleman',
-      c: 'Module',
+      c: 'CdObj',
       a: 'GetCount',
       dat: {
         f_vals: [
@@ -86,9 +92,27 @@ export class ModuleService {
     };
   }
 
-  updateModule$(q: IQuery, cdToken: string) {
+  setEnvelopeCdObjType(q: IQuery, cdToken: string) {
+    this.postData = {
+      ctx: 'Sys',
+      m: 'Moduleman',
+      c: 'CdObj',
+      a: 'GetType',
+      dat: {
+        f_vals: [
+          {
+            query: q
+          }
+        ],
+        token: cdToken
+      },
+      args: {}
+    };
+  }
+
+  updateCdObj$(q: IQuery, cdToken: string) {
     this.setEnvelopeUpdate(q, cdToken);
-    // console.log('updateModules$()/this.postData:', JSON.stringify(this.postData))
+    console.log('updateCdObj$()/this.postData:', JSON.stringify(this.postData))
     return this.svServer.proc(this.postData);
   }
 
@@ -96,7 +120,7 @@ export class ModuleService {
     this.postData = {
       ctx: 'Sys',
       m: 'Moduleman',
-      c: 'Module',
+      c: 'CdObj',
       a: 'Update',
       dat: {
         f_vals: [
@@ -110,9 +134,9 @@ export class ModuleService {
     };
   }
 
-  deleteModules$(q: IQuery, cdToken: string) {
+  deleteCdObj$(q: IQuery, cdToken: string) {
     this.setEnvelopeDelete(q, cdToken);
-    // console.log('deleteModules$()/this.postData:', JSON.stringify(this.postData))
+    console.log('deleteCdObj$()/this.postData:', JSON.stringify(this.postData))
     return this.svServer.proc(this.postData);
   }
 

@@ -61,7 +61,7 @@ export class SessService {
   ...otherwise cyclic error will be thrown
   */
   createSess(res: any, svMenu: any) {
-    console.log('starting SessService::createSess(res,svUser: UserService)');
+    // console.log('starting SessService::createSess(res,svUser: UserService)');
     this.token = res.app_state.sess.cd_token;
     this.setSess(res, svMenu);
     // svUser.getUserData(res);
@@ -71,7 +71,7 @@ export class SessService {
   }
 
   setSess(res: any, svMenu: any) {
-    console.log('starting setSess(res: any)');
+    // console.log('starting setSess(res: any)');
     this.isActive = true;
     this.appState = res.app_state;
     // this.maxDistance = Number(ttl) * 1000;
@@ -86,7 +86,7 @@ export class SessService {
     const token = res.app_state.sess.cd_token;
     svMenu.getMenu$('cdMenu', res.data.menuData)
       .subscribe((menu: any) => {
-        console.log('SessionService::setSess(res: any,svMenu: any)/menu:', menu);
+        // console.log('SessionService::setSess(res: any,svMenu: any)/menu:', menu);
         // event emitter to parent (shell)
         // this.emittMenu.emit(menu);
 
@@ -150,27 +150,27 @@ export class SessService {
   }
 
   resetExprTime(ttl: any) {
-    console.log('starting resetExprTime(ttl)');
+    // console.log('starting resetExprTime(ttl)');
     const exprTime = moment().add(ttl, 'seconds');
     localStorage.setItem('ExprTime-' + this.token, exprTime.toString());
   }
 
   getExprTime(ttl: any) {
-    console.log('starting getExprTime(ttl)');
+    // console.log('starting getExprTime(ttl)');
     const exprTime = moment().add(ttl, 'seconds');
     console.log(exprTime.toString());
     return moment().add(ttl, 'seconds').toString();
   }
 
   logout() {
-    console.log('starting logout()');
+    // console.log('starting logout()');
     this.killSess();
     // set gui to loged out state
     this.svAppState.setMode('login');
   }
 
   killSess() {
-    console.log('starting killSess()');
+    // console.log('starting killSess()');
     localStorage.removeItem('sess-' + this.token);
     localStorage.removeItem('ExprTime-' + this.token);
     clearTimeout(this.countdown);
@@ -248,7 +248,7 @@ export class SessService {
 
    */
   getSessData(): any {
-    console.log('starting getSessData()');
+    // console.log('starting getSessData()');
     const expiration = localStorage.getItem('sess-' + this.token);
     let ret = {};
     if (expiration) {
@@ -258,17 +258,17 @@ export class SessService {
   }
 
   getCdToken() {
-    console.log('starting getCdToken()');
+    // console.log('starting getCdToken()');
     return this.getSessData().cd_token;
   }
 
   getJWToken() {
-    console.log('starting getJWToken()');
+    // console.log('starting getJWToken()');
     return this.getSessData().jwt;
   }
 
   getTtl() {
-    console.log('starting getTtl()');
+    // console.log('starting getTtl()');
     return this.getSessData().ttl;
   }
 
@@ -277,7 +277,7 @@ export class SessService {
   it needs to update the client session to extend the Expiration time
   */
   renewSess(res: any, svMenu: any) {
-    console.log('starting renewSess(res)');
+    // console.log('starting renewSess(res)');
     this.setSess(res, svMenu);
   }
 
@@ -305,7 +305,14 @@ export class SessService {
   // }
 
   setCSess(token: string, iClient: any) {
-    iClient.token = token;
+    if('token' in iClient){
+      iClient.token = token;
+    } 
+
+    if('baseModel' in iClient){
+      iClient.baseModel.token = token;
+    } 
+    
   }
 
   getCSess(iClient: any) {

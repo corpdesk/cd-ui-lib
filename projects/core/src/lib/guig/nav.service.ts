@@ -20,9 +20,30 @@ export class NavService {
     this.rout.navigateByUrl(path);
   }
 
+  /**
+   * secure navigation...requires tocken
+   * @param iClient 
+   * @param location 
+   */
   sNavigate(iClient: any, location: string): void {
+    try {
+      const params = {
+        queryParams: { token: iClient.baseModel.sess.cd_token },
+        skipLocationChange: true,
+        replaceUrl: false
+      };
+      iClient.router.navigate([location], params);
+    } catch (e) {
+      const msg = 'cannot access tocken. Navigation aborted';
+      this.nsNavigate(iClient, '/', msg)
+      console.log(msg)
+      console.log('Error:', e)
+    }
+  }
+
+  nsNavigate(iClient: any, location: string, msg:string): void {
     const params = {
-      queryParams: { token: iClient.sess.cd_token },
+      queryParams: {message:msg},
       skipLocationChange: true,
       replaceUrl: false
     };
