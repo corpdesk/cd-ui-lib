@@ -1,6 +1,7 @@
 import { Type } from '@angular/core';
 import { AbstractControlOptions, FormBuilder, FormGroup } from '@angular/forms';
 import { FieldType, IQuery, IAppState, ISessResp } from '@corpdesk/core/src/lib/base';
+import { of } from 'rxjs';
 import { Observable } from 'rxjs';
 
 export enum ControlType {
@@ -92,6 +93,7 @@ export interface DdlInfo {
   searchInputName?: string;
   selectedValue?: string;
   iconButtonId?: string;
+  data: any;
 }
 
 export interface SelectData {
@@ -123,6 +125,20 @@ export interface DdlCtx {
   step: AWizardStep | null;
   token: string | null;
 };
+
+export interface MultipleChoice {
+  controllerName: string;
+  selectedItem: OptionItem;
+  controlTypes: ControlType;
+  options: OptionItem[];
+}
+
+export interface OptionItem {
+  index: number;
+  optControlId: string;
+  value: string;
+  selected: boolean;
+}
 
 export interface FaDbItem {
   attributes: {
@@ -225,6 +241,52 @@ export interface DdlData {
   fn?: string;
 }
 
+export const DEFAULT_DDL_DATA: DdlData = {
+  config: { suppressScrollX: true, wheelSpeed: 0.3 },
+  header: {
+    title: { lable: 'Notifications', cls: '', action: null },
+    sideLink: { lable: 'View All', cls: '', action: null },
+  },
+  footer: { label: 'View All', icon: '', action: null },
+  // selValueField: '', 
+  // selIndex: '',
+  data: [
+    {
+      label: 'item 1',
+      description: 'If several languages coalesce the grammar',
+      time: '3 min ago',
+      // iconId: '',
+      // iconName: '',
+      // action: null,
+      // attributes: {
+      //   id: 'atlassian',
+      //   membership: {
+      //     free: ['brands'],
+      //     pro: ['brands']
+      //   },
+      //   styles: ['brands'],
+      //   unicode: 'f77b',
+      //   voted: true
+      // },
+      // id: 'atlassian',
+      // links: {
+      //   self: '/api/icons/atlassian'
+      // },
+      // type: 'icon'
+    },
+    {
+      label: 'item 2',
+      description: 'It will seem like simplified English',
+      time: '1 hr ago'
+    },
+    {
+      label: 'item 3',
+      description: 'If several languages coalesce the grammar',
+      time: '4 hr ago'
+    }
+  ]
+}
+
 export enum ActionType {
   navigate = 0,
   execFn = 1
@@ -269,6 +331,7 @@ export interface AWizardModel {
 }
 
 export interface AWizardStep {
+  token:string;
   stepTitle: string;
   stepItems: { prevButtonId?: string; nextButtonId?: string, lastButtonId?: string },
   tabPaneId: string;
@@ -294,6 +357,7 @@ const f: FieldInfo[] = [{
 }];
 
 const ws: AWizardStep = {
+  token: '',
   stepTitle: '',
   stepItems: {},
   tabPaneId: '',

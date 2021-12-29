@@ -4,7 +4,11 @@ import { AWizardStep, ValidationError } from './guig.model';
 import { FormGroup, ValidationErrors } from '@angular/forms';
 import { fromEvent } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
-// import { AWizardModel } from '@corpdesk/core';
+import { BaseModel, EmittedDdlSelection, MultipleChoice, OptionItem } from './guig.model';
+import { Observable } from 'rxjs';
+import { ICdResponse, DEFAULT_CD_RESPONSE } from '@corpdesk/core/src/lib/base';
+import { CdPushEnvelop } from '@corpdesk/core/src/lib/cd-push';
+import { NotificationService } from '@corpdesk/core/src/lib/comm';
 
 interface Rule {
   minChars?: number;
@@ -404,7 +408,7 @@ export class FormsService {
         return false;
       }
     }))
-    
+
   }
 
   isFieldFor(field: FieldInfo, ff: FieldFor) {
@@ -509,9 +513,136 @@ export class FormsService {
     return modForm;
   }
 
-  //   deleteFormControl(controls: ControlFor[]): ControlType {
-  //     return controls.filter(c => c.fieldFor === FieldFor.deleteForm)
-  //       .map(c => c.controlType)[0];
-  //   }
+  setDdlData(ddlId: string, data: any, model: FieldInfo[]) {
+    model.forEach((f) => {
+      if (f.name === ddlId) {
+        f.ddlInfo!.data = data;
+      }
+    })
+  }
+
+  getDdlData(ddlId: string, model: FieldInfo[]): any[] {
+    console.log('cd-ui-lib/FormService::getDdlData()/ddlId:', ddlId)
+    console.log('cd-ui-lib/FormService::getDdlData()/model:', model)
+    return model
+      .filter((f: FieldInfo) => {
+        if (f.name === ddlId) {
+          return f;
+        } else {
+          return null;
+        }
+      })
+      .map((f) => f.ddlInfo!.data)[0];
+  }
+
+  setSelectedIcon(emittedDdlSelection: EmittedDdlSelection, baseModel: BaseModel, step: AWizardStep) {
+    const selectedIcon = emittedDdlSelection.step!.fields.filter((f => f.controls
+      .filter(cf => cf.controlType === ControlType.ddlIcons)))
+      .filter(f => f.name === emittedDdlSelection.controlName)
+      .map((control: FieldInfo) => {
+        const val = control.ddlInfo?.selectedValue
+        const fieldName = control.name;
+        return {
+          fieldName: control.name,
+          selectedValue: val
+        }
+      })
+    const iconStep = baseModel.data.wizardModel.steps.filter(s => s.controller === emittedDdlSelection.step!.controller)
+      .map((s: AWizardStep) => {
+        step.formGroup!.controls[selectedIcon[0].fieldName].setValue(selectedIcon[0].selectedValue)
+        return s;
+      })
+  }
+
+  deselectGroupControls(changedElem: HTMLInputElement, multipleChoice: MultipleChoice, baseModel: BaseModel) {
+    multipleChoice.options.forEach((opt, i) => {
+      if (this.isNotSelectedItem(opt, changedElem.id)) {
+        this.setReverseValue(changedElem.checked, opt, i, multipleChoice, baseModel);
+      }
+    })
+  }
+
+  isNotSelectedItem(options: OptionItem, elemId: string): boolean {
+    return elemId !== options.optControlId;
+  }
+
+  setReverseValue(changedElemState: boolean, opt: OptionItem, i: number, multipleChoice: MultipleChoice, baseModel: BaseModel) {
+    baseModel.data.form.controls[multipleChoice.options[i].optControlId].setValue(!changedElemState)
+    multipleChoice.options[i].selected = !changedElemState;
+  }
+
+  saveForm(step: AWizardStep, newObj: any, createObservable: Observable<any>, pushEnvelop: CdPushEnvelop, svNotif: NotificationService) {
+    const fg: FormGroup = step.formGroup!;
+    // to hold data to send to db
+    const fArr = [];
+    const invalids: any = [];
+    // if form is valid
+    if (fg.valid) {
+      // loop through the form controls
+      for (let k of Object.keys(fg.controls)) {
+        let fieldValue = fg.controls[k].value;
+        const obj = { key: k, value: fieldValue };
+        // take only values for savables
+        if (this.isSavableField(k, step.fields)) {
+          newObj.data[k] = fieldValue;
+        }
+        console.log(`fg.controls['${k}'].status`, fg.controls[k].status)
+        // if a control is not valid, save on invalids
+        if (!fg.controls[k].valid) {
+          invalids.push(k);
+        }
+        fArr.push(obj);
+      }
+      // submit data to back end
+      // service[serviceFn](newObj, token)
+      createObservable
+        .subscribe((r: any) => {
+          const response: ICdResponse = r;
+          console.log('resp:', response);
+          // send notification
+          pushEnvelop.pushData = response;
+          pushEnvelop.resp = response;
+          console.log('guig/FormsService::saveForm()/pushEnvelop.pushRecepients:', pushEnvelop.pushRecepients)
+          svNotif.emitNotif(pushEnvelop);
+        })
+    } else {
+      // if form is not valid:
+      for (let k of Object.keys(fg.controls)) {
+        let fieldValue = fg.controls[k].value;
+        const obj = { key: k, value: fieldValue };
+        if (this.isSavableField(k, step.fields)) {
+          newObj.data[k] = fieldValue;
+        }
+        console.log(`fg.controls['${k}'].status`, fg.controls[k].status)
+        if (!fg.controls[k].valid) {
+          invalids.push(k);
+        }
+        fArr.push(obj);
+      }
+      console.log('...correct invalid fields');
+      console.log('invalid fields:', invalids)
+
+      /////////////////////////
+      
+      const errMsg = `validation error on:${JSON.stringify(invalids)}`;
+      let response: ICdResponse = DEFAULT_CD_RESPONSE;
+      response.app_state.success = false;
+      response.app_state.info!.messages.push(errMsg);
+      response.app_state.info!.app_msg = errMsg;
+      response.app_state.info!.code = 'FormService::saveForm';
+      response.app_state.sess!.cd_token = step.token;
+      console.log('resp:', response);
+      // send notification
+      pushEnvelop.pushData = response;
+      pushEnvelop.resp = response;
+      console.log('guig/FormsService::saveForm()/pushEnvelop.pushRecepients:', pushEnvelop.pushRecepients)
+      svNotif.emitNotif(pushEnvelop);
+    }
+  }
+
+  isSavableField(fieldName: any, model: FieldInfo[]): boolean {
+    let ret: boolean = false;
+    return model.filter(f => f.name === fieldName && f.savable).length > 0;
+  }
 
 }

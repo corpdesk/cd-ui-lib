@@ -47,6 +47,7 @@ export class ServerService {
   // }
 
   proc(params: CdRequest){
+    console.log('base/ServerService::proc()/params:', params)
     return this.http.post(this.env.apiEndpoint, params, this.options);
   }
 

@@ -49,6 +49,24 @@ export interface ICdResponse {
     data: any;
 }
 
+export const DEFAULT_CD_RESPONSE: ICdResponse = {
+    app_state: {
+      success: false,
+      info: {
+        messages: [],
+        code: '',
+        app_msg: ''
+      },
+      sess: {
+        cd_token: '',
+        jwt: '',
+        ttl: 600
+      },
+      cache: {}
+    },
+    data: []
+  };
+
 export interface IAppState {
     success: boolean;
     info: IRespInfo | null;
@@ -107,6 +125,8 @@ export interface ICdRequest {
     dat: any;
     args: object;
 }
+
+
 
 export enum ModuleScope{
     Sys = 0,

@@ -46,3 +46,8 @@ export interface PostData {
 //     data: [];
 // }
 
+export const numericNumberReg1 = '^-?[0-9]\\d*(\\.\\d{1,2})?$';
+export const numericNumberReg2 = '/^[0-9]\d*$/';
+export const numericNumberReg3 = new RegExp(/^-?[0-9]\\d*(\\.\\d{1,2})?$/, 'i')
+export const numericNumberReg4 = new RegExp(/^[0-9]\d*$/, 'i')
+

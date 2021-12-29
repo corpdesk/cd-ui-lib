@@ -33,21 +33,23 @@ export class ModuleService {
     }
    */
   createModule$(newModule: any, cdToken: string) {
+    // console.log('cd-ui-lib/ModuleService::createModule$()/newModule:', newModule)
     this.setEnvelopeCreateModule(newModule, cdToken);
     // console.log('createModule$()/this.postData:', JSON.stringify(this.postData))
     return this.svServer.proc(this.postData);
   }
 
-  setEnvelopeCreateModule(data: any, cdToken: string) {
+  setEnvelopeCreateModule(newModule: any, cdToken: string) {
+    // console.log('cd-ui-lib/ModuleService::setEnvelopeCreateModule()/data:', newModule)
     this.postData = {
-      ctx: data.ctx,
+      ctx: newModule.ctx,
       m: 'Moduleman',
       c: 'Module',
       a: 'Create',
       dat: {
         f_vals: [
           {
-            data: data.savables
+            data: newModule.data
           }
         ],
         token: cdToken

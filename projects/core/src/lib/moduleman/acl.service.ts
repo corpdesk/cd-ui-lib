@@ -28,8 +28,10 @@ export class AclService {
         if (asStr) {
             this.log('04','initComponent')
             iClient.baseModel.jAppState = JSON.parse(asStr);
+            // this.baseModel.sess.userId
             this.log('05','initComponent')
             iClient.baseModel.sess = iClient.baseModel.jAppState.sess!;
+            this.log(iClient.baseModel.sess,'initComponent')
             this.log('06','initComponent')
             if ('rowId' in params) {
                 this.log('07','initComponent')
