@@ -9,7 +9,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 // import { FileUploader } from 'ng2-file-upload';
 import { HttpHeaders } from '@angular/common/http';
 import { ServerService, EnvConfig } from '@corpdesk/core/src/lib/base';
-import { SessService } from '@corpdesk/core/src/lib/user';
+// import { SessService } from '@corpdesk/core/src/lib/user';
 
 class ImageSnippet {
   pending = false;
@@ -44,7 +44,7 @@ export class MessagesService {
     @Inject('env') private env: EnvConfig,
     private http: HttpClient,
     private svServer: ServerService,
-    private svSess: SessService,
+    // private svSess: SessService,
   ) {
     this.selectedMsg = new Object();
     // this.selectedMsg.attachment_guid = '';

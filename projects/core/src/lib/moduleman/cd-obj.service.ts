@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { ServerService, IQuery, CdRequest, ICdResponse } from '@corpdesk/core/src/lib/base';
+import { Injectable, Inject } from '@angular/core';
+import { ServerService, IQuery, CdRequest, ICdResponse, EnvConfig } from '@corpdesk/core/src/lib/base';
 
 @Injectable({
   providedIn: 'root',
@@ -7,7 +7,8 @@ import { ServerService, IQuery, CdRequest, ICdResponse } from '@corpdesk/core/sr
 export class CdObjService {
   postData: CdRequest;
   constructor(
-    private svServer: ServerService
+    private svServer: ServerService,
+    @Inject('env') private env: EnvConfig,
   ) { }
 
   /**
@@ -63,8 +64,9 @@ export class CdObjService {
   }
 
   getCdObj$(q: IQuery, cdToken: string) {
+    console.log('CdObjService::getCdObj$()/q:', q)
     this.setEnvelopeCdObj(q, cdToken);
-    console.log('getCdObj$()/this.postData:', JSON.stringify(this.postData))
+    console.log('CdObjService::getCdObj$()/this.postData:', JSON.stringify(this.postData))
     return this.svServer.proc(this.postData);
   }
 

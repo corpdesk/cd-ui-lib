@@ -39,6 +39,89 @@ export interface EnvConfig {
 //     data: [];
 // }
 
+// {
+//     f_vals: [
+//         {
+//             data: {}
+//         }
+//     ],
+//     token: ''
+// }
+export interface EnvelopFValItem {
+    query?: any,
+    data?: any,
+}
+export interface EnvelopDat {
+    f_vals: EnvelopFValItem[];
+    token: string | null;
+}
+export const SYS_CTX = 'Sys';
+export const DEFAULT_DAT: EnvelopDat = {
+    f_vals: [
+        {
+            query: null,
+            data: null,
+        }
+    ],
+    token: null
+};
+
+export const DEFAULT_ARGS = {};
+
+export const DEFAULT_ENVELOPE_CREATE: ICdRequest = {
+    ctx: SYS_CTX,
+    m: '',
+    c: '',
+    a: 'Create',
+    dat: DEFAULT_DAT,
+    args: DEFAULT_ARGS
+}
+
+export const DEFAULT_ENVELOPE_GET: ICdRequest = {
+    ctx: SYS_CTX,
+    m: '',
+    c: '',
+    a: 'Get',
+    dat: DEFAULT_DAT,
+    args: DEFAULT_ARGS
+}
+
+export const DEFAULT_ENVELOPE_GET_PAGED: ICdRequest = {
+    ctx: SYS_CTX,
+    m: '',
+    c: '',
+    a: 'GetCount',
+    dat: DEFAULT_DAT,
+    args: DEFAULT_ARGS
+}
+
+export const DEFAULT_ENVELOPE_GET_TYPE: ICdRequest = {
+    ctx: SYS_CTX,
+    m: '',
+    c: '',
+    a: 'GetCount',
+    dat: DEFAULT_DAT,
+    args: DEFAULT_ARGS
+}
+
+export const DEFAULT_ENVELOPE_UPDATE: ICdRequest = {
+    ctx: SYS_CTX,
+    m: '',
+    c: '',
+    a: 'Update',
+    dat: DEFAULT_DAT,
+    args: DEFAULT_ARGS
+}
+
+export const DEFAULT_ENVELOPE_DELETE: ICdRequest = {
+    ctx: SYS_CTX,
+    m: '',
+    c: '',
+    a: 'Delete',
+    dat: DEFAULT_DAT,
+    args: DEFAULT_ARGS
+}
+
 export interface CdResponse {
     app_state: IAppState;
     data: any[];
@@ -49,29 +132,72 @@ export interface ICdResponse {
     data: any;
 }
 
+/////////////////////
+// export interface ICdResponse {
+//     app_state: {
+//         success: boolean;
+//         info: IRespInfo;
+//         sess: ISessResp;
+//         cache: object;
+//         sConfig?:IServerConfig;
+//     };
+//     data: object;
+// }
+
+// export interface ISessResp {
+//     cd_token?: string;
+//     userId?: number | null;
+//     jwt?: string;
+//     ttl: number;
+// }
+
+// export interface IRespInfo {
+//     messages: string[];
+//     code: string;
+//     app_msg: any;
+// }
+
+export interface IServerConfig {
+    usePush: boolean;
+    usePolling: boolean;
+    useCacheStore: boolean;
+}
+
+////////////////////
+
 export const DEFAULT_CD_RESPONSE: ICdResponse = {
     app_state: {
-      success: false,
-      info: {
-        messages: [],
-        code: '',
-        app_msg: ''
-      },
-      sess: {
-        cd_token: '',
-        jwt: '',
-        ttl: 600
-      },
-      cache: {}
+        success: false,
+        info: {
+            messages: [],
+            code: '',
+            app_msg: ''
+        },
+        sess: {
+            cd_token: '',
+            jwt: null,
+            ttl: 600
+        },
+        cache: {}
     },
     data: []
-  };
+};
+
+export const DEFAULT_CD_REQUEST: ICdRequest = {
+    ctx: 'Sys',
+    m: '',
+    c: '',
+    a: '',
+    dat: DEFAULT_DAT,
+    args: DEFAULT_ARGS
+};
 
 export interface IAppState {
     success: boolean;
     info: IRespInfo | null;
     sess: ISessResp | null;
     cache: object | null;
+    sConfig?: IServerConfig;
 }
 
 // cd request format
@@ -122,19 +248,16 @@ export interface ICdRequest {
     m: string;
     c: string;
     a: string;
-    dat: any;
-    args: object;
+    dat: EnvelopDat;
+    args: any | null;
 }
 
 
 
-export enum ModuleScope{
+export enum ModuleScope {
     Sys = 0,
     App = 1,
 }
-
-
-
 
 
 // export interface ISessResp {
@@ -146,10 +269,16 @@ export enum ModuleScope{
 export interface ISessResp {
     cd_token?: string;
     userId?: number | null;
-    jwt?: string;
+    jwt: {
+        jwtToken: string,
+        checked: boolean,
+        checkTime: number,
+        authorized: boolean,
+    } | null
     ttl: number;
+    initUuid?: string;
+    initTime?: string;
 }
-
 
 export interface IRespInfo {
     messages: string[];
@@ -157,13 +286,36 @@ export interface IRespInfo {
     app_msg: string | null;
 }
 
+// export interface ICdPushEnvelop {
+//     pushRecepients: any;
+//     triggerEvent: string;
+//     emittEvent: string;
+//     req: ICdRequest;
+//     resp: ICdResponse;
+//     pushData?: any;
+// }
+
 export interface ICdPushEnvelop {
-    pushRecepients: any;
-    triggerEvent: string;
-    emittEvent: string;
-    req: ICdRequest;
-    resp: ICdResponse;
-    pushData?: any;
+    pushData: {
+        m?: string,
+        pushRecepients: IPushRecepient[],
+        triggerEvent: string,
+        emittEvent: string,
+        token: string,
+        initTime: number | null,
+        relayTime: number | null,
+        relayed: boolean,
+        deliveryTime: number | null,
+        deliverd: boolean,
+    },
+    req: ICdRequest | null,
+    resp: ICdResponse | null
+};
+
+export interface IPushRecepient {
+    userId: number;
+    subTypeId: number;
+    room?: string;
 }
 
 export interface IServiceInput {
@@ -266,12 +418,19 @@ export const INIT_CD_RESP = {
         },
         sess: {
             cd_token: null,
-            jwt: '',
+            jwt: null,
             ttl: 0,
         },
         cache: {}
     },
     data: null
+}
+
+export interface CacheData {
+    key: string;
+    value?: string;
+    initUuid?: string;
+    initTime?: string;
 }
 
 

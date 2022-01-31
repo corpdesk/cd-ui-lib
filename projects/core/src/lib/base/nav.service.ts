@@ -26,14 +26,20 @@ export class NavService {
    * @param location 
    */
   sNavigate(iClient: any, location: string): void {
+    console.log('NavService::sNavigate()/01')
     try {
+      console.log('NavService::sNavigate()/02')
       const params = {
         queryParams: { token: iClient.baseModel.sess.cd_token },
         skipLocationChange: true,
         replaceUrl: false
       };
+      console.log('NavService::sNavigate()/03')
+      console.log('NavService::sNavigate()/params:', params)
       iClient.router.navigate([location], params);
+      console.log('NavService::sNavigate()/04')
     } catch (e) {
+      console.log('NavService::sNavigate()/05')
       const msg = 'cannot access tocken. Navigation aborted';
       this.nsNavigate(iClient, '/', msg)
       console.log(msg)

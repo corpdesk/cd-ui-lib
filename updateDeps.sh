@@ -40,6 +40,12 @@ cp -R ~/nazoxTest/cd-ui-lib/dist/core ~/nazoxTest/cd-user/node_modules/@corpdesk
 ## copy @corpdesk/core to cd-user
 echo "...copying @corpdesk/core to ~/nazoxTest/cd-comm/node_modules/@corpdesk/"
 cp -R ~/nazoxTest/cd-ui-lib/dist/core ~/nazoxTest/cd-comm/node_modules/@corpdesk/
+## copy @corpdesk/core to nazoxTest/cd-user
+echo "...copying @corpdesk/core to ~/nazoxTest/cd-user/node_modules/@corpdesk/"
+cp -R ~/nazoxTest/cd-ui-lib/dist/core ~/nazoxTest/cd-user/node_modules/@corpdesk/
+## copy @corpdesk/core to nazoxTest/cd-shell
+echo "...copying @corpdesk/core to ~/nazoxTest/cd-shell/node_modules/@corpdesk/"
+cp -R ~/nazoxTest/cd-ui-lib/dist/core ~/nazoxTest/cd-shell/node_modules/@corpdesk/
 
 ## cd to cd-moduleman directory
 # cd "~/nazoxTest/cd-moduleman"

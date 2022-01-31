@@ -1,8 +1,7 @@
 export * from './guig.module';
 export * from './guig.service';
 export * from './guig.model';
-export * from './guig-context';
-export * from './nav.service';
+// export * from '../base/guig-context';
 export * from './html-elem.service';
 export * from './models/html.model';
 export * from './idle-timeout.service';

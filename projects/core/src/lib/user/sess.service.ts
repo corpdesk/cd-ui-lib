@@ -1,11 +1,12 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import * as moment from 'moment';
 
 
 import { ServerService } from '@corpdesk/core/src/lib/base';
-import { AppStateService, IAppState } from '@corpdesk/core/src/lib/base';
+import { BaseService, AppStateService, ICdResponse, IAppState, 
+  CacheData, EnvConfig, ICdPushEnvelop, ICdRequest } from '@corpdesk/core/src/lib/base';
 import { SocketIoService } from '@corpdesk/core/src/lib/cd-push';
 
 interface Menu {
@@ -47,7 +48,9 @@ export class SessService {
   constructor(
     private svAppState: AppStateService,
     private svServer: ServerService,
+    @Inject('env') private env: EnvConfig,
     private svSocket: SocketIoService,
+    private svBase: BaseService,
   ) {
 
   }
@@ -70,7 +73,7 @@ export class SessService {
     this.setModulesData();
   }
 
-  setSess(res: any, svMenu: any) {
+  setSess(res: ICdResponse, svMenu: any) {
     // console.log('starting setSess(res: any)');
     this.isActive = true;
     this.appState = res.app_state;
@@ -83,7 +86,10 @@ export class SessService {
     //   this.countDown(this.getExprTime(ttl));
     // }
     console.log('SessService::setSess()/res.data:', res.data)
-    const token = res.app_state.sess.cd_token;
+    res.app_state.sess!.initUuid = this.svBase.getGuid();
+    res.app_state.sess!.initTime = ((new Date()).getTime() / 1000).toString()
+    const cdToken = res.app_state.sess!.cd_token;
+    const userId = res.data.userData.userId
     svMenu.getMenu$('cdMenu', res.data.menuData)
       .subscribe((menu: any) => {
         // console.log('SessionService::setSess(res: any,svMenu: any)/menu:', menu);
@@ -91,19 +97,62 @@ export class SessService {
         // this.emittMenu.emit(menu);
 
         const sub: any = {
-          user_id: res.data.userData.userId,
+          user_id: userId,
           sub_type_id: 7
         };
         this.pushRecepients.push(sub);
-        const pushEnvelop = {
-          pushRecepients: this.pushRecepients,
-          triggerEvent: 'login',
-          emittEvent: 'push-menu',
-          pushData: { m: menu, token: res.app_state.sess.cd_token },
-          req: this.setEnvelopeAuth(res.app_state.sess.cd_token),
+        // const pushEnvelop = {
+        //   pushRecepients: this.pushRecepients,
+        //   triggerEvent: 'login',
+        //   emittEvent: 'push-menu',
+        //   pushData: { m: menu, token: cdToken },
+        //   req: this.setEnvelopeAuth(cdToken!),
+        //   resp: res
+        // };
+
+        const pushEnvelop: ICdPushEnvelop = {
+          pushData: {
+            m: menu,
+            pushRecepients: this.pushRecepients,
+            triggerEvent: 'login',
+            emittEvent: 'push-menu',
+            token: cdToken!,
+            initTime: null,
+            relayTime: null,
+            relayed: false,
+            deliveryTime: null,
+            deliverd: false,
+          },
+          req: this.setEnvelopeAuth(cdToken!),
           resp: res
         };
-        this.pushData('send-menu', pushEnvelop);
+
+        // if data push is enabled at the server
+        if (res.app_state.sConfig!.usePush) {
+          this.pushData('send-menu', pushEnvelop);
+        }
+
+        // if polling is enabled at the server
+        if (res.app_state.sConfig!.useCacheStore) {
+          const cacheData = {
+            key: this.svBase.cacheKey('User', 'User', 'Login', `${userId}`, cdToken!),
+            value: JSON.stringify(pushEnvelop)
+          }
+          // this.setEnvelopeCacheCreate(cacheData, cdToken!);
+          // console.log('saveToCache/this.postData:', JSON.stringify(this.postData));
+          // const ret$ = this.svServer.proc(this.postData);
+          // ret$.subscribe((ret) => {
+          //   console.log('CacheResponse:', ret);
+          // })
+
+          this.svBase.cacheCreate$(cacheData, cdToken!)
+            .subscribe((ret) => {
+              console.log('core/User/SessService::CacheResponse:', ret);
+            });
+
+
+        }
+
         /**
          * emittEvent is null because the purpose is to
          * register user socket on successfull login.
@@ -120,7 +169,25 @@ export class SessService {
       })
 
     svMenu.init(res);
-    localStorage.setItem(token, JSON.stringify(res.app_state));
+    localStorage.setItem(cdToken!, JSON.stringify(res.app_state));
+  }
+
+  setEnvelopeCacheCreate(cacheData: CacheData, cdToken: string) {
+    return {
+      ctx: 'Sys',
+      m: 'Moduleman',
+      c: 'CdCache',
+      a: 'Create',
+      dat: {
+        f_vals: [
+          {
+            data: cacheData
+          }
+        ],
+        token: cdToken
+      },
+      args: null
+    };
   }
 
   pushData(pushEvent: any, data: any) {
@@ -131,7 +198,7 @@ export class SessService {
     }
   }
 
-  setEnvelopeAuth(cdToken: string) {
+  setEnvelopeAuth(cdToken: string):ICdRequest {
     return {
       ctx: 'Sys',
       m: 'User',
@@ -305,14 +372,14 @@ export class SessService {
   // }
 
   setCSess(token: string, iClient: any) {
-    if('token' in iClient){
+    if ('token' in iClient) {
       iClient.token = token;
-    } 
+    }
 
-    if('baseModel' in iClient){
+    if ('baseModel' in iClient) {
       iClient.baseModel.token = token;
-    } 
-    
+    }
+
   }
 
   getCSess(iClient: any) {

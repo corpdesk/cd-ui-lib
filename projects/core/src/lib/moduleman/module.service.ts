@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { ServerService, IQuery, CdRequest, ICdResponse } from '@corpdesk/core/src/lib/base';
+import { Injectable, Inject } from '@angular/core';
+import { ServerService, IQuery, CdRequest, ICdResponse, EnvConfig } from '@corpdesk/core/src/lib/base';
 
 @Injectable({
   providedIn: 'root',
@@ -7,7 +7,8 @@ import { ServerService, IQuery, CdRequest, ICdResponse } from '@corpdesk/core/sr
 export class ModuleService {
   postData: CdRequest;
   constructor(
-    private svServer: ServerService
+    private svServer: ServerService,
+    @Inject('env') private env: EnvConfig,
   ) { }
 
   /**

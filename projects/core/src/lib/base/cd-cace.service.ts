@@ -1,12 +1,14 @@
 import { Injectable, Inject } from '@angular/core';
+import { shareReplay } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { FileUploader } from 'ng2-file-upload';
 import { Observable } from 'rxjs';
-import { CdRequest, EnvConfig } from './IBase';
+import { CdRequest, EnvConfig, ICdResponse } from './IBase';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ServerService {
+export class CdCacheService {
   options: any;
   resp: Observable<ArrayBuffer> = new Observable<ArrayBuffer>();
   token: any;

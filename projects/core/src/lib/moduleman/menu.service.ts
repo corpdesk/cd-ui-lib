@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { from } from 'rxjs';
-import { GuigContextService } from '@corpdesk/core/src/lib/guig';
-import { ServerService, IQuery, CdRequest } from '@corpdesk/core/src/lib/base';
-import { SessService } from '@corpdesk/core/src/lib/user';
+import { GuigContextService } from '@corpdesk/core/src/lib/base';
+import { ServerService, IQuery, CdRequest, EnvConfig } from '@corpdesk/core/src/lib/base';
+// import { SessService } from '@corpdesk/core/src/lib/user';
 import { ModuleMenu, MenuCollection } from './menu.model';
 // import { CdResponse } from 'dist/base/public-api';
 import { forkJoin, Observable, of } from 'rxjs';
@@ -143,7 +143,8 @@ export class MenuService {
   // ]
   constructor(
     private svServer: ServerService,
-    private svSess: SessService,
+    @Inject('env') private env: EnvConfig,
+    // private svSess: SessService,
     private gc: GuigContextService,
   ) {
     this.menu = this.initMenu();
@@ -311,11 +312,11 @@ export class MenuService {
   //         "args": null
   //     }
   //  */
-  registerMenu(data: any) {
+  registerMenu(data: any, cdToken: string) {
     console.log(data);
     console.log(data.is_sys_module);
     data = this.cleanRegData(data);
-    this.setEnvelopeRegMenu(data);
+    this.setEnvelopeRegMenu(data, cdToken);
     /*
     post request to server
     */
@@ -330,11 +331,11 @@ export class MenuService {
       });
   }
 
-  registerMenuObsv(data: any) {
+  registerMenuObsv(data: any, cdToken:string) {
     console.log('starting registerMenuObsv(data)')
     console.log('data:', data);
     data = this.cleanRegData(data);
-    this.setEnvelopeRegMenu(data);
+    this.setEnvelopeRegMenu(data, cdToken);
     console.log('this.postData:', JSON.stringify(this.postData));
     /*
     post request to server
@@ -384,7 +385,7 @@ export class MenuService {
   //         args: null
   //     }
   //  */
-  setEnvelopeRegMenu(regData: any) {
+  setEnvelopeRegMenu(regData: any,cdToken: string,) {
     this.postData = {
       ctx: 'Sys',
       m: 'Moduleman',
@@ -396,7 +397,7 @@ export class MenuService {
           data: regData.data
         }],
         docproc: {},
-        token: this.svSess.token
+        token: cdToken
       },
       args: null
     };
@@ -479,9 +480,9 @@ export class MenuService {
   }
 
 
-  getGetAll(clientAppId: any) {
+  getGetAll(clientAppId: any, cdToken:string) {
     console.log('starting MenuService::getGetAll(clientAppId)');
-    this.setEnvelopeGetAll(clientAppId);
+    this.setEnvelopeGetAll(clientAppId, cdToken);
     /*
     post request to server
     */
@@ -493,18 +494,18 @@ export class MenuService {
       });
   }
 
-  getGetAllObsv(clientAppId: any) {
+  getGetAllObsv(clientAppId: any, cdToken:string) {
     console.log('starting MenuService::getGetAllObsv(clientAppId)');
-    this.setEnvelopeGetAll(clientAppId);
+    this.setEnvelopeGetAll(clientAppId, cdToken);
     /*
     post request to server
     */
     return this.svServer.proc(this.postData);
   }
 
-  getGetAnon(clientAppId: any) {
+  getGetAnon(clientAppId: any, cdToken:string) {
     console.log('starting MenuService::getGetAnon(clientAppId)');
-    this.setEnvelopeGetAnon(clientAppId);
+    this.setEnvelopeGetAnon(clientAppId, cdToken);
     /*
     post request to server
     */
@@ -528,7 +529,7 @@ export class MenuService {
   //         args: null
   //     }
   //  */
-  setEnvelopeGetAll(clientAppId: any) {
+  setEnvelopeGetAll(clientAppId: any, cdToken: string) {
     this.postData = {
       ctx: 'Sys',
       m: 'Moduleman',
@@ -542,13 +543,13 @@ export class MenuService {
             }
           }
         ],
-        token: this.svSess.token,
+        token: cdToken,
       },
       args: null
     };
   }
 
-  setEnvelopeGetAnon(clientAppId: any) {
+  setEnvelopeGetAnon(clientAppId: any, cdToken:string) {
     this.postData = {
       ctx: 'Sys',
       m: 'Moduleman',
@@ -562,7 +563,7 @@ export class MenuService {
             }
           }
         ],
-        token: this.svSess.token,
+        token: cdToken,
         // token: '1669D61B-3769-3F58-7755-20652AB91448'
       },
       args: null
@@ -614,9 +615,9 @@ export class MenuService {
     this.menu = await menu;
   }
 
-  getMenuConfig(configId: any) {
+  getMenuConfig(configId: any, cdToken:string) {
     console.log('starting MenuService::getMenuConfig()');
-    this.setMenuConfigDataPost(configId);
+    this.setMenuConfigDataPost(configId, cdToken);
     console.log('this.postData:', JSON.stringify(this.postData));
     this.svServer.proc(this.postData)
       .subscribe((res) => {
@@ -626,7 +627,7 @@ export class MenuService {
 
   }
 
-  setMenuConfigDataPost(configId: any) {
+  setMenuConfigDataPost(configId: any, cdToken:string) {
     console.log('starting MenuService::setMenuConfigDataPost()');
     this.postData = {
       ctx: 'Sys',
@@ -641,7 +642,7 @@ export class MenuService {
             }
           }
         ],
-        token: this.svSess.token
+        token: cdToken
       },
       args: null
     }
@@ -659,21 +660,21 @@ export class MenuService {
    * @param configId 
    * @param fieldId 
    */
-  tUpdate(updateData: any, fieldId: any, component: any) {
+  tUpdate(updateData: any, fieldId: any, component: any, cdToken:string) {
     console.log('starting MenuService::updateMenuConfig()');
     console.log('updateData:', updateData);
     console.log('component:', component);
     switch (component) {
       case 'MenuComponent':
-        this.updateMenuConfigDataPost(updateData, fieldId);
+        this.updateMenuConfigDataPost(updateData, fieldId, cdToken);
         this.svServer.proc(this.postData)
           .subscribe((res) => {
             console.log(res);
-            this.respUpdateMenuConfig(res);
+            this.respUpdateMenuConfig(res, cdToken);
           });
         break;
       case 'MenuListComponent':
-        this.updateMenuPost(updateData, fieldId);
+        this.updateMenuPost(updateData, fieldId, cdToken);
         console.log('updateMenuPost/his.postData:', this.postData)
         this.svServer.proc(this.postData)
           .subscribe((res) => {
@@ -693,7 +694,7 @@ export class MenuService {
               active: "0"
             }
    */
-  updateMenuConfigDataPost(updateData: any, fieldId: any) {
+  updateMenuConfigDataPost(updateData: any, fieldId: any, cdToken:string) {
     console.log('starting MenuService::updateMenuConfigDataPost()');
     this.postData = {
       ctx: 'Sys',
@@ -713,20 +714,20 @@ export class MenuService {
             data: updateData
           }
         ],
-        token: this.svSess.getCdToken()
+        token: cdToken
       },
       args: null
     }
   }
 
-  respUpdateMenuConfig(res: any) {
+  respUpdateMenuConfig(res: any, cdToken:string) {
     console.log('starting MenuService::respUpdateMenuConfig(res)');
     console.log(res);
     this.resp = res;
-    this.getMenuConfig(this.configId);
+    this.getMenuConfig(this.configId, cdToken);
   }
 
-  updateMenuPost(updateData: any, fieldId: any) {
+  updateMenuPost(updateData: any, fieldId: any, cdToken:string) {
     console.log('starting MenuService::updateMenuPost()');
     this.postData = {
       ctx: 'Sys',
@@ -746,7 +747,7 @@ export class MenuService {
             data: updateData
           }
         ],
-        token: this.svSess.getCdToken()
+        token: cdToken
       },
       args: null
     }

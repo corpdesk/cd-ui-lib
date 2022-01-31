@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { CdPushEnvelop, SocketIoService } from '@corpdesk/core';
-import { AnyCnameRecord } from 'dns';
+import { CdPushEnvelop, SocketIoService } from '@corpdesk/core/src/lib/cd-push';
+// import { AnyCnameRecord } from 'dns';
 
 interface ErrDisplayDat {
   msg: string;

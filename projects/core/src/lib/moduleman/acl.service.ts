@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { NavService } from '@corpdesk/core/src/lib/guig';
-import { CdRequest } from '@corpdesk/core/src/lib/base';
-import { SessService } from '@corpdesk/core/src/lib/user';
+// import { NavService } from '@corpdesk/core/src/lib/guig';
+import { CdRequest, NavService } from '@corpdesk/core/src/lib/base';
+// import { SessService } from '@corpdesk/core/src/lib/user';
 
 @Injectable({
     providedIn: 'root',
@@ -11,14 +11,14 @@ export class AclService {
     debug = true;
     postData: CdRequest;
     constructor(
-        private svSess: SessService,
+        // private svSess: SessService,
         private router: Router,
         private svNav: NavService,
     ) { }
 
-    async initComponent(params: any, iClient: any) {
+    async initComponent(params: any, iClient: any, svSess: any) {
         this.log('01','initComponent')
-        this.svSess.setCSess(params.token, iClient);
+        svSess.setCSess(params.token, iClient);
         this.log('02','initComponent')
         const asStr = localStorage.getItem(params.token);
         this.log('03','initComponent')

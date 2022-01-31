@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { ServerService, CdFilter } from '@corpdesk/core/src/lib/base';
+import { Injectable, Inject } from '@angular/core';
+import { ServerService, CdFilter, EnvConfig } from '@corpdesk/core/src/lib/base';
 // import { ServerService } from '../../moduleman/controllers/server.service';
 import { SessService } from './sess.service';
 import { Group } from './group-model';
@@ -16,6 +16,7 @@ export class GroupService {
   ExtFilter: CdFilter[] = [];
   constructor(
     private svServer: ServerService,
+    @Inject('env') private env: EnvConfig,
     private svSess: SessService,
   ) { }
 

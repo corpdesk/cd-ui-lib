@@ -161,6 +161,16 @@ Angular router query parameters:
 - delete item
 - hide/show column
 
+31/12/2022
+- set up BaseService with CRUD
+- cd-obj CRUD
+- company CRUD
+- initial work on cd-cache...IN PROGRESS
+- socket-io issue
+- set up websocket as alternative...IN PROGRESS
+- harmonise interface for socket.io and websocket...IN PROGRESS
+
+
 15/12/2021
 - optimize modules CRUD
 

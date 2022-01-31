@@ -48,7 +48,7 @@ export class CommconversationService {
   clickedCommConversationID = -1;
   constructor(
     private svServer: ServerService,
-    private svSess: SessService,
+    // private svSess: SessService,
     public svUser: UserService,
     public svSocket: SocketIoService,
   ) {
@@ -56,10 +56,10 @@ export class CommconversationService {
     this.pushSubscribe();
   }
 
-  init() {
+  init(cdToken:string) {
     this.trayMode = 1;
-    this.inBox();
-    this.outBox();
+    this.inBox(cdToken);
+    this.outBox(cdToken);
     this.elInBox = document.getElementById('memo-menu-inbox');
     this.elOutBox = document.getElementById('memo-menu-outbox');
     this.selectInbox();
@@ -162,17 +162,17 @@ export class CommconversationService {
     this.countUnread = this.unreadMessages.length;
   }
 
-  setMode(docMode: any, options: DocModeOpts) {
+  setMode(docMode: any, options: DocModeOpts, cdToken:string) {
     console.log('this.conversation:', this.conversation);
     this.elInBox = document.getElementById('memo-menu-inbox');
     this.elOutBox = document.getElementById('memo-menu-outbox');
     switch (docMode) {
       case 'IN-TRAY':
-        this.inBox();
+        this.inBox(cdToken);
         this.selectInbox();
         break;
       case 'OUT-TRAY':
-        this.outBox();
+        this.outBox(cdToken);
         this.selectOutbox();
         break;
       case 'COMPOSE-DOC':
@@ -184,7 +184,7 @@ export class CommconversationService {
         break;
       case 'READ-DOC':
 
-        this.getConversationObsv(this.clickedCommConversationID)
+        this.getConversationObsv(this.clickedCommConversationID, cdToken)
           .subscribe((ret: any) => {
             console.log('subscribe/ret:', ret);
             console.log('this.svUser.currentUser;:', this.svUser.currentUser);
@@ -202,7 +202,7 @@ export class CommconversationService {
 
         break;
       case 'REPLY-DOC':
-        this.getConversationObsv(options.commconversation_id)
+        this.getConversationObsv(options.commconversation_id, cdToken)
           .subscribe((ret: any) => {
             console.log('getConversationObsv/subscribe/ret:', ret);
             console.log('this.svUser.currentUser;:', this.svUser.currentUser);
@@ -223,9 +223,9 @@ export class CommconversationService {
     }
   }
 
-  inBox() {
+  inBox(cdToken:string) {
     console.log('starting inBox()');
-    this.ConversationInboxObsv()
+    this.ConversationInboxObsv(cdToken)
       .subscribe((ret: any) => {
         console.log('subscribe/ret:', ret);
         this.conversation = ret.data.conversation;
@@ -241,8 +241,8 @@ export class CommconversationService {
       });
   }
 
-  outBox() {
-    this.ConversationOutBoxObsv()
+  outBox(cdToken:string) {
+    this.ConversationOutBoxObsv(cdToken)
       .subscribe((ret: any) => {
         console.log('subscribe/ret:', ret);
         this.conversation = ret.data.conversation;
@@ -257,9 +257,9 @@ export class CommconversationService {
       });
   }
 
-  ConversationInboxObsv() {
+  ConversationInboxObsv(cdToken:string) {
     console.log('starting ConversationInboxObsv()');
-    this.setEnvelopeConversationInbox();
+    this.setEnvelopeConversationInbox(cdToken);
     console.log('this.postData:', JSON.stringify(this.postData));
     return this.svServer.proc(this.postData)
   }
@@ -282,7 +282,7 @@ export class CommconversationService {
   //     },
   //     "args": null
   // }
-  setEnvelopeConversationInbox() {
+  setEnvelopeConversationInbox(cdToken:string) {
     this.postData = {
       ctx: 'Sys',
       m: 'Comm',
@@ -296,15 +296,15 @@ export class CommconversationService {
             }
           }
         ],
-        token: this.svSess.getCdToken()
+        token: cdToken
       },
       args: null
     };
   }
 
-  getConversationObsv(commconversationID: any) {
+  getConversationObsv(commconversationID: any, cdToken:string) {
     console.log('starting getConversationObsv()');
-    this.setEnvelopeGetConversation(commconversationID);
+    this.setEnvelopeGetConversation(commconversationID, cdToken);
     console.log('this.postData:', JSON.stringify(this.postData));
     /*
     post request to server
@@ -330,7 +330,7 @@ export class CommconversationService {
   //     },
   //     "args": null
   // }
-  setEnvelopeGetConversation(commconversationID: any) {
+  setEnvelopeGetConversation(commconversationID: any, cdToken:string) {
     this.postData = {
       ctx: 'Sys',
       m: 'Comm',
@@ -345,7 +345,7 @@ export class CommconversationService {
             }
           }
         ],
-        token: this.svSess.getCdToken()
+        token: cdToken
       },
       args: null
     };
@@ -369,9 +369,9 @@ export class CommconversationService {
   * works for any communication eg chat, memo, doc comments
   * 
   */
-  initCommObsv(initCommData: CommData) {
+  initCommObsv(initCommData: CommData, cdToken:string) {
     console.log('starting getConversationObsv()');
-    this.setEnvelopeInitComm(initCommData);
+    this.setEnvelopeInitComm(initCommData, cdToken);
     console.log('this.postData:', JSON.stringify(this.postData));
     return this.svServer.proc(this.postData)
   }
@@ -419,7 +419,7 @@ export class CommconversationService {
   //     },
   //     "args": null
   // }
-  setEnvelopeInitComm(initCommData: any) {
+  setEnvelopeInitComm(initCommData: any, cdToken:string) {
     this.postData = {
       ctx: 'Sys',
       m: 'Comm',
@@ -429,13 +429,13 @@ export class CommconversationService {
         f_vals: [
           initCommData
         ],
-        token: this.svSess.token
+        token: cdToken
       },
       args: null
     };
   }
 
-  getEnvelopeInitComm(initCommData: any) {
+  getEnvelopeInitComm(initCommData: any, cdToken:string) {
     return {
       ctx: 'Sys',
       m: 'Comm',
@@ -445,7 +445,7 @@ export class CommconversationService {
         f_vals: [
           initCommData
         ],
-        token: this.svSess.getCdToken()
+        token: cdToken
       },
       args: null
     };
@@ -454,9 +454,9 @@ export class CommconversationService {
   /*
   * for flaging memo as 'read'
   */
-  flagOpenMemoObsv(docID: any) {
+  flagOpenMemoObsv(docID: any, cdToken:string) {
     console.log('starting flagOpenMemoObsv()');
-    this.setEnvelopeFlagOpenMemo(docID);
+    this.setEnvelopeFlagOpenMemo(docID, cdToken);
     console.log('this.postData:', JSON.stringify(this.postData));
     return this.svServer.proc(this.postData)
   }
@@ -477,7 +477,7 @@ export class CommconversationService {
   //     },
   //     "args": null
   // }
-  setEnvelopeFlagOpenMemo(docID: any) {
+  setEnvelopeFlagOpenMemo(docID: any, cdToken:string) {
     this.postData = {
       ctx: 'Sys',
       m: 'Comm',
@@ -491,7 +491,7 @@ export class CommconversationService {
             }
           }
         ],
-        token: this.svSess.getCdToken()
+        token: cdToken
       },
       args: null
     };
@@ -503,9 +503,9 @@ export class CommconversationService {
   * works for any communication eg chat, memo, doc comments
   * 
   */
-  replyCommObsv(replyCommData: CommData) {
+  replyCommObsv(replyCommData: CommData, cdToken:string) {
     console.log('starting getConversationObsv()');
-    this.setEnvelopeReplyComm(replyCommData);
+    this.setEnvelopeReplyComm(replyCommData, cdToken);
     console.log('this.postData:', JSON.stringify(this.postData));
     return this.svServer.proc(this.postData)
   }
@@ -553,7 +553,7 @@ export class CommconversationService {
   //     },
   //     "args": null
   // }
-  setEnvelopeReplyComm(replyCommData: any) {
+  setEnvelopeReplyComm(replyCommData: any, cdToken:string) {
     this.postData = {
       ctx: 'Sys',
       m: 'Comm',
@@ -563,15 +563,15 @@ export class CommconversationService {
         f_vals: [
           replyCommData
         ],
-        token: this.svSess.getCdToken()
+        token: cdToken
       },
       args: null
     };
   }
 
-  ConversationOutBoxObsv() {
+  ConversationOutBoxObsv(cdToken:string) {
     console.log('starting ConversationOutBoxObsv()');
-    this.setEnvelopeConversationOutBox();
+    this.setEnvelopeConversationOutBox(cdToken);
     console.log('this.postData:', JSON.stringify(this.postData));
     return this.svServer.proc(this.postData)
   }
@@ -593,7 +593,7 @@ export class CommconversationService {
   //     },
   //     "args": null
   // }
-  setEnvelopeConversationOutBox() {
+  setEnvelopeConversationOutBox(cdToken:string) {
     this.postData = {
       ctx: 'Sys',
       m: 'Comm',
@@ -607,7 +607,7 @@ export class CommconversationService {
             }
           }
         ],
-        token: this.svSess.getCdToken()
+        token: cdToken
       },
       args: null
     };

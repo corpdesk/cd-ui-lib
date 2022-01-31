@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 // import { CdFilter } from '@corpdesk/base';
 // import { CdFilter } from '../../../base';
-import { ServerService, CdFilter } from '@corpdesk/core/src/lib/base';
+import { ServerService, CdFilter, EnvConfig } from '@corpdesk/core/src/lib/base';
 import { SessService } from './sess.service';
 import { GroupMember, GroupMemberInput } from './group-member-model';
 
@@ -12,6 +12,7 @@ export class GroupMemberService {
   postData: any;
   constructor(
     private svServer: ServerService,
+    @Inject('env') private env: EnvConfig,
     private svSess: SessService,
   ) { }
 

@@ -12,6 +12,7 @@ import { Injectable, Inject } from '@angular/core';
 import { io } from 'socket.io-client';
 import { Observable } from 'rxjs';
 import { EnvConfig } from '@corpdesk/core/src/lib/base';
+import { BehaviorSubject } from 'rxjs';
 // import { EnvConfig } from '@corpdesk/core';
 
 
@@ -21,26 +22,62 @@ import { EnvConfig } from '@corpdesk/core/src/lib/base';
 export class SocketIoService {
   socket: any;
   readonly url: string = '';
+  public message$: BehaviorSubject<string> = new BehaviorSubject('');
   constructor(
     @Inject('env') private env: EnvConfig,
   ) {
     // this.socket = io(`${environment.HOST}:` + environment.SOCKET_IO_PORT);
     // this.socket = io.connect('https://localhost', {secure: true});
     this.url = `${this.env.HOST}:` + this.env.SOCKET_IO_PORT;
+    console.log('core/SocketioService::constructor()/eventName:', this.url)
     this.socket = io(this.url);
   }
 
   listen(eventName: string) {
+    console.log('core/SocketioService::listen()/01')
+    console.log('core/SocketioService::listen()/eventName:', eventName)
     return new Observable(subscriber => {
-      this.socket.on(eventName, (data: any) => {
+      return this.socket.on(eventName, (data: any) => {
+        console.log('core/SocketioService::listen()/this.socket.on()/eventName:', eventName)
+        console.log('core/SocketioService::listen()/this.socket.on()/data:', data)
         subscriber.next(data);
       });
     });
   }
 
-  emit(eventName: string, data: any) {
-    this.socket.emit(eventName, data);
+  listen2(eventName: string) {
+    console.log('core/SocketioService::listen()/01')
+    console.log('core/SocketioService::listen()/eventName:', eventName)
+    this.socket.on(eventName, (data: any) => {
+      console.log('core/SocketioService::listen()/this.socket.on()/eventName:', eventName)
+      console.log('core/SocketioService::listen()/this.socket.on()/data:', data)
+    });
   }
+
+  public getNewMessage = (eventName:string) => {
+    console.log('core/SocketioService::getNewMessage()/01')
+    this.socket.on(eventName, (data:any) =>{
+      console.log('core/SocketioService::getNewMessage()/this.socket.on()/eventName:', eventName)
+      console.log('core/SocketioService::getNewMessage()/this.socket.on()/data:', data)
+      this.message$.next(data);
+    });
+    return this.message$.asObservable();
+  };
+
+  emit(eventName: string, data: any) {
+    console.log('core/SocketioService::emit()/01')
+    // this.socket.emit(eventName, data);
+    this.socket.emit(eventName, data, function (state:any) {
+      console.log('core/SocketioService::emit()/02')
+      console.log('core/SocketioService::emit()/state:', state)
+      if (state.error) 
+        console.log('Something went wrong on the server. ServerError:', state.error);
+      if (state.ok)
+        console.log('Event was processed successfully');
+    });
+  }
+
+  
 
   // ////////////////////////////////////////////
   // public sendMessage(message) {

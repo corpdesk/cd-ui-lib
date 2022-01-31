@@ -331,7 +331,7 @@ export interface AWizardModel {
 }
 
 export interface AWizardStep {
-  token:string;
+  token: string;
   stepTitle: string;
   stepItems: { prevButtonId?: string; nextButtonId?: string, lastButtonId?: string },
   tabPaneId: string;
@@ -374,6 +374,19 @@ const wm: AWizardModel = {
   steps: []
 }
 
+export interface StepModel {
+  token: string;
+    stepTitle: string;
+    stepItems: any;
+    tabPaneId: string;
+    cardTitle: string;
+    cardTitleDesc: string;
+    module: string;
+    controller: string;
+    formGroup: any;
+    fields: FieldInfo[]
+}
+
 const fb = new FormBuilder();
 const frm: FormGroup = fb.group({});
 const bc = [{ label: '' }, { label: '', active: true }]
@@ -393,7 +406,7 @@ const s: ISessResp = {
   cd_token: '',
   ttl: 600,
   userId: null,
-  jwt: '',
+  jwt: null,
 }
 
 const as: IAppState = {
@@ -409,7 +422,7 @@ const as: IAppState = {
  * whether component is
  * create, list, edit, or delet
  */
-export interface BaseModelCtx{
+export interface BaseModelCtx {
   create?: object,
   list?: object,
   edit?: object,
@@ -417,15 +430,38 @@ export interface BaseModelCtx{
 }
 
 export class BaseModel {
+  module = '';
+  controller = '';
   token = '';
   jAppState = as;
   sess = s;
   data = d;
   breadCrumbItems: Array<{}> = bc;
-  ctx:BaseModelCtx;
-  constructor(){
+  ctx: BaseModelCtx;
+  controllerRoutes = {
+    listRoute: '',
+    editRoute: '',
+    deleteRoute: '',
+    createRoute: '',
+  }
+  constructor(module: string, controller: string) {
+    this.init(module, controller);
+  }
 
+  init(module: string, controller: string) {
+    this.module = module;
+    this.controller = controller;
+    this.controllerRoutes = {
+      listRoute: `/${module}/${controller}/list`,
+      editRoute: `/${module}/${controller}/edit`,
+      deleteRoute: `/${module}/${controller}/delete`,
+      createRoute: `/${module}/${controller}/create`,
+    }
   }
 }
+
+// Validation Patterns
+export const EMAIL_PATTERN = '^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$';
+export const URL_PATTERN = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?'
 
 

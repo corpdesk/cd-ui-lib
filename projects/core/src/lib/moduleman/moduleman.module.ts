@@ -1,8 +1,42 @@
-import { NgModule } from '@angular/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { EnvConfig } from '@corpdesk/core/src/lib/base';
+import { AclService } from './acl.service';
+import { CdObjService } from './cd-obj.service';
+import { CompanyService } from './company.service';
+import { MenuService } from './menu.service';
+import { ModuleService } from './module.service';
 
 @NgModule({
   declarations: [],
   imports: [CommonModule],
 })
-export class ModulemanModule {}
+export class ModulemanModule {
+  static forRoot(env: EnvConfig): ModuleWithProviders<ModulemanModule> {
+    return {
+      ngModule: ModulemanModule,
+      providers: [
+        AclService,
+        CdObjService,
+        CompanyService,
+        MenuService,
+        ModuleService,
+        { provide: 'env', useValue: env }
+      ]
+    };
+  }
+
+  static forChild(env: EnvConfig): ModuleWithProviders<ModulemanModule> {
+    return {
+      ngModule: ModulemanModule,
+      providers: [
+        AclService,
+        CdObjService,
+        CompanyService,
+        MenuService,
+        ModuleService,
+        { provide: 'env', useValue: env }
+      ]
+    };
+  }
+}

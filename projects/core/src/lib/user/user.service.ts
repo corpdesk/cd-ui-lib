@@ -1,6 +1,6 @@
-import { Injectable, Inject, OnChanges } from '@angular/core';
+import { Injectable, Input, Inject, OnChanges } from '@angular/core';
 import { Observable } from 'rxjs';
-import { AppStateService, CdResponse,EnvConfig, CdFilter, ServerService } from '@corpdesk/core/src/lib/base';
+import { AppStateService, ICdResponse,EnvConfig, CdFilter, ServerService } from '@corpdesk/core/src/lib/base';
 import { User, UserData, IAuthData } from './user-model';
 import { SocketIoService, CdPushEnvelop } from '@corpdesk/core/src/lib/cd-push';
 
@@ -9,8 +9,9 @@ import { SocketIoService, CdPushEnvelop } from '@corpdesk/core/src/lib/cd-push';
   providedIn: 'root'
 })
 export class UserService {
+  // env: EnvConfig;
   private postData: any;
-  cd_token = '';
+  cd_token: string | undefined = '';
   userData: User[] = [];
   cuid = '';
   userName = '';
@@ -36,27 +37,52 @@ export class UserService {
     public svSocket: SocketIoService,
     @Inject('env') private env: EnvConfig,
   ) {
+    console.log('core/UserService::constructor()/this.env:', this.env);
     // this.currentProfile.name = 'Login/Register';
     // this.currentProfile.picture = 'assets/cd/branding/coop/avatarCircle.svg';
   }
+
+  // init(env: EnvConfig){
+  //   this.env = env;
+  // }
 
   /*
     set userData
     set contacts
     */
-  init(res: any) {
+  // init(res: any) {
+  //   console.log('starting UserService::init()');
+  //   if (res) {
+  //     console.log('UserService::init()/res:', res);
+  //     this.cd_token = res.app_state.sess.cd_token;
+  //     // { name: 'Login/Register', picture: 'assets/cd/branding/coop/avatarCircle.svg' }
+  //     this.currentUser = res.data;
+  //     // this.currentUser.name = 'Login/Register';
+  //     this.currentProfile.name = res.data.userData.username;
+  //     this.cuid = res.data.userData.user_id;
+  //     this.pals = res.data.pals;
+  //     // this.currentUser.picture = 'assets/cd/branding/coop/avatarCircle.svg';
+  //     const avatarUrl = `${this.env.HOST}/user-resources/${res.data.userData.user_guid}/avatar-01/a.jpg`;
+  //     console.log('avatarUrl:', avatarUrl);
+  //     this.currentProfile.picture = avatarUrl;
+  //   }
+
+  // }
+
+  userDataResp(resp: ICdResponse) {
     console.log('starting UserService::init()');
-    if (res) {
-      console.log('UserService::init()/res:', res);
-      this.cd_token = res.app_state.sess.cd_token;
+    if (resp) {
+      console.log('UserService::init()/res:', resp);
+      // this.cd_token = resp.app_state.sess.cd_token;
+      this.cd_token = resp.app_state.sess!.cd_token;
       // { name: 'Login/Register', picture: 'assets/cd/branding/coop/avatarCircle.svg' }
-      this.currentUser = res.data;
+      this.currentUser = resp.data;
       // this.currentUser.name = 'Login/Register';
-      this.currentProfile.name = res.data.userData.username;
-      this.cuid = res.data.userData.user_id;
-      this.pals = res.data.pals;
+      this.currentProfile.name = resp.data.userData.username;
+      this.cuid = resp.data.userData.user_id;
+      this.pals = resp.data.pals;
       // this.currentUser.picture = 'assets/cd/branding/coop/avatarCircle.svg';
-      const avatarUrl = `${this.env.HOST}/user-resources/${res.data.userData.user_guid}/avatar-01/a.jpg`;
+      const avatarUrl = `${this.env.HOST}/user-resources/${resp.data.userData.user_guid}/avatar-01/a.jpg`;
       console.log('avatarUrl:', avatarUrl);
       this.currentProfile.picture = avatarUrl;
     }
@@ -74,7 +100,7 @@ export class UserService {
   // }
 
   auth$(authData: IAuthData) {
-    // console.log('auth$(authData: AuthData)');
+    console.log('auth$(authData: AuthData)');
     delete authData.rememberMe;
     this.setEnvelopeAuth(authData);
     // console.log('Submit()/this.postData:', JSON.stringify(this.postData))
@@ -100,11 +126,11 @@ export class UserService {
   }
 
 
-  getUserData(loginResp: CdResponse) {
-    // console.log('starting UserService::getUserData()');
-    // console.log('UserService::getUserData()/loginResp:', loginResp);
-    this.setUserData(loginResp);
-  }
+  // getUserData(loginResp: CdResponse) {
+  //   // console.log('starting UserService::getUserData()');
+  //   // console.log('UserService::getUserData()/loginResp:', loginResp);
+  //   this.setUserData(loginResp);
+  // }
 
   setUserData(loginResp: any) {
     // console.log('starting UserService::setUserData(loginResp)');
@@ -114,7 +140,7 @@ export class UserService {
     this.svServer.proc(this.postData).subscribe((userDataResp: any) => {
       // console.log('UserService::setUserData(res)/userDataResp:', userDataResp);
       // this.svMenu.init(userDataResp);
-      this.init(userDataResp);
+      this.userDataResp(userDataResp);
       // this.svNotif.init(userDataResp);
       this.svAppState.setMode('anon');
       // this.svMessages.init(userDataResp);
@@ -138,7 +164,7 @@ export class UserService {
     });
   }
 
-  setEnvelopUserDataPost(loginResp: CdResponse) {
+  setEnvelopUserDataPost(loginResp: ICdResponse) {
     // console.log('starting UserService::setUserDataPost()');
     // console.log('setEnvelopUserDataPost/loginResp:', loginResp.app_state)
     /*

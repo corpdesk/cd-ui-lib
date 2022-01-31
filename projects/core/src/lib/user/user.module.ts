@@ -1,6 +1,11 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EnvConfig } from '@corpdesk/core/src/lib/base';
+import { UserService } from './user.service';
+import { SessService } from './sess.service';
+import { GroupService } from './group.service';
+import { GroupMemberService } from './group-member.service';
+import { MenuService } from '@corpdesk/core/src/lib/moduleman';
 
 @NgModule({
   declarations: [],
@@ -13,6 +18,11 @@ export class UserModule {
     return {
       ngModule: UserModule,
       providers: [
+        UserService,
+        SessService,
+        GroupService,
+        GroupMemberService,
+        MenuService,
         { provide: 'env', useValue: env }
       ]
     };
@@ -22,6 +32,11 @@ export class UserModule {
     return {
       ngModule: UserModule,
       providers: [
+        UserService,
+        SessService,
+        GroupService,
+        GroupMemberService,
+        MenuService,
         { provide: 'env', useValue: env }
       ]
     };
