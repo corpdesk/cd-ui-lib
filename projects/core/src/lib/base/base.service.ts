@@ -1,7 +1,12 @@
 import { Injectable } from '@angular/core';
 import { v4 as uuidv4 } from 'uuid';
 import { ServerService } from './server.service';
-import { DEFAULT_ENVELOPE_CREATE, DEFAULT_ENVELOPE_DELETE, DEFAULT_ENVELOPE_GET, DEFAULT_ENVELOPE_GET_PAGED, DEFAULT_ENVELOPE_GET_TYPE, DEFAULT_ENVELOPE_UPDATE, ICdRequest, IQuery } from './IBase';
+import {
+  DEFAULT_ENVELOPE_CREATE, DEFAULT_ENVELOPE_DELETE,
+  DEFAULT_ENVELOPE_GET, DEFAULT_ENVELOPE_GET_PAGED, DEFAULT_ENVELOPE_GET_TYPE,
+  DEFAULT_ENVELOPE_UPDATE, ICdRequest, IQuery,
+  LsFilter, IAppState, CdObjId
+} from './IBase';
 
 @Injectable({
   providedIn: 'root',
@@ -124,5 +129,58 @@ export class BaseService {
     this.setEnvelopeCache(DEFAULT_ENVELOPE_CREATE, d, cdToken);
     console.log('cacheCreate$()/this.postData:', JSON.stringify(this.postData))
     return this.svServer.proc(this.postData);
+  }
+
+  searchLocalStorage(f: LsFilter) {
+    // const lc = { ...localStorage };
+    const lcArr = [];
+
+    const lcLength = localStorage.length;
+    console.log('BaseService::searchLocalStorage()/lcLength:', lcLength);
+    let i = 0;
+    for (let i = 0; i < localStorage.length; i++) {
+      // try {
+      // set iteration key name
+      const k = localStorage.key(i);
+      // use key name to retrieve the corresponding value
+      var v = localStorage.getItem(k!);
+      // console.log the iteration key and value
+      console.log('Key: ' + k + ', Value: ' + v);
+      try {
+        const lcItem = JSON.parse(v!);
+        if ('success' in lcItem) {
+          const appState: IAppState = lcItem;
+          // console.log('BaseService::searchLocalStorage()/appState:', appState)
+        }
+        if ('resourceGuid' in lcItem) {
+          const cdObjId = lcItem;
+          // console.log('BaseService::searchLocalStorage()/cdObjId:', cdObjId)
+        }
+        lcArr.push({ key: k, value: JSON.parse(v!) })
+      } catch (e) {
+        console.log('offending item:', v);
+        console.log('the item is not an object');
+        console.log('Error:', e);
+      }
+
+      // } catch (e) {
+      //   console.log('BaseService::pushSubscribe()/Error:', e);
+      // }
+
+    }
+    console.log('BaseService::searchLocalStorage()/lcArr:', lcArr);
+    console.log('BaseService::searchLocalStorage()/f.cdObjId!.resourceName:', f.cdObjId!.resourceName);
+    // isAppState
+    const resourceName = 'UserModule';
+    const AppStateItems = (d: any) => 'success' in d.value;
+    const CdObjIdItems = (d: any) => 'resourceName' in d.value;
+    const filtObjName = (d: any) => d.value.resourceName === f.cdObjId!.resourceName && d.value.ngModule === f.cdObjId!.ngModule;
+    const latestItem = (prev: any, current: any) => (prev.value.commTrack.initTime > current.value.commTrack.initTime) ? prev : current;
+    return lcArr
+      .filter(CdObjIdItems)
+      .filter(filtObjName)
+      .reduce(latestItem)
+    // console.log('searchLocalStorage()/result:', result)
+
   }
 }

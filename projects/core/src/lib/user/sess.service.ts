@@ -1,22 +1,38 @@
-import { Injectable, Inject } from '@angular/core';
+import { Injectable, Inject, Output } from '@angular/core';
 import { Observable } from 'rxjs';
-
 import * as moment from 'moment';
-
-
 import { ServerService } from '@corpdesk/core/src/lib/base';
-import { BaseService, AppStateService, ICdResponse, IAppState, 
-  CacheData, EnvConfig, ICdPushEnvelop, ICdRequest } from '@corpdesk/core/src/lib/base';
-import { SocketIoService } from '@corpdesk/core/src/lib/cd-push';
+import {
+  BaseService, AppStateService, ICdResponse, IAppState,
+  CacheData, EnvConfig, ICdPushEnvelop, ICdRequest, DEFAULT_COMM_TRACK,
+  LsFilter, StorageType
+} from '@corpdesk/core/src/lib/base';
+import { SocketIoService, WebsocketService, WsHttpService } from '@corpdesk/core/src/lib/cd-push';
+import { MenuService } from '@corpdesk/core/src/lib/moduleman';
+import { map } from 'rxjs-compat/operator/map';
+import { mergeMap } from 'rxjs-compat/operator/mergeMap';
+import { tap } from 'rxjs/operators';
+import { forkJoin } from 'rxjs';
+import { SioService } from './sio.service';
+// import { EventEmitter } from 'stream';
 
 interface Menu {
   items: any;
 };
 
+enum MenuCollection {
+  cdDemoMenu = 'cdDemoMenu',
+  nazoxDemo = 'nazoxDemo',
+  cdMenu = 'cdMenu'
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class SessService {
+  resourceName = 'SessService';
+  resourceGuid = '';
+  jwtWsToken = '';
   token: any;
   consumerToken = '';
   countdown: any;
@@ -42,20 +58,87 @@ export class SessService {
     cache: {}
   };
 
-  // @Output() emittMenu = new EventEmitter<any>();
+  // @Output() emittMenu = new EventEmitter();
   pushRecepients: any = [];
 
   constructor(
     private svAppState: AppStateService,
     private svServer: ServerService,
-    @Inject('env') private env: EnvConfig,
     private svSocket: SocketIoService,
+    private svWsHttp: WsHttpService,
+    private svWs: WebsocketService,
     private svBase: BaseService,
-  ) {
+    private svSio: SioService,
+    @Inject('env') private env: EnvConfig,
 
+  ) {
+    this.registerWsService()
   }
 
+  registerWsService() {
+    this.resourceGuid = this.svBase.getGuid();
+    const key = this.resourceGuid;
+    const value: any = {
+      ngModule: 'UserModule',
+      resourceName: 'SessService',
+      resourceGuid: this.resourceGuid,
+      jwtToken: this.jwtWsToken,
+      socket: null,
+      commTrack: {
+        initTime: Number(new Date()),
+        relayTime: null,
+        relayed: false,
+        deliveryTime: null,
+        deliverd: false,
+      }
+    }
 
+    const env = {
+      ctx: 'Sys',
+      m: 'CdPush',
+      c: 'Websocket',
+      a: 'Create',
+      dat: {
+        f_vals: [
+          {
+            data: value
+          }
+        ],
+        token: ''
+      },
+      args: {}
+    }
+    
+    // register and get a token for further Websocket communication
+    // ... and get jwtToken from the server
+    this.svWsHttp.registerResource$(env)
+      .subscribe((regResponse: any) => {
+        console.log('registerWsService()/regResponse:', regResponse)
+        console.log('registerWsService()/regResponse.success:', regResponse.success)
+        if (regResponse.app_state.success) {
+          console.log('SidebarComponent::registerWsService()/succeded!!:')
+          this.jwtWsToken = regResponse.app_state.sess!.jwt!.jwtToken!;
+          value.jwtToken = this.jwtWsToken;
+          console.log('SidebarComponent::registerWsService()/value:', value)
+          localStorage.setItem(key, JSON.stringify(value));
+          console.log('SidebarComponent::registerWsService()/this.jwtWsToken:', this.jwtWsToken)
+          this.initWebSocket(this.jwtWsToken)
+        }
+      })
+  }
+
+  initWebSocket(jwtWsToken:string) {
+    this.svWs.listenSecure(jwtWsToken,this.resourceGuid)
+      .subscribe(
+        (msg: any) => {
+          this.svWs.onMsgReceived(msg);
+        }, // Called whenever there is a message from the server.
+        (err: any) => {
+          console.log('SessService::initWebSocket()/Subscriber Error:', err)
+        }, // Called if at any point WebSocket API signals some kind of error.
+        () => console.log('complete') // Called when connection is closed (for whatever reason).
+      );
+  }
 
   /*
   Every time successfull response come from server,
@@ -73,7 +156,7 @@ export class SessService {
     this.setModulesData();
   }
 
-  setSess(res: ICdResponse, svMenu: any) {
+  setSess(res: ICdResponse, svMenu: MenuService) {
     // console.log('starting setSess(res: any)');
     this.isActive = true;
     this.appState = res.app_state;
@@ -89,18 +172,112 @@ export class SessService {
     res.app_state.sess!.initUuid = this.svBase.getGuid();
     res.app_state.sess!.initTime = ((new Date()).getTime() / 1000).toString()
     const cdToken = res.app_state.sess!.cd_token;
-    const userId = res.data.userData.userId
-    svMenu.getMenu$('cdMenu', res.data.menuData)
+    const uid = res.data.userData.userId
+    svMenu.getMenu$(MenuCollection.cdMenu, res.data.menuData)
+      /**
+       * 1. get menu
+       *  - check that menu is valid
+       *  - check that the jwtWsToken is valid
+       *  - search for the recepient: SidebarComponent, using svBase.searchLocalStorage(filter)
+       * 2. pushMenu(menu) to SidebarComponent via Websocket
+       *  - check websocket server to confirm if message is arriving
+       *  - chekc if we are receiving feed back for relayed message
+       *  - check if SidebarComponent is receiving message
+       * 3. Websocket push to SidebarComponent::loadMenu(menu)
+       */
       .subscribe((menu: any) => {
+        console.log('SessionService::setSess()/menthis.jwtWsTokenu:', this.jwtWsToken);
+
+        /**
+         * set filter for getting the recepient: SidebarComponent
+         */
+        let filter: LsFilter = {
+          storageType: StorageType.CdObjId,
+          cdObjId: {
+            appId: localStorage.getItem('appId')!,
+            resourceGuid: null,
+            resourceName: 'SidebarComponent',
+            ngModule: 'SharedModule',
+            jwtToken: null,
+            socket:null,
+            commTrack: null
+          }
+        }
+        /**
+         * search the recepient: SidebarComponent
+         */
+        const sidebarCdObj = this.svBase.searchLocalStorage(filter).value;
+        console.log('SessionService::setSess()/sidebarCdObj:', sidebarCdObj);
+
+        /**
+         * set filter for getting the sender: SessService
+         */
+        filter = {
+          storageType: StorageType.CdObjId,
+          cdObjId: {
+            appId:localStorage.getItem('appId')!,
+            resourceGuid: null,
+            resourceName: 'SessService',
+            ngModule: 'UserModule',
+            jwtToken: this.jwtWsToken,
+            socket: null,
+            commTrack: null
+          }
+        }
+        /**
+         * search the sender: SessService
+         */
+        const sessCdObj = this.svBase.searchLocalStorage(filter).value;
+        console.log('SessService::setSess()/sessCdObj:', sessCdObj)
+
+        /**
+         * set the pushRecepients for sender and recepient
+         */
+
+        const recepient: any = {
+          userId: uid,
+          subTypeId: 7,
+          cdObjId: sidebarCdObj
+        };
+        this.pushRecepients.push(recepient);
+
+        const sender = {
+          userId: uid,
+          subTypeId: 1,
+          cdObjId: sessCdObj
+        };
+        this.pushRecepients.push(sender);
+
+        /**
+         * set push data
+         */
+        const pushEnvelop: ICdPushEnvelop = {
+          pushData: {
+            appId: localStorage.getItem('appId')!,
+            socketScope: 'app',
+            pushGuid: this.svBase.getGuid(),
+            m: menu,
+            pushRecepients: this.pushRecepients,
+            triggerEvent: 'login',
+            emittEvent: 'push-menu',
+            token: cdToken!,
+            commTrack: DEFAULT_COMM_TRACK
+          },
+          req: this.setEnvelopeAuth(cdToken!),
+          resp: res
+        };
+        console.log('SessionService::setSess()/sending message');
+        console.log('SessionService::setSess()/pushEnvelop:', pushEnvelop);
+        // this.svWs.sendMsg(pushEnvelop);
+
         // console.log('SessionService::setSess(res: any,svMenu: any)/menu:', menu);
         // event emitter to parent (shell)
         // this.emittMenu.emit(menu);
 
-        const sub: any = {
-          user_id: userId,
-          sub_type_id: 7
-        };
-        this.pushRecepients.push(sub);
+        // search for recepient cdObjId, 
+
+
+        
         // const pushEnvelop = {
         //   pushRecepients: this.pushRecepients,
         //   triggerEvent: 'login',
@@ -110,32 +287,66 @@ export class SessService {
         //   resp: res
         // };
 
-        const pushEnvelop: ICdPushEnvelop = {
-          pushData: {
-            m: menu,
-            pushRecepients: this.pushRecepients,
-            triggerEvent: 'login',
-            emittEvent: 'push-menu',
-            token: cdToken!,
-            initTime: null,
-            relayTime: null,
-            relayed: false,
-            deliveryTime: null,
-            deliverd: false,
-          },
-          req: this.setEnvelopeAuth(cdToken!),
-          resp: res
-        };
-
-        // if data push is enabled at the server
+        /**
+         * pushGuid: string,
+        m?: string,
+        pushRecepients: ICommConversationSub[],
+        triggerEvent: string,
+        emittEvent: string,
+        token: string,
+        commTrack: CommTrack
+         */
+        // const pushEnvelop: ICdPushEnvelop = {
+        //   pushData: {
+        //     pushGuid: this.svBase.getGuid(),
+        //     m: menu,
+        //     pushRecepients: this.pushRecepients,
+        //     triggerEvent: 'login',
+        //     emittEvent: 'push-menu',
+        //     token: cdToken!,
+        //     commTrack: DEFAULT_COMM_TRACK
+        //   },
+        //   req: this.setEnvelopeAuth(cdToken!),
+        //   resp: res
+        // };
+        // console.log('ui-lib/SessService::setSess()/pushEnvelop:', pushEnvelop)
+        console.log('ui-lib/SessService::setSess()/res.app_state.sConfig!.usePush:', res.app_state.sConfig!.usePush)
+        // if websocket is enabled at the server
         if (res.app_state.sConfig!.usePush) {
-          this.pushData('send-menu', pushEnvelop);
+          console.log('ui-lib/SessService::setSess()/sConfig.usePush2===true:')
+          // this.svWs.connectSecure('userA', 'example-password-userA')
+          // this.svWs.sendMsg(pushEnvelop);
+          // this.svWs.getValueFromHttp('userA', 'example-password-userA')
+          // .then((authResponse: any) => {
+          //   const jwtToken = authResponse.token;
+          //   console.log('SessService::setSess/subscribe()/jwtToken', jwtToken)
+          //   this.svWs.jwtToken = jwtToken;
+          //   // this.svWs.connectSecure(jwtToken);
+          //   return this.svWs.listenSecure(jwtToken)
+          //   // .subscribe(
+          //   //   (msg: any) => {
+          //   //     this.svWs.onMsgReceived(msg);
+          //   //   }, // Called whenever there is a message from the server.
+          //   //   (err: any) => {
+          //   //     console.log('Subscriber Error:', err)
+          //   //   }, // Called if at any point WebSocket API signals some kind of error.
+          //   //   () => console.log('complete') // Called when connection is closed (for whatever reason).
+          //   // );
+          //   // this.svWs.sendMsg(pushEnvelop);
+          // })
+        }
+
+        // if socket-io is enabled at the server
+        if (res.app_state.sConfig!.usePush) {
+          console.log('ui-lib/SessService::setSess()/sConfig.usePush2===true:')
+          // this.pushData('send-menu', pushEnvelop);
+          this.svSio.pushData(pushEnvelop, 'send-menu')
         }
 
         // if polling is enabled at the server
         if (res.app_state.sConfig!.useCacheStore) {
           const cacheData = {
-            key: this.svBase.cacheKey('User', 'User', 'Login', `${userId}`, cdToken!),
+            key: this.svBase.cacheKey('User', 'User', 'Login', `${uid}`, cdToken!),
             value: JSON.stringify(pushEnvelop)
           }
           // this.setEnvelopeCacheCreate(cacheData, cdToken!);
@@ -198,7 +409,7 @@ export class SessService {
     }
   }
 
-  setEnvelopeAuth(cdToken: string):ICdRequest {
+  setEnvelopeAuth(cdToken: string): ICdRequest {
     return {
       ctx: 'Sys',
       m: 'User',

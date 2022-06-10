@@ -50,8 +50,18 @@ export class ServerService {
     return this.http.post(this.env.apiEndpoint, params, this.options);
   }
 
+  wsRegister(params: CdRequest){
+    console.log('base/ServerService::proc()/params:', params)
+    return this.http.post(this.env.apiEndpoint, params, this.options);
+  }
+
   setParams(p: CdRequest) {
     this.params = p;
+  }
+
+  registerResource$(params: any) {
+    console.log('base/ServerService::registerResource()/params:', params)
+    return this.http.post('http://localhost:3000/p-reg/', params, this.options);
   }
 
 }

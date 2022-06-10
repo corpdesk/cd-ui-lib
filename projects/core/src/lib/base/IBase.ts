@@ -8,7 +8,9 @@ import { Validators } from "@angular/forms";
  * @action // class method to invoke
  */
 
-export interface EnvConfig {
+ export interface EnvConfig {
+    clientAppGuid: string;
+    appId: string;
     production: boolean;
     apiEndpoint: string;
     consumerToken: string;// current company consumer
@@ -18,6 +20,8 @@ export interface EnvConfig {
     consumer: string;
     clientAppId: number; // this client application identifies itself to the server with this id
     SOCKET_IO_PORT: number; // push server port
+    defaultauth?: string;
+    firebaseConfig?: any;
 }
 
 // export interface CdResponse {
@@ -270,10 +274,11 @@ export interface ISessResp {
     cd_token?: string;
     userId?: number | null;
     jwt: {
-        jwtToken: string,
+        jwtToken: string | null,
         checked: boolean,
-        checkTime: number,
+        checkTime: number | null,
         authorized: boolean,
+        ttl: number | null,
     } | null
     ttl: number;
     initUuid?: string;
@@ -297,26 +302,27 @@ export interface IRespInfo {
 
 export interface ICdPushEnvelop {
     pushData: {
+        appId: string;
+        socketScope: string;
+        pushGuid: string;
         m?: string,
-        pushRecepients: IPushRecepient[],
-        triggerEvent: string,
-        emittEvent: string,
-        token: string,
-        initTime: number | null,
-        relayTime: number | null,
-        relayed: boolean,
-        deliveryTime: number | null,
-        deliverd: boolean,
+        pushRecepients: ICommConversationSub[];
+        triggerEvent: string;
+        emittEvent: string;
+        token: string;
+        commTrack: CommTrack;
     },
     req: ICdRequest | null,
     resp: ICdResponse | null
 };
 
-export interface IPushRecepient {
-    userId: number;
-    subTypeId: number;
-    room?: string;
-}
+// export interface IPushRecepient {
+//     userId: number;
+//     subTypeId: number;
+//     room?: string;
+// }
+
+
 
 export interface IServiceInput {
     svInstance: any;
@@ -329,16 +335,16 @@ export interface IServiceInput {
 }
 
 export interface IDoc {
-    doc_id?: number;
-    doc_guid?: string;
-    doc_name?: string;
-    doc_description?: string;
-    company_id?: number;
-    doc_from: number;
-    doc_type_id: number;
-    doc_date?: Date;
-    attach_guid?: string;
-    doc_expire_date?: Date;
+    docId?: number;
+    docGuid?: string;
+    docName?: string;
+    docDescription?: string;
+    companyId?: number;
+    docFrom: number;
+    docTypeId: number;
+    docDate?: Date;
+    attachGuid?: string;
+    docExpireDate?: Date;
 }
 
 export type ClassRef = new (...args: any[]) => any;
@@ -357,12 +363,53 @@ export interface IBase {
 }
 
 export interface ICommConversationSub {
-    user_id: number; // subscriber user_id
-    sub_type_id: number; // type of subscriber
-    commconversation_id?: number;
-    commconversationsub_id?: number;
-    commconversationsub_invited?: boolean;
-    commconversationsub_accepted?: boolean;
+    userId: number; // subscriber userId
+    subTypeId: number; // type of subscriber
+    commconversationId?: number;
+    commconversationsubId?: number;
+    commconversationsubInvited?: boolean;
+    commconversationsubAccepted?: boolean;
+    groupId?: number; // can be used to represent chat room in websocket service
+    // commTrack: CommTrack;
+    cdObjId: CdObjId;
+}
+
+export interface CommTrack {
+    initTime: number | null,
+    relayTime: number | null,
+    relayed: boolean,
+    deliveryTime: number | null,
+    deliverd: boolean,
+}
+
+export interface CdObjId {
+    appId:string;
+    ngModule: string | null;
+    resourceName: string | null;
+    resourceGuid: string | null;
+    jwtToken: string | null;
+    socket: any;
+    socketId?: string;
+    commTrack: CommTrack | null;
+}
+
+export enum StorageType {
+    CdObjId = 0,
+    IAppState = 1,
+}
+
+export interface LsFilter {
+    storageType: StorageType;
+    cdObjId?: CdObjId,
+    appState?: IAppState
+}
+
+export const DEFAULT_COMM_TRACK = {
+    initTime: null,
+    relayTime: null,
+    relayed: false,
+    deliveryTime: null,
+    deliverd: false,
 }
 
 export interface IAclCtx {
