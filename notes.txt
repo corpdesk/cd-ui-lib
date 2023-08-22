@@ -1,3 +1,7 @@
+To build run:
+ng build --project core
+
+
 References :
 - https://tomastrajan.medium.com/the-best-way-to-architect-your-angular-libraries-87959301d3d3
 - https://medium.com/tunaiku-tech/creating-secondary-entry-points-for-your-angular-library-1d5c0e95600a
