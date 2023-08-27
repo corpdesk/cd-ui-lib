@@ -61,7 +61,7 @@ export class ServerService {
 
   registerResource$(params: any) {
     console.log('base/ServerService::registerResource()/params:', params)
-    return this.http.post('http://localhost:3000/p-reg/', params, this.options);
+    return this.http.post(this.env.apiEndpoint, params, this.options);
   }
 
 }
