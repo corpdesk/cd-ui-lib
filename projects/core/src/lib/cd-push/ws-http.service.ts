@@ -41,23 +41,23 @@ export class WsHttpService {
   }
 
   // proc(params: PostData) {
-  //   return this.http.post(this.env.apiEndpoint, params, this.options);
+  //   return this.http.post(this.env.apiHost, params, this.options);
   // }
 
   // proc(params: PostData) {
-  //   // const url: string = `${this.env.apiEndpoint}:${this.env.CD_PORT || 80}`;
+  //   // const url: string = `${this.env.apiHost}:${this.env.CD_PORT || 80}`;
   //   const url: string = `http://localhost:3001`;
   //   return this.http.post(url , params, this.options);
   // }
 
   proc(params: CdRequest) {
     console.log('base/ServerService::proc()/params:', JSON.stringify(params))
-    return this.http.post(this.env.apiEndpoint, params, this.options);
+    return this.http.post(this.env.apiHost, params, this.options);
   }
 
   WsHttpService(params: CdRequest) {
     console.log('base/ServerService::wsRegister()/params:', JSON.stringify(params))
-    return this.http.post(this.env.apiEndpoint, params, this.options);
+    return this.http.post(this.env.apiHost, params, this.options);
   }
 
   post(params: CdRequest, route: string) {
