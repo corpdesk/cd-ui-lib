@@ -15,7 +15,9 @@ import { Validators } from "@angular/forms";
     apiEndpoint: string;
     consumerToken: string;// current company consumer
     USER_RESOURCES: string;
-    HOST: string;
+    apiHost:string;
+    shellHost: string;
+    sioHost:string;
     CD_PORT?: number; // optional setting for apiEndpoint
     consumer: string;
     clientAppId: number; // this client application identifies itself to the server with this id
