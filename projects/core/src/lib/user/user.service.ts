@@ -82,7 +82,7 @@ export class UserService {
       this.cuid = resp.data.userData.user_id;
       this.pals = resp.data.pals;
       // this.currentUser.picture = 'assets/cd/branding/coop/avatarCircle.svg';
-      const avatarUrl = `${this.env.HOST}/user-resources/${resp.data.userData.user_guid}/avatar-01/a.jpg`;
+      const avatarUrl = `${this.env.shellHost}/user-resources/${resp.data.userData.user_guid}/avatar-01/a.jpg`;
       console.log('avatarUrl:', avatarUrl);
       this.currentProfile.picture = avatarUrl;
     }
