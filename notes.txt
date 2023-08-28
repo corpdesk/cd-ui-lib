@@ -63,8 +63,8 @@ https://tomastrajan.medium.com/why-and-how-to-lazy-load-angular-libraries-a3bf14
 - modify to connect via cd-api (node.js version) from laravel back-end
     - create a new param in environment: CD_PORT
     - set CD_PORT = 3000,
-    - modify ServerService::proc() for this.env.apiHost to...
-    - `${this.env.apiHost}:${this.env.CD_PORT || 80}`
+    - modify ServerService::proc() for this.env.apiEndpoint to...
+    - `${this.env.apiEndpoint}:${this.env.CD_PORT || 80}`
     - this allows library clients to set endpoints with port setting
     - port setting defaults to 80 when CD_PORT is not set
     - update 'username' to 'user_name'
@@ -2557,8 +2557,8 @@ Testing socket.io on login:
 - modify to connect via cd-api (node.js version) from laravel back-end
     - create a new param in environment: CD_PORT
     - set CD_PORT = 3000,
-    - modify ServerService::proc() for this.env.apiHost to...
-    - `${this.env.apiHost}:${this.env.CD_PORT || 80}`
+    - modify ServerService::proc() for this.env.apiEndpoint to...
+    - `${this.env.apiEndpoint}:${this.env.CD_PORT || 80}`
     - this allows library clients to set endpoints with port setting
     - port setting defaults to 80 when CD_PORT is not set
     - update 'username' to 'user_name'
