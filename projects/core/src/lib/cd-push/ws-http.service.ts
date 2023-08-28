@@ -37,7 +37,7 @@ export class WsHttpService {
       headers: h
     };
 
-    this.wsEndPoint = 'http://localhost:3000';
+    this.wsEndPoint = 'http://cd-sio-23:3000';
   }
 
   // proc(params: PostData) {
@@ -73,13 +73,13 @@ export class WsHttpService {
   jwtAuth$(userName: string, password: string) {
     console.log('jwtAuth()/01')
     // const requestUrl = `${environment.wsEndpoint}/auth?username=${userName}&password=${password}`
-    const requestUrl = 'http://localhost:3000/auth?username=' + userName + '&password=' + password;
+    const requestUrl = 'http://cd-sio-23:3000/auth?username=' + userName + '&password=' + password;
     return this.http.get(requestUrl, this.options);
   }
 
   registerResource$(params: ICdRequest) {
     console.log('base/ServerService::registerResource$()/params:', JSON.stringify(params))
-    return this.http.post('http://localhost:3000/p-reg/', params, this.options);
+    return this.http.post('http://cd-sio-23:3000/p-reg/', params, this.options);
   }
 
   setParams(p: CdRequest) {
