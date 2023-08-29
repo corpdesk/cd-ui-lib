@@ -72,13 +72,13 @@ export class WsHttpService {
 
   jwtAuth$(userName: string, password: string) {
     console.log('jwtAuth()/01')
-    const requestUrl = `${this.env.sioHost}:${this.env.SOCKET_IO_PORT}/auth?username=` + userName + '&password=' + password;
+    const requestUrl = `${sioEndpoint}/auth?username=` + userName + '&password=' + password;
     return this.http.get(requestUrl, this.options);
   }
 
   registerResource$(params: ICdRequest) {
     console.log('base/ServerService::registerResource$()/params:', JSON.stringify(params))
-    return this.http.post(`${this.env.sioHost}:${this.env.SOCKET_IO_PORT}/p-reg/`, params, this.options);
+    return this.http.post(`${sioEndpoint}/p-reg/`, params, this.options);
   }
 
   setParams(p: CdRequest) {

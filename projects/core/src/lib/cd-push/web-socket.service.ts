@@ -70,7 +70,7 @@ export class WebsocketService {
   }
 
   connect() {
-    this.socket$ = webSocket(`ws://cd-sio-23:3000/ws`);
+    this.socket$ = webSocket(`${wsEndpoint}/ws`);
     this.data$ = this.socket$
       .pipe(
         retryWhen(errors =>
@@ -106,7 +106,7 @@ export class WebsocketService {
     console.log('WebsocketService::connectSecure()/01')
     this.socket$ = webSocket(
       {
-        url: `ws://cd-sio-23:3000/ws?token=${jwtToken}&rg=${resourceGuid}`,
+        url: `${wsEndpoint}/ws?token=${jwtToken}&rg=${resourceGuid}`,
         openObserver: {
           next: () => {
             console.log("connection ok");
@@ -137,7 +137,7 @@ export class WebsocketService {
   }
   // async connectSecure(userName: string, password: string) {
   //   console.log('WebsocketService::connectSecure()/01')
-  //   // const requestUrl = 'http://cd-sio-23:3000/auth?username=' + userName + '&password=' + password;
+  //   // const requestUrl = '${sioEndpoint}/auth?username=' + userName + '&password=' + password;
   //   // console.log('WebsocketService::connectSecure()/requestUrl:', requestUrl);
   //   try {
   //     const authResponse: any = await this.getValueFromHttp(userName, password);
@@ -146,7 +146,7 @@ export class WebsocketService {
   //     console.log('init()/this.jwtToken:', this.jwtToken);
   //     this.socket$ = webSocket(
   //       {
-  //         url: `ws://cd-sio-23:3000/ws?token=${this.jwtToken}`,
+  //         url: `${wsEndpoint}/ws?token=${this.jwtToken}`,
   //         openObserver: {
   //           next: () => {
   //             console.log("connection ok");

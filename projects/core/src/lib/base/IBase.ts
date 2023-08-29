@@ -13,6 +13,8 @@ import { Validators } from "@angular/forms";
     appId: string;
     production: boolean;
     apiEndpoint: string;
+    sioEndpoint: string;
+    wsEndpoint: string;
     consumerToken: string;// current company consumer
     USER_RESOURCES: string;
     apiHost:string;
