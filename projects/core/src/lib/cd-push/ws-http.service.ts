@@ -37,7 +37,7 @@ export class WsHttpService {
       headers: h
     };
 
-    this.wsEndPoint = 'http://cd-sio-23:3000';
+    this.wsEndPoint = `${this.env.sioHost}:${this.env.SOCKET_IO_PORT}`;
   }
 
   // proc(params: PostData) {
@@ -79,7 +79,7 @@ export class WsHttpService {
 
   registerResource$(params: ICdRequest) {
     console.log('base/ServerService::registerResource$()/params:', JSON.stringify(params))
-    return this.http.post('http://cd-sio-23:3000/p-reg/', params, this.options);
+    return this.http.post(`${this.env.sioHost}:${this.env.SOCKET_IO_PORT}/p-reg/`, params, this.options);
   }
 
   setParams(p: CdRequest) {

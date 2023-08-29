@@ -15,7 +15,9 @@ export interface EnvConfig {
     apiEndpoint: string;
     consumerToken: string;// current company consumer
     USER_RESOURCES: string;
-    HOST: string;
+    apiHost: string;
+    sioHost: string;
+    shellHost: string;
     CD_PORT?: number; // optional setting for apiEndpoint
     consumer: string;
     clientAppId: number; // this client application identifies itself to the server with this id
