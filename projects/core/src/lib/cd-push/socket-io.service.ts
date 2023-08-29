@@ -28,9 +28,9 @@ export class SocketIoService {
   ) {
     // this.socket = io(`${environment.apiEndpoint}:` + environment.SOCKET_IO_PORT);
     // this.socket = io.connect('https://localhost', {secure: true});
-    this.url = `${this.env.apiEndpoint}:` + this.env.SOCKET_IO_PORT;
+    this.url = `${this.env.sioEndpoint}`;
     console.log('core/SocketioService::constructor()/eventName:', this.url)
-    this.socket = io(this.url);
+    this.socket = io(`${this.env.sioEndpoint}`);
   }
 
   listen(eventName: string) {

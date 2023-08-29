@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { v4 as uuidv4 } from 'uuid';
 import { ICdPushEnvelop } from './IBase';
 import { throwError } from 'rxjs';
@@ -7,6 +7,7 @@ import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { pushEnvelop } from './message.model';
 import { of } from 'rxjs';
 import { WsHttpService } from '.';
+import { EnvConfig } from '@corpdesk/core/src/lib/base';
 
 
 @Injectable({
@@ -22,8 +23,10 @@ export class WebsocketService {
   private maxRetry = 10;
   private connectionOk = false;
   private pushGuid = '';
+  readonly url: string = '';
   constructor(
     private svWsHttp: WsHttpService,
+    @Inject('env') private env: EnvConfig,
   ) {
     this.pushGuid = uuidv4();
     console.log('WebsocketService::construct()/this.pushGuid:', this.pushGuid)
@@ -70,7 +73,7 @@ export class WebsocketService {
   }
 
   connect() {
-    this.socket$ = webSocket(`${wsEndpoint}/ws`);
+    this.socket$ = webSocket(`${this.env.wsEndpoint}/ws`);
     this.data$ = this.socket$
       .pipe(
         retryWhen(errors =>
@@ -106,7 +109,7 @@ export class WebsocketService {
     console.log('WebsocketService::connectSecure()/01')
     this.socket$ = webSocket(
       {
-        url: `${wsEndpoint}/ws?token=${jwtToken}&rg=${resourceGuid}`,
+        url: `${this.env.sioEndpoint}/ws?token=${jwtToken}&rg=${resourceGuid}`,
         openObserver: {
           next: () => {
             console.log("connection ok");
