@@ -72,8 +72,7 @@ export class WsHttpService {
 
   jwtAuth$(userName: string, password: string) {
     console.log('jwtAuth()/01')
-    // const requestUrl = `${environment.wsEndpoint}/auth?username=${userName}&password=${password}`
-    const requestUrl = 'http://cd-sio-23:3000/auth?username=' + userName + '&password=' + password;
+    const requestUrl = `${this.env.sioHost}:${this.env.SOCKET_IO_PORT}/auth?username=` + userName + '&password=' + password;
     return this.http.get(requestUrl, this.options);
   }
 
