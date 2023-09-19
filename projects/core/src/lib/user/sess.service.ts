@@ -75,6 +75,10 @@ export class SessService {
     this.registerWsService()
   }
 
+  setEnv(env:EnvConfig){
+    this.env = env;
+  }
+
   registerWsService() {
     this.resourceGuid = this.svBase.getGuid();
     const key = this.resourceGuid;
@@ -253,7 +257,7 @@ export class SessService {
          */
         const pushEnvelop: ICdPushEnvelop = {
           pushData: {
-            appId: localStorage.getItem('appId')!,
+            appId: localStorage.getItem('appId') as string,
             socketScope: 'app',
             pushGuid: this.svBase.getGuid(),
             m: menu,
@@ -261,7 +265,8 @@ export class SessService {
             triggerEvent: 'login',
             emittEvent: 'push-menu',
             token: cdToken!,
-            commTrack: DEFAULT_COMM_TRACK
+            commTrack: DEFAULT_COMM_TRACK,
+            isNotification: false
           },
           req: this.setEnvelopeAuth(cdToken!),
           resp: res

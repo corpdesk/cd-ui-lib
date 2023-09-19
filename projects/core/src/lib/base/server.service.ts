@@ -25,7 +25,7 @@ export class ServerService {
     private http: HttpClient,
     @Inject('env') private env: EnvConfig,
   ) {
-    console.log('core/ServerService::constructor()/this.env:', this.env);
+    // console.log('core/ServerService::constructor()/this.env:', this.env);
     const h = new HttpHeaders({
       'Content-Type': 'application/json',
       'Access-Control-Allow-Origin': '*'
@@ -33,6 +33,10 @@ export class ServerService {
     this.options = {
       headers: h
     };
+  }
+
+  setEnv(env:EnvConfig){
+    this.env = env;
   }
 
   // proc(params: PostData) {

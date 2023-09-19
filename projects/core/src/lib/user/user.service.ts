@@ -69,6 +69,10 @@ export class UserService {
 
   // }
 
+  setEnv(env:EnvConfig){
+    this.env = env;
+  }
+
   userDataResp(resp: ICdResponse) {
     console.log('starting UserService::init()');
     if (resp) {
@@ -104,6 +108,7 @@ export class UserService {
     delete authData.rememberMe;
     this.setEnvelopeAuth(authData);
     // console.log('Submit()/this.postData:', JSON.stringify(this.postData))
+    this.svServer.setEnv(this.env)
     return this.svServer.proc(this.postData);
   }
 

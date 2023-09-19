@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { io } from "socket.io-client";
+import { EnvConfig } from '../base';
 
 
 @Injectable({
@@ -9,9 +10,12 @@ import { io } from "socket.io-client";
 export class SioService {
 
   public message$: BehaviorSubject<string> = new BehaviorSubject('');
-  constructor() { }
+  constructor(
+    @Inject('env') private env: EnvConfig,
+  ) { }
 
-  socket = io('http://localhost:3200');
+  // socket = io('http://localhost:3200');
+  socket = io(this.env.sioEndpoint);
 
   public sendMessage(message: any) {
     this.socket.emit('message', message);

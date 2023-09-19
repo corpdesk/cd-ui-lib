@@ -315,10 +315,28 @@ export interface ICdPushEnvelop {
         emittEvent: string;
         token: string;
         commTrack: CommTrack;
+        isNotification: boolean | null;
     },
     req: ICdRequest | null,
     resp: ICdResponse | null
 };
+
+// export interface ICdPushEnvelop {
+//     pushData: {
+//         appId: string;
+//         socketScope: string;
+//         pushGuid: string;
+//         m?: string;
+//         pushRecepients: ICommConversationSub[];
+//         triggerEvent: string;
+//         emittEvent: string;
+//         token: string;
+//         commTrack: CommTrack;
+//         isNotification: boolean | null;
+//     },
+//     req: ICdRequest | null,
+//     resp: ICdResponse | null
+// };
 
 // export interface IPushRecepient {
 //     userId: number;
@@ -366,6 +384,17 @@ export interface IBase {
     dRules: object;
 }
 
+// export interface ICommConversationSub {
+//     userId: number; // subscriber userId
+//     subTypeId: number; // type of subscriber
+//     commconversationId?: number;
+//     commconversationsubId?: number;
+//     commconversationsubInvited?: boolean;
+//     commconversationsubAccepted?: boolean;
+//     groupId?: number; // can be used to represent chat room in websocket service
+//     // commTrack: CommTrack;
+//     cdObjId: CdObjId;
+// }
 export interface ICommConversationSub {
     userId: number; // subscriber userId
     subTypeId: number; // type of subscriber
@@ -378,12 +407,28 @@ export interface ICommConversationSub {
     cdObjId: CdObjId;
 }
 
+// export interface CommTrack {
+//     initTime: number | null,
+//     relayTime: number | null,
+//     relayed: boolean,
+//     deliveryTime: number | null,
+//     deliverd: boolean,
+// }
+
 export interface CommTrack {
-    initTime: number | null,
-    relayTime: number | null,
-    relayed: boolean,
-    deliveryTime: number | null,
-    deliverd: boolean,
+    initTime: number | null;
+    relayTime: number | null;
+    pushed: boolean;
+    pushTime: number | null;
+    relayed: boolean;
+    deliveryTime: number | null;
+    delivered: boolean;
+    completed?: boolean;
+    completedTime?: number | null;
+    cached?:boolean;
+    cachedTime?:number | null;
+    saved?:boolean;
+    savedTime?: number | null;
 }
 
 export interface CdObjId {
@@ -414,6 +459,9 @@ export const DEFAULT_COMM_TRACK = {
     relayed: false,
     deliveryTime: null,
     deliverd: false,
+    pushed: false, 
+    pushTime: null, 
+    delivered: false
 }
 
 export interface IAclCtx {

@@ -150,6 +150,10 @@ export class MenuService {
     this.menu = this.initMenu();
   }
 
+  setEnv(env:EnvConfig){
+    this.env = env;
+  }
+
   /*
   invoked following svUser::getUserData() when all menu items are fetched
   */
