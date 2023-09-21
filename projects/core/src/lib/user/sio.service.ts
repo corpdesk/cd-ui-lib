@@ -1,21 +1,28 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { io } from "socket.io-client";
-import { EnvConfig } from '../base';
+// import { EnvConfig } from '../base';
 
 
 @Injectable({
   providedIn: 'root',
 })
 export class SioService {
-
+  env: any=null;
+  socket: any = null;
   public message$: BehaviorSubject<string> = new BehaviorSubject('');
   constructor(
-    @Inject('env') private env: EnvConfig,
+    // @Inject('env') private env: EnvConfig,
   ) { }
 
-  // socket = io('http://localhost:3200');
-  socket = io(this.env.sioEndpoint);
+  setEnv(env:any){
+    this.env = env;
+  }
+  
+  init(){
+    // socket = io('http://localhost:3200');
+    this.socket = io(this.env.sioEndpoint);
+  }
 
   public sendMessage(message: any) {
     this.socket.emit('message', message);
@@ -33,7 +40,7 @@ export class SioService {
     // this.socket.on('message', (message) =>{
     //   this.message$.next(message);
     // });
-    this.socket.on('push-menu', (data) => {
+    this.socket.on('push-menu', (data: any) => {
       console.log('message:', data)
       console.log('JSON.stringify(message):', JSON.stringify(data))
       this.message$.next(data);

@@ -131,7 +131,7 @@ export class BaseService {
     return this.svServer.proc(this.postData);
   }
 
-  searchLocalStorage(f: LsFilter) {
+  searchLocalStorage(f: any) {
     // const lc = { ...localStorage };
     const lcArr = [];
 
@@ -147,16 +147,21 @@ export class BaseService {
       // console.log the iteration key and value
       console.log('Key: ' + k + ', Value: ' + v);
       try {
-        const lcItem = JSON.parse(v!);
-        if ('success' in lcItem) {
-          const appState: IAppState = lcItem;
-          // console.log('BaseService::searchLocalStorage()/appState:', appState)
+        if (typeof (v) === 'object') {
+          const lcItem = JSON.parse(v!);
+          if ('success' in lcItem) {
+            const appState: IAppState = lcItem;
+            // console.log('BaseService::searchLocalStorage()/appState:', appState)
+          }
+          if ('resourceGuid' in lcItem) {
+            const cdObjId = lcItem;
+            // console.log('BaseService::searchLocalStorage()/cdObjId:', cdObjId)
+          }
+          lcArr.push({ key: k, value: JSON.parse(v!) })
+        } else {
+          lcArr.push({ key: k, value: v })
         }
-        if ('resourceGuid' in lcItem) {
-          const cdObjId = lcItem;
-          // console.log('BaseService::searchLocalStorage()/cdObjId:', cdObjId)
-        }
-        lcArr.push({ key: k, value: JSON.parse(v!) })
+
       } catch (e) {
         console.log('offending item:', v);
         console.log('the item is not an object');
@@ -173,14 +178,21 @@ export class BaseService {
     // isAppState
     const resourceName = 'UserModule';
     const AppStateItems = (d: any) => 'success' in d.value;
+    const isObject = (d: any) => typeof (d.value) === 'object';
     const CdObjIdItems = (d: any) => 'resourceName' in d.value;
     const filtObjName = (d: any) => d.value.resourceName === f.cdObjId!.resourceName && d.value.ngModule === f.cdObjId!.ngModule;
     const latestItem = (prev: any, current: any) => (prev.value.commTrack.initTime > current.value.commTrack.initTime) ? prev : current;
-    return lcArr
-      .filter(CdObjIdItems)
-      .filter(filtObjName)
-      .reduce(latestItem)
-    // console.log('searchLocalStorage()/result:', result)
+    let ret: any = null;
+    try {
+      ret = lcArr
+        .filter(isObject)
+        .filter(CdObjIdItems!)
+        .filter(filtObjName!)
+        .reduce(latestItem!)
+    } catch (e) {
+      console.log('Error:', e);
+    }
+    return ret;
 
   }
 }

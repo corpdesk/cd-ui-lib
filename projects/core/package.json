@@ -1,6 +1,6 @@
 {
   "name": "@corpdesk/core",
-  "version": "0.1.14",
+  "version": "0.2.7",
   "license": "MIT",
   "peerDependencies": {
     "@angular/common": "~12.2.0",
@@ -9,7 +9,7 @@
     "moment-timezone": "^0.5.33",
     "ng2-file-upload": "^1.4.0",
     "rxjs-compat": "^6.6.7",
-    "socket.io-client": "^4.4.1"
+    "socket.io-client": "^4.7.2"
   },
   "dependencies": {
     "moment": "^2.29.1",

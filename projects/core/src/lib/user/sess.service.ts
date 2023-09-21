@@ -258,7 +258,7 @@ export class SessService {
         const pushEnvelop: ICdPushEnvelop = {
           pushData: {
             appId: localStorage.getItem('appId') as string,
-            socketScope: 'app',
+            // socketScope: 'app',
             pushGuid: this.svBase.getGuid(),
             m: menu,
             pushRecepients: this.pushRecepients,

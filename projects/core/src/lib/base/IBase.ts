@@ -8,7 +8,7 @@ import { Validators } from "@angular/forms";
  * @action // class method to invoke
  */
 
- export interface EnvConfig {
+export interface EnvConfig {
     clientAppGuid: string;
     appId: string;
     production: boolean;
@@ -17,9 +17,9 @@ import { Validators } from "@angular/forms";
     wsEndpoint: string;
     consumerToken: string;// current company consumer
     USER_RESOURCES: string;
-    apiHost:string;
+    apiHost: string;
     shellHost: string;
-    sioHost:string;
+    sioHost: string;
     CD_PORT?: number; // optional setting for apiEndpoint
     consumer: string;
     clientAppId: number; // this client application identifies itself to the server with this id
@@ -154,7 +154,7 @@ export interface ICdResponse {
 
 // export interface ISessResp {
 //     cd_token?: string;
-//     userId?: number | null;
+//     userId?: number | string | null;
 //     jwt?: string;
 //     ttl: number;
 // }
@@ -276,7 +276,7 @@ export enum ModuleScope {
 
 export interface ISessResp {
     cd_token?: string;
-    userId?: number | null;
+    userId?: number | string | null;
     jwt: {
         jwtToken: string | null,
         checked: boolean,
@@ -304,22 +304,46 @@ export interface IRespInfo {
 //     pushData?: any;
 // }
 
+// export interface ICdPushEnvelop {
+//     pushData: {
+//         appId: string;
+//         socketScope: string;
+//         pushGuid: string;
+//         m?: string,
+//         pushRecepients: ICommConversationSub[];
+//         triggerEvent: string;
+//         emittEvent: string;
+//         token: string;
+//         commTrack: CommTrack;
+//         isNotification: boolean | null;
+//     },
+//     req: ICdRequest | null,
+//     resp: ICdResponse | null
+// };
 export interface ICdPushEnvelop {
     pushData: {
-        appId: string;
-        socketScope: string;
+        appId?: string;
+        appSockets?: ISocketStore[];
         pushGuid: string;
-        m?: string,
+        m?: string;
         pushRecepients: ICommConversationSub[];
         triggerEvent: string;
         emittEvent: string;
         token: string;
         commTrack: CommTrack;
         isNotification: boolean | null;
+        isAppInit?: boolean | null;
     },
     req: ICdRequest | null,
     resp: ICdResponse | null
 };
+
+export interface ISocketStore{
+    socketId:string;
+    name:string;
+    socketGuid?:string;
+    parentComponent?:string;
+}
 
 // export interface ICdPushEnvelop {
 //     pushData: {
@@ -416,23 +440,23 @@ export interface ICommConversationSub {
 // }
 
 export interface CommTrack {
-    initTime: number | null;
-    relayTime: number | null;
+    initTime: number | string | null;
+    relayTime: number | string | null;
     pushed: boolean;
-    pushTime: number | null;
+    pushTime: number | string | null;
     relayed: boolean;
-    deliveryTime: number | null;
+    deliveryTime: number | string | null;
     delivered: boolean;
     completed?: boolean;
-    completedTime?: number | null;
-    cached?:boolean;
-    cachedTime?:number | null;
-    saved?:boolean;
-    savedTime?: number | null;
+    completedTime?: number | string | null;
+    cached?: boolean;
+    cachedTime?: number | string | null;
+    saved?: boolean;
+    savedTime?: number | string | null;
 }
 
 export interface CdObjId {
-    appId:string;
+    appId: string;
     ngModule: string | null;
     resourceName: string | null;
     resourceGuid: string | null;
@@ -459,8 +483,8 @@ export const DEFAULT_COMM_TRACK = {
     relayed: false,
     deliveryTime: null,
     deliverd: false,
-    pushed: false, 
-    pushTime: null, 
+    pushed: false,
+    pushTime: null,
     delivered: false
 }
 
@@ -531,6 +555,60 @@ export interface CacheData {
     initUuid?: string;
     initTime?: string;
 }
+
+export interface ILoginData {
+    consumer: IConsumer[];
+    menuData: IMenuItem[];
+    userData: IUserData;
+}
+
+export interface IConsumer {
+    consumerId: number | string ;
+    consumerGuid: string;
+    consumerName: string;
+    consumerEnabled: number | string | null;
+    docId: number | string | null;
+    companyId: number | string | null;
+    companyGuid: string | null;
+}
+
+export interface IMenuItem {
+    menuLabel: string | null;
+    menuId: number;
+    icon: string | null;
+    path: string | null;
+    isTitle: string | null;
+    badge: string | null;
+    menuParentId: number | string | null;
+    isLayout: number | boolean | null;
+    moduleIsPublic: number | string | null;
+    moduleGuid: string | null;
+    children: IMenuItem[]
+}
+
+export interface IUserData {
+    userId: number | string ;
+    userGuid: string | null;
+    userName: string | null;
+    email: string | null;
+    companyId: number | string | null;
+    docId: number | string | null;
+    mobile: number | string | null;
+    gender: number | string | null;
+    birthDate: string | null;
+    postalAddr: string | null;
+    fName: string | null;
+    mName: string | null;
+    lName: string | null;
+    nationalId: number | string | null;
+    passportId: number | string | null;
+    userEnabled: boolean | number | null;
+    zipCode: string | null;
+    activationKey: string | null;
+    userTypeId: number | string | null;
+}
+
+
 
 
 
