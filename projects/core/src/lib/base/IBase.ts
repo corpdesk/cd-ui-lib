@@ -323,7 +323,7 @@ export interface IRespInfo {
 export interface ICdPushEnvelop {
     pushData: {
         appId?: string;
-        appSockets?: ISocketStore[];
+        appSockets?: ISocketItem[];
         pushGuid: string;
         m?: string;
         pushRecepients: ICommConversationSub[];
@@ -338,11 +338,16 @@ export interface ICdPushEnvelop {
     resp: ICdResponse | null
 };
 
-export interface ISocketStore{
+export interface ISocketItem{
     socketId:string;
     name:string;
     socketGuid?:string;
-    parentComponent?:string;
+}
+
+export interface LsFilter {
+    storageType: StorageType;
+    cdObjId?: CdObjId;
+    appState?: IAppState;
 }
 
 // export interface ICdPushEnvelop {

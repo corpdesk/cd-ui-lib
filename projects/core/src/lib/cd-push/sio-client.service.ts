@@ -16,7 +16,7 @@ export class SioClientService {
   constructor() {
   }
 
-  setEnv(env:any){
+  setEnv(env: any) {
     this.env = env
   }
   /**
@@ -72,11 +72,30 @@ export class SioClientService {
    * initiate listeners to various events involved
    * in pushing message via push server
    */
-  initSio() {
+  initSio(cls: any, action: any) {
     console.log('cdUiLib::SioClientService::initSio()/01')
     this.socket = io(this.env.sioEndpoint);
     // this.registerResource(rGuid)
-    
+
+    /**
+     * injecting extra listeners from 
+     * implementing class
+     */
+    // extListiners(this);
+
+    if (action) {
+      this.listenSecure('push-registered-client', cls, action)
+        .subscribe((payLoadStr: any) => {
+          console.log('initSio::listenSecure/action=push-registered-client')
+          action(cls, 'push-registered-client', payLoadStr)
+        })
+
+      this.listenSecure('push-msg-pushed', cls, action)
+        .subscribe((payLoadStr: any) => {
+          console.log('initSio::listenSecure/action=push-msg-pushed')
+          action(cls, 'push-msg-pushed', payLoadStr)
+        })
+    }
 
     /**
      * Send receives 'push-msg-relayed' event when
@@ -159,8 +178,9 @@ export class SioClientService {
 
   }
 
-  public listenSecure = (emittEvent: string) => {
+  public listenSecure = (emittEvent: string, cls = null, action: any = null) => {
     console.log('cdUiLib::SioClientService::listenSecure()/emittEvent/01', emittEvent)
+
     this.socket.on(emittEvent, (payLoadStr: any) => {
 
       /**
@@ -177,7 +197,18 @@ export class SioClientService {
         console.log('cdUiLib::SioClientService::listenSecure()/emittEvent/01/emittEvent:', emittEvent)
         console.log('cdUiLib::SioClientService::listenSecure()/payLoadStr:', payLoadStr)
         const payLoad: ICdPushEnvelop = payLoadStr;
-        if ('pushData' in payLoad) {
+        // if (emittEvent === 'push-registered-client') {
+        //   action(cls, payLoadStr)
+        // }
+        // if (emittEvent == 'push-registered-client') {
+        //   action(cls,emittEvent, payLoad)
+        // }
+
+        if(action){
+          action(cls, emittEvent, payLoad);
+        }
+
+        if ('pushData' in payLoad && action) {
           console.log('cdUiLib::SioClientService::listenSecure/2')
           if ('triggerEvent' in payLoad.pushData) {
             console.log('cdUiLib::SioClientService::listenSecure/3')
@@ -185,6 +216,7 @@ export class SioClientService {
           } else {
             console.log('cdUiLib::SioClientService::listenSecure()/triggerEvent missing in payLoad.pushData')
           }
+
         } else {
           console.log('cdUiLib::SioClientService::listenSecure()/pushData missing in payLoad')
         }

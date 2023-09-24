@@ -12,6 +12,7 @@ import {
   providedIn: 'root',
 })
 export class BaseService {
+  debug = false;
   postData: ICdRequest;
   module = '';
   controller = '';
@@ -131,7 +132,8 @@ export class BaseService {
     return this.svServer.proc(this.postData);
   }
 
-  searchLocalStorage(f: any) {
+  searchLocalStorage(f: LsFilter) {
+    console.log('starting BaseService::searchLocalStorage()/lcLength:');
     // const lc = { ...localStorage };
     const lcArr = [];
 
@@ -147,19 +149,27 @@ export class BaseService {
       // console.log the iteration key and value
       console.log('Key: ' + k + ', Value: ' + v);
       try {
+        console.log('BaseService::searchLocalStorage()/1')
         if (typeof (v) === 'object') {
+          console.log('BaseService::searchLocalStorage()/2')
+          console.log('BaseService::searchLocalStorage()/v:', v)
           const lcItem = JSON.parse(v!);
           if ('success' in lcItem) {
+            console.log('BaseService::searchLocalStorage()/3')
             const appState: IAppState = lcItem;
-            // console.log('BaseService::searchLocalStorage()/appState:', appState)
+            console.log('BaseService::searchLocalStorage()/appState:', appState)
           }
           if ('resourceGuid' in lcItem) {
+            console.log('BaseService::searchLocalStorage()/4')
             const cdObjId = lcItem;
-            // console.log('BaseService::searchLocalStorage()/cdObjId:', cdObjId)
+            console.log('BaseService::searchLocalStorage()/cdObjId:', cdObjId)
           }
+          console.log('BaseService::searchLocalStorage()/5')
           lcArr.push({ key: k, value: JSON.parse(v!) })
         } else {
-          lcArr.push({ key: k, value: v })
+          console.log('BaseService::searchLocalStorage()/typeof (v):', typeof (v))
+          console.log('BaseService::searchLocalStorage()/6')
+          lcArr.push({ key: k, value: JSON.parse(v) })
         }
 
       } catch (e) {
@@ -168,15 +178,11 @@ export class BaseService {
         console.log('Error:', e);
       }
 
-      // } catch (e) {
-      //   console.log('BaseService::pushSubscribe()/Error:', e);
-      // }
-
     }
     console.log('BaseService::searchLocalStorage()/lcArr:', lcArr);
     console.log('BaseService::searchLocalStorage()/f.cdObjId!.resourceName:', f.cdObjId!.resourceName);
     // isAppState
-    const resourceName = 'UserModule';
+    // const resourceName = 'UserModule';
     const AppStateItems = (d: any) => 'success' in d.value;
     const isObject = (d: any) => typeof (d.value) === 'object';
     const CdObjIdItems = (d: any) => 'resourceName' in d.value;
@@ -184,15 +190,51 @@ export class BaseService {
     const latestItem = (prev: any, current: any) => (prev.value.commTrack.initTime > current.value.commTrack.initTime) ? prev : current;
     let ret: any = null;
     try {
+      // ret = lcArr
+      //   .filter((d: any) => {
+      //     if (typeof (d.value) === 'object') {
+      //       console.log('BaseService::searchLocalStorage()/filteredByObject: d:', d);
+      //       return d
+      //     } else {
+      //       return null;
+      //     }
+      //   })
+      //   .filter((d: any) => {
+      //     if ('resourceName' in d.value) {
+      //       console.log('BaseService::searchLocalStorage()/filteredByResourceNameField: d:', d);
+      //       return d;
+      //     } else {
+      //       return null;
+      //     }
+      //   })
+      //   .filter((d: any) => {
+      //     console.log('BaseService::searchLocalStorage()/filteredByName: d:', d);
+      //     console.log('BaseService::searchLocalStorage()/filteredByName: d.value.resourceName:', d.value.resourceName);
+      //     console.log('BaseService::searchLocalStorage()/filteredByName: f.cdObjId!.resourceName:', f.cdObjId!.resourceName);
+      //     console.log('BaseService::searchLocalStorage()/filteredByName: d.value.ngModule:', d.value.ngModule);
+      //     console.log('BaseService::searchLocalStorage()/filteredByName: f.cdObjId!.ngModule:', f.cdObjId!.ngModule);
+      //     if (d.value.resourceName === f.cdObjId!.resourceName && d.value.ngModule === f.cdObjId!.ngModule) {
+      //       return d;
+      //     } else {
+      //       return null;
+      //     }
+      //   })
+      //   .reduce(
+      //     (prev={}, current={}) => {
+      //       console.log('BaseService::searchLocalStorage()/prev:', prev);
+      //       console.log('BaseService::searchLocalStorage()/current:', current);
+      //       return (prev.value.commTrack.initTime > current.value.commTrack.initTime) ? prev : current;
+      //     }
+      //   );
       ret = lcArr
         .filter(isObject)
         .filter(CdObjIdItems!)
         .filter(filtObjName!)
         .reduce(latestItem!)
+      console.log('BaseService::searchLocalStorage()/ret:', ret);
     } catch (e) {
       console.log('Error:', e);
     }
     return ret;
-
   }
 }

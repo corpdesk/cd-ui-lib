@@ -774,13 +774,16 @@ export class MenuService {
    * @param newMapping : remaping instructions
    */
   async mapMenu(cdMenu: CdMenu[]) {
+    console.log('start cdUiLib::MenuServices::mapMenu(cdMenu)')
     let strCdMenu = JSON.stringify(cdMenu);
+    console.log('cdUiLib::MenuServices::mapMenu(cdMenu)/strCdMenu:', strCdMenu)
     fieldMap.forEach((m: any) => {
       strCdMenu = this.replaceAll(strCdMenu, m.cdField, m.uiField);
     })
     // console.log('strCdMenu:', strCdMenu);
+    console.log('cdUiLib::MenuServices::mapMenu(cdMenu)/strCdMenu:', strCdMenu)
     const jCdMenu = JSON.parse(await strCdMenu);
-    console.log('jCdMenu:', jCdMenu);
+    console.log('cdUiLib::MenuServices::mapMenu(cdMenu)/jCdMenu:', jCdMenu)
     return jCdMenu;
   }
 
