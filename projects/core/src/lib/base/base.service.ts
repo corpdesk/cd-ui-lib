@@ -138,7 +138,7 @@ export class BaseService {
     const lcArr = [];
 
     const lcLength = localStorage.length;
-    console.log('BaseService::searchLocalStorage()/lcLength:', lcLength);
+    // console.log('BaseService::searchLocalStorage()/lcLength:', lcLength);
     let i = 0;
     for (let i = 0; i < localStorage.length; i++) {
       // try {
@@ -147,28 +147,28 @@ export class BaseService {
       // use key name to retrieve the corresponding value
       var v = localStorage.getItem(k!);
       // console.log the iteration key and value
-      console.log('Key: ' + k + ', Value: ' + v);
+      // console.log('Key: ' + k + ', Value: ' + v);
       try {
-        console.log('BaseService::searchLocalStorage()/1')
+        // console.log('BaseService::searchLocalStorage()/1')
         if (typeof (v) === 'object') {
-          console.log('BaseService::searchLocalStorage()/2')
-          console.log('BaseService::searchLocalStorage()/v:', v)
+          // console.log('BaseService::searchLocalStorage()/2')
+          // console.log('BaseService::searchLocalStorage()/v:', v)
           const lcItem = JSON.parse(v!);
           if ('success' in lcItem) {
-            console.log('BaseService::searchLocalStorage()/3')
+            // console.log('BaseService::searchLocalStorage()/3')
             const appState: IAppState = lcItem;
-            console.log('BaseService::searchLocalStorage()/appState:', appState)
+            // console.log('BaseService::searchLocalStorage()/appState:', appState)
           }
           if ('resourceGuid' in lcItem) {
-            console.log('BaseService::searchLocalStorage()/4')
+            // console.log('BaseService::searchLocalStorage()/4')
             const cdObjId = lcItem;
-            console.log('BaseService::searchLocalStorage()/cdObjId:', cdObjId)
+            // console.log('BaseService::searchLocalStorage()/cdObjId:', cdObjId)
           }
-          console.log('BaseService::searchLocalStorage()/5')
+          // console.log('BaseService::searchLocalStorage()/5')
           lcArr.push({ key: k, value: JSON.parse(v!) })
         } else {
-          console.log('BaseService::searchLocalStorage()/typeof (v):', typeof (v))
-          console.log('BaseService::searchLocalStorage()/6')
+          // console.log('BaseService::searchLocalStorage()/typeof (v):', typeof (v))
+          // console.log('BaseService::searchLocalStorage()/6')
           lcArr.push({ key: k, value: JSON.parse(v) })
         }
 
@@ -179,8 +179,8 @@ export class BaseService {
       }
 
     }
-    console.log('BaseService::searchLocalStorage()/lcArr:', lcArr);
-    console.log('BaseService::searchLocalStorage()/f.cdObjId!.resourceName:', f.cdObjId!.resourceName);
+    // console.log('BaseService::searchLocalStorage()/lcArr:', lcArr);
+    // console.log('BaseService::searchLocalStorage()/f.cdObjId!.resourceName:', f.cdObjId!.resourceName);
     // isAppState
     // const resourceName = 'UserModule';
     const AppStateItems = (d: any) => 'success' in d.value;

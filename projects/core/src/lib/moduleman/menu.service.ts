@@ -340,7 +340,7 @@ export class MenuService {
     console.log('data:', data);
     data = this.cleanRegData(data);
     this.setEnvelopeRegMenu(data, cdToken);
-    console.log('this.postData:', JSON.stringify(this.postData));
+    // console.log('this.postData:', JSON.stringify(this.postData));
     /*
     post request to server
     */
@@ -492,8 +492,8 @@ export class MenuService {
     */
     this.svServer.proc(this.postData)
       .subscribe((res: any) => {
-        console.log('getGetAll(clientAppId)/request:', JSON.stringify(this.postData));
-        console.log('MenuService::getGetAll(clientAppId)/res:', res);
+        // console.log('getGetAll(clientAppId)/request:', JSON.stringify(this.postData));
+        // console.log('MenuService::getGetAll(clientAppId)/res:', res);
         this.setRespGetAll(res.data);
       });
   }
@@ -508,15 +508,15 @@ export class MenuService {
   }
 
   getGetAnon(clientAppId: any, cdToken:string) {
-    console.log('starting MenuService::getGetAnon(clientAppId)');
+    // console.log('starting MenuService::getGetAnon(clientAppId)');
     this.setEnvelopeGetAnon(clientAppId, cdToken);
     /*
     post request to server
     */
     this.svServer.proc(this.postData)
       .subscribe((res: any) => {
-        console.log('getGetAnon(clientAppId)/request:', JSON.stringify(this.postData));
-        console.log('MenuService::getGetAnon(clientAppId)/res:', res);
+        // console.log('getGetAnon(clientAppId)/request:', JSON.stringify(this.postData));
+        // console.log('MenuService::getGetAnon(clientAppId)/res:', res);
         this.setRespGetAnon(res.data);
       });
   }
@@ -666,8 +666,8 @@ export class MenuService {
    */
   tUpdate(updateData: any, fieldId: any, component: any, cdToken:string) {
     console.log('starting MenuService::updateMenuConfig()');
-    console.log('updateData:', updateData);
-    console.log('component:', component);
+    // console.log('updateData:', updateData);
+    // console.log('component:', component);
     switch (component) {
       case 'MenuComponent':
         this.updateMenuConfigDataPost(updateData, fieldId, cdToken);
@@ -776,14 +776,14 @@ export class MenuService {
   async mapMenu(cdMenu: CdMenu[]) {
     console.log('start cdUiLib::MenuServices::mapMenu(cdMenu)')
     let strCdMenu = JSON.stringify(cdMenu);
-    console.log('cdUiLib::MenuServices::mapMenu(cdMenu)/strCdMenu:', strCdMenu)
+    // console.log('cdUiLib::MenuServices::mapMenu(cdMenu)/strCdMenu:', strCdMenu)
     fieldMap.forEach((m: any) => {
       strCdMenu = this.replaceAll(strCdMenu, m.cdField, m.uiField);
     })
     // console.log('strCdMenu:', strCdMenu);
-    console.log('cdUiLib::MenuServices::mapMenu(cdMenu)/strCdMenu:', strCdMenu)
+    // console.log('cdUiLib::MenuServices::mapMenu(cdMenu)/strCdMenu:', strCdMenu)
     const jCdMenu = JSON.parse(await strCdMenu);
-    console.log('cdUiLib::MenuServices::mapMenu(cdMenu)/jCdMenu:', jCdMenu)
+    // console.log('cdUiLib::MenuServices::mapMenu(cdMenu)/jCdMenu:', jCdMenu)
     return jCdMenu;
   }
 
