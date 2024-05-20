@@ -30,7 +30,7 @@ export class SocketIoService {
     // this.socket = io.connect('https://localhost', {secure: true});
     this.url = `${this.env.sioEndpoint}`;
     console.log('core/SocketioService::constructor()/eventName:', this.url)
-    this.socket = io(`${this.env.sioEndpoint}`);
+    this.socket = io(`${this.env.sioEndpoint}`,this.env.reqHeaders);
   }
 
   listen(eventName: string) {
