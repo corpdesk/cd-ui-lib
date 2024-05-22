@@ -26,13 +26,8 @@ export class ServerService {
     @Inject('env') private env: EnvConfig,
   ) {
     // console.log('core/ServerService::constructor()/this.env:', this.env);
-    const h = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*'
-    });
-    this.options = {
-      headers: h
-    };
+    const h = new HttpHeaders(env.apiOptions.headers);
+    this.options = env.apiOptions;
   }
 
   setEnv(env:EnvConfig){

@@ -1,4 +1,4 @@
-projDir="~/cd-projects"
+projDir="$HOME/cd-projects"
 ## cd to cd-ui-lib directory
 cd "$projDir/cd-ui-lib"
 ## build @corpdesk/core
@@ -49,8 +49,8 @@ echo "...copying @corpdesk/core to $projDir/cd-shell/node_modules/@corpdesk/"
 cp -R $projDir/cd-ui-lib/dist/core $projDir/cd-shell/node_modules/@corpdesk/
 ## ngWebSocket
 ## copy @corpdesk/core to ~/projects/ngWebSocket
-echo "...copying @corpdesk/core to ~/projects/ngWebSocket/node_modules/@corpdesk/"
-cp -R $projDir/cd-ui-lib/dist/core ~/projects/ngWebSocket/node_modules/@corpdesk/
+# echo "...copying @corpdesk/core to ~/projects/ngWebSocket/node_modules/@corpdesk/"
+# cp -R $projDir/cd-ui-lib/dist/core ~/projects/ngWebSocket/node_modules/@corpdesk/
 
 ## cd to cd-moduleman directory
 # cd "$projDir/cd-moduleman"

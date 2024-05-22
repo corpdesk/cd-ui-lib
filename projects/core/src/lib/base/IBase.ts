@@ -25,7 +25,9 @@ export interface EnvConfig {
     clientAppId: number; // this client application identifies itself to the server with this id
     SOCKET_IO_PORT: number; // push server port
     defaultauth?: string;
-    reqHeaders?: any;
+    mfManifestPath?: string;
+    apiOptions?: any;
+    sioOptions?: any;
     firebaseConfig?: any;
 }
 
