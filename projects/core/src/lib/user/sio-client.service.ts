@@ -74,7 +74,8 @@ export class SioClientService {
    */
   initSio() {
     console.log('cdUiLib::SioClientService::initSio()/01:this.env.sioEndpoint', this.env.sioEndpoint)
-    this.socket = io(this.env.sioEndpoint);
+    this.socket = io(this.env.sioEndpoint, this.env.sioOptions);
+    console.log('cdUiLib::SioClientService::initSio()/02:this.socket', this.socket)
     // this.registerResource(rGuid)
     
 

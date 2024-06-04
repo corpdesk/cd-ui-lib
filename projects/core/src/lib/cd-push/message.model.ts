@@ -51,6 +51,7 @@ export const pushEnvelop: ICdPushEnvelop = {
     triggerEvent: '',
     emittEvent: '',
     token: '',
+    isNotification: false,
     commTrack:DEFAULT_COMM_TRACK
   },
   // msg: sendData.controls['msg'].value,

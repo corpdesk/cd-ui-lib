@@ -1,5 +1,6 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 import { CdRequest, EnvConfig } from './IBase';
 
@@ -24,10 +25,11 @@ export class ServerService {
   constructor(
     private http: HttpClient,
     @Inject('env') private env: EnvConfig,
+    private logger: NGXLogger,
   ) {
-    // console.log('core/ServerService::constructor()/this.env:', this.env);
-    const h = new HttpHeaders(env.apiOptions.headers);
-    this.options = env.apiOptions;
+    // this.logger.debug('core/ServerService::constructor()/this.env:', this.env);
+    // const h = new HttpHeaders(env.apiOptions.headers);
+    this.options = this.env.apiOptions;
   }
 
   setEnv(env:EnvConfig){
@@ -45,13 +47,14 @@ export class ServerService {
   // }
 
   proc(params: CdRequest){
-    console.log('base/ServerService::proc()/params:', params)
-    return this.http.post(this.env.apiEndpoint, params, this.options);
+    this.logger.debug('base/ServerService::proc()/params:', params)
+    this.logger.debug('base/ServerService::proc()/this.env.apiOptions.headers:', this.env.apiOptions.headers)
+    return this.http.post(this.env.apiEndpoint, params, this.env.apiOptions.headers);
   }
 
   wsRegister(params: CdRequest){
-    console.log('base/ServerService::proc()/params:', params)
-    return this.http.post(this.env.apiEndpoint, params, this.options);
+    this.logger.debug('base/ServerService::wsRegister()/params:', params)
+    return this.http.post(this.env.apiEndpoint, params, this.env.apiOptions.headers);
   }
 
   setParams(p: CdRequest) {
@@ -59,8 +62,8 @@ export class ServerService {
   }
 
   registerResource$(params: any) {
-    console.log('base/ServerService::registerResource()/params:', params)
-    return this.http.post(this.env.apiEndpoint, params, this.options);
+    this.logger.debug('base/ServerService::registerResource()/params:', params)
+    return this.http.post(this.env.apiEndpoint, params, this.env.apiOptions.headers);
   }
 
 }

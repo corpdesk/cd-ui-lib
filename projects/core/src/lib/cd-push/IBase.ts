@@ -15,6 +15,8 @@ export interface EnvConfig {
     apiEndpoint: string;
     sioEndpoint: string;
     wsEndpoint: string;
+    wsMode: string;
+    pushConfig: any;
     consumerToken: string;// current company consumer
     USER_RESOURCES: string;
     apiHost: string;
@@ -24,8 +26,11 @@ export interface EnvConfig {
     consumer: string;
     clientAppId: number; // this client application identifies itself to the server with this id
     SOCKET_IO_PORT: number; // push server port
-    defaultauth: string;
-    firebaseConfig: any;
+    mfManifestPath?: string;
+    apiOptions?: any;
+    sioOptions?: any;
+    wsOptions?:any;
+    firebaseConfig?: any;
 }
 
 // export interface CdResponse {
@@ -276,7 +281,7 @@ export enum ModuleScope {
 
 export interface ISessResp {
     cd_token?: string;
-    userId?: number | null;
+    userId?: number | string | null;
     jwt: {
         jwtToken: string | null,
         checked: boolean,
@@ -304,19 +309,43 @@ export interface IRespInfo {
 //     pushData?: any;
 // }
 
+// export interface ICdPushEnvelop {
+//     pushData: {
+//         pushGuid: string,
+//         m?: string,
+//         pushRecepients: ICommConversationSub[],
+//         triggerEvent: string,
+//         emittEvent: string,
+//         token: string,
+//         commTrack: CommTrack
+//     },
+//     req: ICdRequest | null,
+//     resp: ICdResponse | null
+// };
+
 export interface ICdPushEnvelop {
     pushData: {
-        pushGuid: string,
-        m?: string,
-        pushRecepients: ICommConversationSub[],
-        triggerEvent: string,
-        emittEvent: string,
-        token: string,
-        commTrack: CommTrack
+        appId?: string;
+        appSockets?: ISocketItem[];
+        pushGuid: string;
+        m?: string;
+        pushRecepients: ICommConversationSub[];
+        triggerEvent: string;
+        emittEvent: string;
+        token: string;
+        commTrack: CommTrack;
+        isNotification: boolean | null;
+        isAppInit?: boolean | null;
     },
     req: ICdRequest | null,
     resp: ICdResponse | null
 };
+
+export interface ISocketItem{
+    socketId:string;
+    name:string;
+    socketGuid?:string;
+}
 
 // export interface CdObjId {
 //     ngModule: string | null;
@@ -403,12 +432,28 @@ export interface ICommConversationSub {
     cdObjId: CdObjId;
 }
 
+// export interface CommTrack {
+//     initTime: number | null,
+//     relayTime: number | null,
+//     relayed: boolean,
+//     deliveryTime: number | null,
+//     deliverd: boolean,
+// }
+
 export interface CommTrack {
-    initTime: number | null,
-    relayTime: number | null,
-    relayed: boolean,
-    deliveryTime: number | null,
-    deliverd: boolean,
+    initTime: number | string | null;
+    relayTime: number | string | null;
+    pushed: boolean;
+    pushTime: number | string | null;
+    relayed: boolean;
+    deliveryTime: number | string | null;
+    delivered: boolean;
+    completed?: boolean;
+    completedTime?: number | string | null;
+    cached?: boolean;
+    cachedTime?: number | string | null;
+    saved?: boolean;
+    savedTime?: number | string | null;
 }
 
 export const DEFAULT_CD_OBJ_ID: CdObjId = {
@@ -420,12 +465,23 @@ export const DEFAULT_CD_OBJ_ID: CdObjId = {
     commTrack: null
 }
 
+// export const DEFAULT_COMM_TRACK = {
+//     initTime: null,
+//     relayTime: null,
+//     relayed: false,
+//     deliveryTime: null,
+//     deliverd: false,
+// }
+
 export const DEFAULT_COMM_TRACK = {
     initTime: null,
     relayTime: null,
     relayed: false,
     deliveryTime: null,
     deliverd: false,
+    pushed: false,
+    pushTime: null,
+    delivered: false
 }
 
 export interface IAclCtx {

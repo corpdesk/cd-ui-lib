@@ -21,7 +21,7 @@ export class SioService {
   
   init(){
     // socket = io('http://localhost:3200');
-    this.socket = io(this.env.sioEndpoint);
+    this.socket = io(this.env.sioEndpoint, this.env.sioOptions);
   }
 
   public sendMessage(message: any) {

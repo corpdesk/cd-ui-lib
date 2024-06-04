@@ -15,6 +15,8 @@ export interface EnvConfig {
     apiEndpoint: string;
     sioEndpoint: string;
     wsEndpoint: string;
+    wsMode: string;
+    pushConfig: any;
     consumerToken: string;// current company consumer
     USER_RESOURCES: string;
     apiHost: string;
@@ -28,6 +30,7 @@ export interface EnvConfig {
     mfManifestPath?: string;
     apiOptions?: any;
     sioOptions?: any;
+    wsOptions?:any;
     firebaseConfig?: any;
 }
 

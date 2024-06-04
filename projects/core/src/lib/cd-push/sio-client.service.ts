@@ -2,7 +2,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { io } from "socket.io-client";
-import { CdObjId, ICdPushEnvelop, ICdResponse } from '@corpdesk/core/src/lib/base';
+import { CdObjId, ICdResponse } from '@corpdesk/core/src/lib/base';
+import { ICdPushEnvelop } from './IBase';
 
 @Injectable({
   providedIn: 'root',

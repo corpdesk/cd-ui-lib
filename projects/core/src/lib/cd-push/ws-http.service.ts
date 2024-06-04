@@ -4,8 +4,7 @@ import { Observable } from 'rxjs';
 import { CdRequest, EnvConfig, CdObjId, ICdRequest } from './IBase';
 
 const OPT_JSON_ALL_CORS = {
-  'Content-Type': 'application/json',
-  'Access-Control-Allow-Origin': '*'
+  'Content-Type': 'application/json'
 };
 @Injectable({
   providedIn: 'root'
@@ -52,12 +51,14 @@ export class WsHttpService {
 
   proc(params: CdRequest) {
     console.log('base/ServerService::proc()/params:', JSON.stringify(params))
-    return this.http.post(this.env.apiEndpoint, params, this.options);
+    console.log('base/ServerService::proc()/this.env.apiOptions:', JSON.stringify(this.env.apiOptions))
+    return this.http.post(this.env.apiEndpoint, params, this.env.apiOptions);
   }
 
   WsHttpService(params: CdRequest) {
     console.log('base/ServerService::wsRegister()/params:', JSON.stringify(params))
-    return this.http.post(this.env.apiEndpoint, params, this.options);
+    console.log('base/ServerService::wsRegister()/this.env.apiOptions:', JSON.stringify(this.env.apiOptions))
+    return this.http.post(this.env.apiEndpoint, params, this.env.apiOptions);
   }
 
   post(params: CdRequest, route: string) {
@@ -78,7 +79,7 @@ export class WsHttpService {
 
   registerResource$(params: ICdRequest) {
     console.log('base/ServerService::registerResource$()/params:', JSON.stringify(params))
-    return this.http.post(`${this.env.sioEndpoint}/p-reg/`, params, this.options);
+    return this.http.post(`${this.env.sioEndpoint}/p-reg/`, params, this.env.apiOptions);
   }
 
   setParams(p: CdRequest) {

@@ -106,17 +106,43 @@ export const DEFAULT_CD_RESPONSE: ICdResponse = {
     data: []
 };
 
+// export interface EnvConfig {
+//     production: boolean;
+//     apiEndpoint: string;
+//     consumerToken: string;// current company consumer
+//     USER_RESOURCES: string;
+//     HOST: string;
+//     CD_PORT?: number; // optional setting for apiEndpoint
+//     consumer: string;
+//     clientAppId: number; // this client application identifies itself to the server with this id
+//     clientAppGuid: string; // this client application identifies itself to the server with this guid, to depricate clientAppId
+//     SOCKET_IO_PORT: number; // push server port
+// }
+
 export interface EnvConfig {
+    clientAppGuid: string;
+    appId: string;
     production: boolean;
     apiEndpoint: string;
+    sioEndpoint: string;
+    wsEndpoint: string;
+    wsMode: string;
+    pushConfig: any;
     consumerToken: string;// current company consumer
     USER_RESOURCES: string;
-    HOST: string;
+    apiHost: string;
+    shellHost: string;
+    sioHost: string;
     CD_PORT?: number; // optional setting for apiEndpoint
     consumer: string;
     clientAppId: number; // this client application identifies itself to the server with this id
-    clientAppGuid: string; // this client application identifies itself to the server with this guid, to depricate clientAppId
     SOCKET_IO_PORT: number; // push server port
+    defaultauth?: string;
+    mfManifestPath?: string;
+    apiOptions?: any;
+    sioOptions?: any;
+    wsOptions?:any;
+    firebaseConfig?: any;
 }
 
 export interface ICdPushEnvelop {

@@ -11,7 +11,8 @@
 import { Injectable, Inject } from '@angular/core';
 import { io } from 'socket.io-client';
 import { Observable } from 'rxjs';
-import { EnvConfig } from '@corpdesk/core/src/lib/base';
+// import { EnvConfig } from '@corpdesk/cd-push/src/lib/base';
+import { EnvConfig } from './IBase';
 import { BehaviorSubject } from 'rxjs';
 // import { EnvConfig } from '@corpdesk/core';
 
@@ -29,47 +30,48 @@ export class SocketIoService {
     // this.socket = io(`${environment.apiEndpoint}:` + environment.SOCKET_IO_PORT);
     // this.socket = io.connect('https://localhost', {secure: true});
     this.url = `${this.env.sioEndpoint}`;
-    console.log('core/SocketioService::constructor()/eventName:', this.url)
+    console.log('cd-push/SocketioService::constructor()/this.url:', this.url)
+    console.log('cd-push/SocketioService::constructor()/this.env.sioOptions:', this.env.sioOptions)
     this.socket = io(`${this.env.sioEndpoint}`,this.env.sioOptions);
   }
 
   listen(eventName: string) {
-    console.log('core/SocketioService::listen()/01')
-    console.log('core/SocketioService::listen()/eventName:', eventName)
+    console.log('cd-push/SocketioService::listen()/01')
+    console.log('cd-push/SocketioService::listen()/eventName:', eventName)
     return new Observable(subscriber => {
       return this.socket.on(eventName, (data: any) => {
-        console.log('core/SocketioService::listen()/this.socket.on()/eventName:', eventName)
-        console.log('core/SocketioService::listen()/this.socket.on()/data:', data)
+        console.log('cd-push/SocketioService::listen()/this.socket.on()/eventName:', eventName)
+        console.log('cd-push/SocketioService::listen()/this.socket.on()/data:', data)
         subscriber.next(data);
       });
     });
   }
 
   listen2(eventName: string) {
-    console.log('core/SocketioService::listen()/01')
-    console.log('core/SocketioService::listen()/eventName:', eventName)
+    console.log('cd-push/SocketioService::listen()/01')
+    console.log('cd-push/SocketioService::listen()/eventName:', eventName)
     this.socket.on(eventName, (data: any) => {
-      console.log('core/SocketioService::listen()/this.socket.on()/eventName:', eventName)
-      console.log('core/SocketioService::listen()/this.socket.on()/data:', data)
+      console.log('cd-push/SocketioService::listen()/this.socket.on()/eventName:', eventName)
+      console.log('cd-push/SocketioService::listen()/this.socket.on()/data:', data)
     });
   }
 
   public getNewMessage = (eventName:string) => {
-    console.log('core/SocketioService::getNewMessage()/01')
+    console.log('cd-push/SocketioService::getNewMessage()/01')
     this.socket.on(eventName, (data:any) =>{
-      console.log('core/SocketioService::getNewMessage()/this.socket.on()/eventName:', eventName)
-      console.log('core/SocketioService::getNewMessage()/this.socket.on()/data:', data)
+      console.log('cd-push/SocketioService::getNewMessage()/this.socket.on()/eventName:', eventName)
+      console.log('cd-push/SocketioService::getNewMessage()/this.socket.on()/data:', data)
       this.message$.next(data);
     });
     return this.message$.asObservable();
   };
 
   emit(eventName: string, data: any) {
-    console.log('core/SocketioService::emit()/01')
+    console.log('cd-push/SocketioService::emit()/01')
     // this.socket.emit(eventName, data);
     this.socket.emit(eventName, data, function (state:any) {
-      console.log('core/SocketioService::emit()/02')
-      console.log('core/SocketioService::emit()/state:', state)
+      console.log('cd-push/SocketioService::emit()/02')
+      console.log('cd-push/SocketioService::emit()/state:', state)
       if (state.error) 
         console.log('Something went wrong on the server. ServerError:', state.error);
       if (state.ok)

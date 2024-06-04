@@ -27,6 +27,7 @@
     "ng2-file-upload": "^1.4.0",
     "ng2-search-filter": "^0.5.1",
     "ngx-cookie-service": "^13.0.0",
+    "ngx-logger": "^5.0.12",
     "ngx-socket-io": "^4.1.0",
     "ngx-webstorage": "^8.0.0",
     "node-fetch": "^3.2.0",
@@ -35,7 +36,7 @@
     "rxjs": "~6.6.0",
     "rxjs-compat": "^6.6.7",
     "rxjs-websockets": "^8.0.1",
-    "socket.io-client": "^4.7.2",
+    "socket.io-client": "^4.7.5",
     "tslib": "^2.3.0",
     "uuid": "^8.3.2",
     "zone.js": "~0.11.4"
