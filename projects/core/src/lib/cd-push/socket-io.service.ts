@@ -39,6 +39,7 @@ export class SocketIoService {
     console.log('cd-push/SocketioService::listen()/01')
     console.log('cd-push/SocketioService::listen()/eventName:', eventName)
     return new Observable(subscriber => {
+      console.log('cd-push/SocketioService::listen()/02')
       return this.socket.on(eventName, (data: any) => {
         console.log('cd-push/SocketioService::listen()/this.socket.on()/eventName:', eventName)
         console.log('cd-push/SocketioService::listen()/this.socket.on()/data:', data)

@@ -161,7 +161,7 @@ export class SessService {
   }
 
   setSess(res: ICdResponse, svMenu: MenuService) {
-    // console.log('starting setSess(res: any)');
+    console.log('starting core::UserService::setSess()/01');
     this.isActive = true;
     this.appState = res.app_state;
     // this.maxDistance = Number(ttl) * 1000;
@@ -190,6 +190,7 @@ export class SessService {
        * 3. Websocket push to SidebarComponent::loadMenu(menu)
        */
       .subscribe((menu: any) => {
+        console.log('SessionService::setSess()/01');
         console.log('SessionService::setSess()/menthis.jwtWsTokenu:', this.jwtWsToken);
 
         /**
@@ -210,6 +211,7 @@ export class SessService {
         /**
          * search the recepient: SidebarComponent
          */
+        console.log('SessionService::setSess()/filter:', filter);
         const sidebarCdObj = this.svBase.searchLocalStorage(filter).value;
         console.log('SessionService::setSess()/sidebarCdObj:', sidebarCdObj);
 

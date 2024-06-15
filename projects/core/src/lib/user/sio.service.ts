@@ -8,38 +8,51 @@ import { io } from "socket.io-client";
   providedIn: 'root',
 })
 export class SioService {
-  env: any=null;
+  env: any = null;
   socket: any = null;
   public message$: BehaviorSubject<string> = new BehaviorSubject('');
   constructor(
     // @Inject('env') private env: EnvConfig,
   ) { }
 
-  setEnv(env:any){
+  setEnv(env: any) {
     this.env = env;
   }
-  
-  init(){
+
+  init() {
     // socket = io('http://localhost:3200');
     this.socket = io(this.env.sioEndpoint, this.env.sioOptions);
   }
 
   public sendMessage(message: any) {
-    this.socket.emit('message', message);
+    if (this.socket) {
+      this.socket.emit('message', message);
+    } else {
+      console.error('SioService::sendMessage(): error: socket is invalid')
+    }
   }
 
-  public pushData(data: any, eventName:string) {
-    this.socket.emit(eventName, data);
+  public pushData(data: any, eventName: string) {
+    if (this.socket) {
+      this.socket.emit(eventName, data);
+    } else {
+      console.error('SioService::pushData(): error: socket is invalid')
+    }
   }
 
   public testMessage() {
-    this.socket.emit('send-menu', this.getMsg());
+    if (this.socket) {
+      this.socket.emit('send-menu', this.getMsg());
+    } else {
+      console.error('SioService::testMessage(): error: socket is invalid')
+    }
   }
 
   public sioListen = () => {
     // this.socket.on('message', (message) =>{
     //   this.message$.next(message);
     // });
+    
     this.socket.on('push-menu', (data: any) => {
       console.log('message:', data)
       console.log('JSON.stringify(message):', JSON.stringify(data))

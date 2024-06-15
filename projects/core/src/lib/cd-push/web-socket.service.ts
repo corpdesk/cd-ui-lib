@@ -73,6 +73,7 @@ export class WebsocketService {
   }
 
   connect() {
+    console.log('WebsocketService::connect()/01')
     this.socket$ = webSocket(`${this.env.wsEndpoint}/ws`);
     this.data$ = this.socket$
       .pipe(

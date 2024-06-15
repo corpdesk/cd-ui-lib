@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { io } from "socket.io-client";
 import { CdObjId, ICdResponse } from '@corpdesk/core/src/lib/base';
 import { ICdPushEnvelop } from './IBase';
+import { NGXLogger } from 'ngx-logger';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,9 @@ export class SioClientService {
   socket: any = null;
   public message$: BehaviorSubject<string> = new BehaviorSubject('');
   pushDataList: ICdPushEnvelop[] = [];
-  constructor() {
+  constructor(
+    private logger: NGXLogger,
+  ) {
   }
 
   setEnv(env: any) {
@@ -75,7 +78,7 @@ export class SioClientService {
    */
   initSio(cls: any, action: any) {
     console.log('cdUiLib::SioClientService::initSio()/01')
-    this.socket = io(this.env.sioEndpoint);
+    this.socket = io(this.env.sioEndpoint, this.env.sioOptions);
     // this.registerResource(rGuid)
 
     /**
@@ -158,7 +161,12 @@ export class SioClientService {
 
   public sendMessage(msg: string) {
     console.log('cdUiLib::SioClientService::sendMessage()/msg', msg)
-    this.socket.emit('message', msg);
+    if (this.socket) {
+      this.socket.emit('message', msg);
+    } else {
+      console.log('cdUiLib::SioClientService::sendMessage() error: socket is invalid')
+    }
+
   }
 
   public sendPayLoad(pushEnvelope: ICdPushEnvelop) {
@@ -168,103 +176,111 @@ export class SioClientService {
         console.log('cdUiLib::SioClientService::sendPayLoad/02/pushEnvelope:')
         // every message has a unique id
         // pushEnvelope.pushData.pushGuid = uuidv4();
-        const msg = JSON.stringify(pushEnvelope);
-        this.socket.emit(pushEnvelope.pushData.triggerEvent, msg);
+        if (this.socket) {
+          const msg = JSON.stringify(pushEnvelope);
+          this.socket.emit(pushEnvelope.pushData.triggerEvent, msg);
+        } else {
+          this.logger.error("cdUiLib::SioClientService::sendPayLoad/:unable to push message. socket is null")
+        }
       } else {
-        console.log('cdUiLib::SioClientService::sendPayLoad/01/triggerEvent missing in payLoad.pushData')
+        this.logger.error('cdUiLib::SioClientService::sendPayLoad/01/triggerEvent missing in payLoad.pushData')
       }
     } else {
-      console.log('cdUiLib::SioClientService::sendPayLoad/01/pushData missing in pushEnvelope')
+      this.logger.error('cdUiLib::SioClientService::sendPayLoad/01/pushData missing in pushEnvelope')
     }
 
   }
 
   public listenSecure = (emittEvent: string, cls = null, action: any = null) => {
     console.log('cdUiLib::SioClientService::listenSecure()/emittEvent/01', emittEvent)
-
-    this.socket.on(emittEvent, (payLoadStr: any) => {
-
-      /**
-       * - check if confirmation process is enabled
-       * - prepare confirmation message back to sender
-       *    - flag message as recieved
-       *    - set triggerEvent event to 'msg-delivered' for server processing
-       *    - set emittEvent event to 'msg-delivered' for server processing
-       *    - trim (remove unessary load) payload for confirmation message
-       * - send confirmation message to sender
-       */
-      let triggerEvent = null;
-      if (payLoadStr) {
-        console.log('cdUiLib::SioClientService::listenSecure()/emittEvent/01/emittEvent:', emittEvent)
-        console.log('cdUiLib::SioClientService::listenSecure()/payLoadStr:', payLoadStr)
-        const payLoad: ICdPushEnvelop = payLoadStr;
-        // if (emittEvent === 'push-registered-client') {
-        //   action(cls, payLoadStr)
-        // }
-        // if (emittEvent == 'push-registered-client') {
-        //   action(cls,emittEvent, payLoad)
-        // }
-
-        if(action){
-          action(cls, emittEvent, payLoad);
-        }
-
-        if ('pushData' in payLoad && action) {
-          console.log('cdUiLib::SioClientService::listenSecure/2')
-          if ('triggerEvent' in payLoad.pushData) {
-            console.log('cdUiLib::SioClientService::listenSecure/3')
-            triggerEvent = payLoad.pushData.triggerEvent;
-          } else {
-            console.log('cdUiLib::SioClientService::listenSecure()/triggerEvent missing in payLoad.pushData')
-          }
-
-        } else {
-          console.log('cdUiLib::SioClientService::listenSecure()/pushData missing in payLoad')
-        }
-
+    if (this.socket) {
+      this.socket.on(emittEvent, (payLoadStr: any) => {
 
         /**
-         * 
-         * if emittEvent === 'msg-delivered-push', 
-         * it means end of cycle of messaging, no need to 
-         * send another confirmation message, so...
-         *    - do not send confirmation message
-         *    - 
+         * - check if confirmation process is enabled
+         * - prepare confirmation message back to sender
+         *    - flag message as recieved
+         *    - set triggerEvent event to 'msg-delivered' for server processing
+         *    - set emittEvent event to 'msg-delivered' for server processing
+         *    - trim (remove unessary load) payload for confirmation message
+         * - send confirmation message to sender
          */
-        console.log('cdUiLib::SioClientService::listenSecure/4')
-        console.log('listenSecure()/emittEvent/04/emittEvent:', emittEvent)
-        if (emittEvent === 'push-msg-relayed') {
-          /**
-           * proceed with normal message reception,
-           * do not send another emittEvent = 'msg-delivered-push'
-           */
-          console.log('cdUiLib::SioClientService::listenSecure/5')
-          // this.message$.next(payLoadStr);
-        } else {
-          /**
-           * send confirmation massage
-           *  - set triggerEvent = 'msg-delivered'
-           *  - set emittEvent = 'msg-delivered-push'
-           */
-          console.log('cdUiLib::SioClientService::listenSecure/6')
-          if (emittEvent === 'push-msg-relayed') {
-
-          }
-          // else {
-          //   this.sendPayLoad(payLoad)
+        let triggerEvent = null;
+        if (payLoadStr) {
+          console.log('cdUiLib::SioClientService::listenSecure()/emittEvent/01/emittEvent:', emittEvent)
+          console.log('cdUiLib::SioClientService::listenSecure()/payLoadStr:', payLoadStr)
+          const payLoad: ICdPushEnvelop = payLoadStr;
+          // if (emittEvent === 'push-registered-client') {
+          //   action(cls, payLoadStr)
           // }
-          if (emittEvent === 'push-msg-pushed') {
-            this.notificationAcceptDelivery(payLoadStr)
+          // if (emittEvent == 'push-registered-client') {
+          //   action(cls,emittEvent, payLoad)
+          // }
+
+          if (action) {
+            action(cls, emittEvent, payLoad);
           }
 
-          if (emittEvent === 'push-delivered') {
-            this.notificationMsgComplete(payLoadStr)
+          if ('pushData' in payLoad && action) {
+            console.log('cdUiLib::SioClientService::listenSecure/2')
+            if ('triggerEvent' in payLoad.pushData) {
+              console.log('cdUiLib::SioClientService::listenSecure/3')
+              triggerEvent = payLoad.pushData.triggerEvent;
+            } else {
+              console.log('cdUiLib::SioClientService::listenSecure()/triggerEvent missing in payLoad.pushData')
+            }
+
+          } else {
+            console.log('cdUiLib::SioClientService::listenSecure()/pushData missing in payLoad')
           }
 
+
+          /**
+           * 
+           * if emittEvent === 'msg-delivered-push', 
+           * it means end of cycle of messaging, no need to 
+           * send another confirmation message, so...
+           *    - do not send confirmation message
+           *    - 
+           */
+          console.log('cdUiLib::SioClientService::listenSecure/4')
+          console.log('listenSecure()/emittEvent/04/emittEvent:', emittEvent)
+          if (emittEvent === 'push-msg-relayed') {
+            /**
+             * proceed with normal message reception,
+             * do not send another emittEvent = 'msg-delivered-push'
+             */
+            console.log('cdUiLib::SioClientService::listenSecure/5')
+            // this.message$.next(payLoadStr);
+          } else {
+            /**
+             * send confirmation massage
+             *  - set triggerEvent = 'msg-delivered'
+             *  - set emittEvent = 'msg-delivered-push'
+             */
+            console.log('cdUiLib::SioClientService::listenSecure/6')
+            if (emittEvent === 'push-msg-relayed') {
+
+            }
+            // else {
+            //   this.sendPayLoad(payLoad)
+            // }
+            if (emittEvent === 'push-msg-pushed') {
+              this.notificationAcceptDelivery(payLoadStr)
+            }
+
+            if (emittEvent === 'push-delivered') {
+              this.notificationMsgComplete(payLoadStr)
+            }
+
+          }
         }
-      }
 
-    });
+      });
+    } else {
+      console.log('cdUiLib::SioClientService::listenSecure()/error: socket is invalid')
+    }
+
     return this.message$.asObservable();
   }
 

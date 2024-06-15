@@ -133,14 +133,35 @@ export class BaseService {
   }
 
   searchLocalStorage(f: LsFilter) {
-    console.log('starting BaseService::searchLocalStorage()/lcLength:');
+    console.log('starting BaseService::searchLocalStorage()/01');
     // const lc = { ...localStorage };
     const lcArr = [];
 
     const lcLength = localStorage.length;
     // console.log('BaseService::searchLocalStorage()/lcLength:', lcLength);
+
+
+
+    /**
+     * Safely parses a JSON string.
+     * @param {string} str - The JSON string to parse.
+     * @returns {object|null} - The parsed object, or null if parsing fails.
+     */
+    function safeJsonParse(str: string) {
+      console.log('starting BaseService::searchLocalStorage()/safeJsonParse()/01');
+      try {
+        console.log('BaseService::searchLocalStorage()/safeJsonParse()/02');
+        return JSON.parse(str);
+      } catch (e: any) {
+        console.log('BaseService::searchLocalStorage()/safeJsonParse()/03');
+        console.error('JSON parsing error:', e.message);
+        console.error('Invalid JSON string:', str);
+        return null;
+      }
+    }
     let i = 0;
     for (let i = 0; i < localStorage.length; i++) {
+      console.log('BaseService::searchLocalStorage()/02');
       // try {
       // set iteration key name
       const k = localStorage.key(i);
@@ -149,47 +170,88 @@ export class BaseService {
       // console.log the iteration key and value
       // console.log('Key: ' + k + ', Value: ' + v);
       try {
-        // console.log('BaseService::searchLocalStorage()/1')
+        console.log('BaseService::searchLocalStorage()/03');
         if (typeof (v) === 'object') {
-          // console.log('BaseService::searchLocalStorage()/2')
-          // console.log('BaseService::searchLocalStorage()/v:', v)
-          const lcItem = JSON.parse(v!);
+          console.log('BaseService::searchLocalStorage()/04')
+          console.log('BaseService::searchLocalStorage()/v:', v)
+          const parsedValue = safeJsonParse(v!);
+          const lcItem = JSON.parse(parsedValue!);
+          console.log('BaseService::searchLocalStorage()/lcItem:', lcItem)
           if ('success' in lcItem) {
-            // console.log('BaseService::searchLocalStorage()/3')
+            console.log('BaseService::searchLocalStorage()/05')
             const appState: IAppState = lcItem;
-            // console.log('BaseService::searchLocalStorage()/appState:', appState)
+            console.log('BaseService::searchLocalStorage()/appState:', appState)
           }
           if ('resourceGuid' in lcItem) {
-            // console.log('BaseService::searchLocalStorage()/4')
+            console.log('BaseService::searchLocalStorage()/06')
             const cdObjId = lcItem;
             // console.log('BaseService::searchLocalStorage()/cdObjId:', cdObjId)
           }
-          // console.log('BaseService::searchLocalStorage()/5')
+          console.log('BaseService::searchLocalStorage()/07')
           lcArr.push({ key: k, value: JSON.parse(v!) })
         } else {
-          // console.log('BaseService::searchLocalStorage()/typeof (v):', typeof (v))
-          // console.log('BaseService::searchLocalStorage()/6')
-          lcArr.push({ key: k, value: JSON.parse(v) })
+          console.log('BaseService::searchLocalStorage()/v:', v)
+          console.log('BaseService::searchLocalStorage()/typeof (v):', typeof (v))
+          console.log('BaseService::searchLocalStorage()/08')
+          const parsedValue = safeJsonParse(v);
+          lcArr.push({ key: k, value: parsedValue })
         }
 
       } catch (e) {
+        console.log('BaseService::searchLocalStorage()/09');
         console.log('offending item:', v);
         console.log('the item is not an object');
         console.log('Error:', e);
       }
 
     }
-    // console.log('BaseService::searchLocalStorage()/lcArr:', lcArr);
+    console.log('BaseService::searchLocalStorage()/10');
+    console.log('BaseService::searchLocalStorage()/lcArr:', lcArr);
     // console.log('BaseService::searchLocalStorage()/f.cdObjId!.resourceName:', f.cdObjId!.resourceName);
     // isAppState
     // const resourceName = 'UserModule';
-    const AppStateItems = (d: any) => 'success' in d.value;
-    const isObject = (d: any) => typeof (d.value) === 'object';
-    const CdObjIdItems = (d: any) => 'resourceName' in d.value;
-    const filtObjName = (d: any) => d.value.resourceName === f.cdObjId!.resourceName && d.value.ngModule === f.cdObjId!.ngModule;
-    const latestItem = (prev: any, current: any) => (prev.value.commTrack.initTime > current.value.commTrack.initTime) ? prev : current;
+    const AppStateItems = (d: any) => {
+      console.log('BaseService::searchLocalStorage()/101');
+      console.log('BaseService::searchLocalStorage()/d.value:', d.value);
+      return 'success' in d.value
+    };
+    const isObject = (d: any) => {
+      console.log('BaseService::searchLocalStorage()/102');
+      console.log('BaseService::searchLocalStorage()/d:', d);
+      return typeof (d.value) === 'object'
+    };
+    const CdObjIdItems = (d: any) => {
+      console.log('BaseService::searchLocalStorage()/103');
+      console.log('BaseService::searchLocalStorage()/d:', d);
+      if(d.value){
+        return 'resourceName' in d.value
+      } else {
+        return null
+      }
+      
+    };
+    const filtObjName = (d: any) => {
+      console.log('BaseService::searchLocalStorage()/104');
+      console.log('BaseService::searchLocalStorage()/d:', d);
+      console.log('BaseService::searchLocalStorage()/f:', f);
+      const ret = d.value.resourceName === f.cdObjId!.resourceName && d.value.ngModule === f.cdObjId!.ngModule;
+      console.log('BaseService::searchLocalStorage()/ret:', ret);
+      if(ret){
+        return ret;
+      } else{
+        return 
+      }
+      
+    }
+    const latestItem = (prev: any, current: any) => {
+      console.log('BaseService::searchLocalStorage()/105');
+      console.log('BaseService::searchLocalStorage()/prev:', prev);
+      console.log('BaseService::searchLocalStorage()/current:', current);
+      return (prev.value.commTrack.initTime > current.value.commTrack.initTime) ? prev : current;
+    }
     let ret: any = null;
     try {
+      console.log('BaseService::searchLocalStorage()/11');
       // ret = lcArr
       //   .filter((d: any) => {
       //     if (typeof (d.value) === 'object') {
@@ -230,9 +292,15 @@ export class BaseService {
         .filter(isObject)
         .filter(CdObjIdItems!)
         .filter(filtObjName!)
+      console.log('BaseService::searchLocalStorage()/ret1:', ret);
+      if(ret.length > 0){
+        console.log('BaseService::searchLocalStorage()/ret2:', ret);
+        ret = ret
         .reduce(latestItem!)
-      console.log('BaseService::searchLocalStorage()/ret:', ret);
+      }
+      console.log('BaseService::searchLocalStorage()/ret3:', ret);
     } catch (e) {
+      console.log('BaseService::searchLocalStorage()/12');
       console.log('Error:', e);
     }
     return ret;
