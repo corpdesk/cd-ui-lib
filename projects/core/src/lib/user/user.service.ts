@@ -380,9 +380,9 @@ export class UserService {
   setEnvelopeRegUser(regData: any) {
     this.postData = {
       ctx: 'Sys',
-      m: 'Moduleman',
-      c: 'ModulesController',
-      a: 'actionRegisterModule',
+      m: 'User',
+      c: 'UserController',
+      a: 'Register',
       dat: {
         f_vals: [
           {
