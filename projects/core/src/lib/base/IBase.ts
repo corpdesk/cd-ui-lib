@@ -31,6 +31,7 @@ export interface EnvConfig {
     apiOptions?: any;
     sioOptions?: any;
     wsOptions?:any;
+    initialPage?: string;
     firebaseConfig?: any;
 }
 
