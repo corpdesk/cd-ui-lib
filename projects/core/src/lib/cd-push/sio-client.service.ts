@@ -91,12 +91,14 @@ export class SioClientService {
       this.listenSecure('push-registered-client', cls, action)
         .subscribe((payLoadStr: any) => {
           console.log('initSio::listenSecure/action=push-registered-client')
+          console.log('initSio::listenSecure/action=push-registered-client/payLoadStr:', payLoadStr)
           action(cls, 'push-registered-client', payLoadStr)
         })
 
       this.listenSecure('push-msg-pushed', cls, action)
         .subscribe((payLoadStr: any) => {
           console.log('initSio::listenSecure/action=push-msg-pushed')
+          console.log('initSio::listenSecure/action=push-msg-pushed/payLoadStr:', payLoadStr)
           action(cls, 'push-msg-pushed', payLoadStr)
         })
     }

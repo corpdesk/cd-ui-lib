@@ -330,7 +330,7 @@ export class UserService {
     this.postData = {
       ctx: 'Sys',
       m: 'User',
-      c: 'UserController',
+      c: 'User',
       a: 'actionGet',
       dat: {
         f_vals: flt,
@@ -381,12 +381,13 @@ export class UserService {
     this.postData = {
       ctx: 'Sys',
       m: 'User',
-      c: 'UserController',
+      c: 'User',
       a: 'Register',
       dat: {
         f_vals: [
           {
-            data: regData
+            data: regData,
+            clientContext: this.env.clientContext,
           }
         ],
         docproc: {},
@@ -437,7 +438,7 @@ export class UserService {
     this.postData = {
       ctx: 'Sys',
       m: 'User',
-      c: 'UserController',
+      c: 'User',
       a: 'actionGetAll',
       dat: {
         f_vals: [],
@@ -445,6 +446,54 @@ export class UserService {
         token: this.svServer.token
       },
       args: null
+    };
+  }
+
+  getUser$(reqQuery: any, sid: string) {
+    this.setEnvelopeGetUser(reqQuery, sid);
+    return this.svServer.proc(this.postData)
+  }
+
+  
+
+
+  /**
+   * ToDo: sort the token riddle...when being fetched for veryfying the user the 1st time
+   * During registration, the sid retrieved should be able to allow verification of user.
+   * At the moment a static one is used below. Not secure or tanable.
+   * 
+   * {
+            "ctx": "Sys",
+            "m": "User",
+            "c": "UserController",
+            "a": "actionJoinGroup",
+            "dat": {
+                "f_vals": [
+                    {
+                        "data": {
+                            "user_id": 1010,
+                            "group_guid_parent": "25E5D480-1F1E-166B-F1CD-0BA2BD86DC22"
+                        }
+                    }
+                ],
+                "token": "mT6blaIfqWhzNXQLG8ksVbc1VodSxRZ8lu5cMgda"
+            },
+            "args": null
+        }
+   */
+  setEnvelopeGetUser(reqQuery: any, sid: string) {
+    this.postData = {
+      ctx: "Sys",
+      m: "User",
+      c: "User",
+      a: "Get",
+      dat: {
+        f_vals: [
+          reqQuery
+        ],
+        token: 'fc9ef956-7b81-45e4-aeb3-ae66f50b1ce5'
+      },
+      args: {}
     };
   }
 
@@ -536,7 +585,7 @@ export class UserService {
   //   this.postData = {
   //     ctx: 'Sys',
   //     m: 'User',
-  //     c: 'UserController',
+  //     c: 'User',
   //     a: 'actionGetAll',
   //     dat: {
   //       f_vals: [],

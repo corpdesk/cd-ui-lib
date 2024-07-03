@@ -17,7 +17,8 @@ export interface EnvConfig {
     wsEndpoint: string;
     wsMode: string;
     pushConfig: any;
-    consumerToken: string;// current company consumer
+    consumerToken?: string;// current company consumer. To depricate in favour of clientContext which will include consumerToken, entity:eg company name or project name eg ASDAP, MPEP etc
+    clientContext: any;
     USER_RESOURCES: string;
     apiHost: string;
     shellHost: string;
