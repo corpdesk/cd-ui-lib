@@ -72,7 +72,7 @@ export class SessService {
     @Inject('env') private env: EnvConfig,
 
   ) {
-    this.registerWsService()
+    // this.registerWsService()
   }
 
   setEnv(env:EnvConfig){

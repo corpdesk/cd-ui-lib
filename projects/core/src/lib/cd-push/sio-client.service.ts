@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { io } from "socket.io-client";
+import { Socket, io } from "socket.io-client";
 import { CdObjId, ICdResponse } from '@corpdesk/core/src/lib/base';
 import { ICdPushEnvelop } from './IBase';
 import { NGXLogger } from 'ngx-logger';
@@ -12,7 +12,7 @@ import { NGXLogger } from 'ngx-logger';
 export class SioClientService {
   env: any = null;
   jwtToken = '';
-  socket: any = null;
+  socket: Socket;
   public message$: BehaviorSubject<string> = new BehaviorSubject('');
   pushDataList: ICdPushEnvelop[] = [];
   constructor(
@@ -79,6 +79,8 @@ export class SioClientService {
   initSio(cls: any, action: any) {
     console.log('cdUiLib::SioClientService::initSio()/01')
     this.socket = io(this.env.sioEndpoint, this.env.sioOptions);
+    console.log("cdUiLib::SioClientService::initSio()/this.socket:", this.socket)
+
     // this.registerResource(rGuid)
 
     /**
@@ -175,10 +177,11 @@ export class SioClientService {
     console.log('cdUiLib::SioClientService::sendPayLoad/01/pushEnvelope:', pushEnvelope)
     if ('pushData' in pushEnvelope) {
       if ('pushGuid' in pushEnvelope.pushData) {
-        console.log('cdUiLib::SioClientService::sendPayLoad/02/pushEnvelope:')
+        console.log('cdUiLib::SioClientService::sendPayLoad/02/this.socket:', this.socket)
         // every message has a unique id
         // pushEnvelope.pushData.pushGuid = uuidv4();
         if (this.socket) {
+          this.logger.log("cdUiLib::SioClientService::sendPayLoad/:socket is available")
           const msg = JSON.stringify(pushEnvelope);
           this.socket.emit(pushEnvelope.pushData.triggerEvent, msg);
         } else {
@@ -194,7 +197,8 @@ export class SioClientService {
   }
 
   public listenSecure = (emittEvent: string, cls = null, action: any = null) => {
-    console.log('cdUiLib::SioClientService::listenSecure()/emittEvent/01', emittEvent)
+    console.log('cdUiLib::SioClientService::listenSecure()/01/emittEvent:', emittEvent)
+    console.log('cdUiLib::SioClientService::listenSecure()/this.socket:', this.socket)
     if (this.socket) {
       this.socket.on(emittEvent, (payLoadStr: any) => {
 
