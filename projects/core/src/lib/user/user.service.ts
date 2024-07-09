@@ -277,9 +277,9 @@ export class UserService {
         //   req: null,
         //   resp: userDataResp
         // };
-        const pushEnvelop = this.configPushPayload('login', 'push-menu', loginData.userData.userId)
+        // const pushEnvelop = this.configPushPayload('login', 'push-menu', loginData.userData.userId)
         // this.emitLogin(pushEnvelop);
-        this.svSio.sendPayLoad(pushEnvelop);
+        // this.svSio.sendPayLoad(pushEnvelop);
       }
 
     });
