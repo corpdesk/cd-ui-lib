@@ -572,10 +572,12 @@ export class FormsService {
   }
 
   saveForm(step: AWizardStep, newObj: any, createObservable: Observable<any>, pushEnvelop: CdPushEnvelop, svNotif: NotificationService) {
+    console.log("cdUiLib/FormsService::saveForm()/01")
     const fg: FormGroup = step.formGroup!;
     // to hold data to send to db
     const fArr = [];
     const invalids: any = [];
+    console.log("cdUiLib/FormsService::saveForm()/fg.valid:", fg.valid)
     // if form is valid
     if (fg.valid) {
       // loop through the form controls
@@ -601,6 +603,7 @@ export class FormsService {
           console.log('resp:', response);
           // send notification
           pushEnvelop.pushData = response;
+          console.log('guig/FormsService::saveForm()/response:', response)
           pushEnvelop.resp = response;
           console.log('guig/FormsService::saveForm()/pushEnvelop.pushRecepients:', pushEnvelop.pushRecepients)
           svNotif.emitNotif(pushEnvelop);

@@ -4,8 +4,11 @@ import { EnvConfig } from '@corpdesk/core/src/lib/base';
 import { AclService } from './acl.service';
 import { CdObjService } from './cd-obj.service';
 import { CompanyService } from './company.service';
+import { ConsumerService } from './consumer.service';
+import { ConsumerResourceService } from './consumer-resource.service';
 import { MenuService } from './menu.service';
 import { ModuleService } from './module.service';
+
 
 @NgModule({
   declarations: [],
@@ -19,6 +22,8 @@ export class ModulemanModule {
         AclService,
         CdObjService,
         CompanyService,
+        ConsumerService,
+        ConsumerResourceService,
         MenuService,
         ModuleService,
         { provide: 'env', useValue: env }
@@ -33,6 +38,8 @@ export class ModulemanModule {
         AclService,
         CdObjService,
         CompanyService,
+        ConsumerService,
+        ConsumerResourceService,
         MenuService,
         ModuleService,
         { provide: 'env', useValue: env }

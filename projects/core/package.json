@@ -1,6 +1,6 @@
 {
   "name": "@corpdesk/core",
-  "version": "0.2.82",
+  "version": "0.2.87",
   "license": "MIT",
   "peerDependencies": {
     "@angular/common": "~12.2.0",

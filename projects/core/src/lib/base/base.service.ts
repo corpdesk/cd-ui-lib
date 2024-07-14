@@ -32,12 +32,17 @@ export class BaseService {
    * @param module 
    * @param controller 
    */
-  setEnvelope(defaultEnvelope: ICdRequest, q: IQuery, cdToken: string, ctx: string | null = null, module: string | null = null, controller: string | null = null) {
+  setEnvelope(defaultEnvelope: ICdRequest, q: any, cdToken: string, ctx: string | null = null, module: string | null = null, controller: string | null = null) {
     console.log('BaseService::setEnvelope$()/q:', q)
     console.log('BaseService::setEnvelope$()/cdToken:', cdToken)
     this.postData = defaultEnvelope;
     this.initEnvelope(ctx, module, controller);
-    this.postData.dat.f_vals[0].query = q;
+    if(defaultEnvelope.a === "Create"){
+      this.postData.dat.f_vals[0].data = q;
+    } else {
+      this.postData.dat.f_vals[0].query = q;
+    }
+    
     this.postData.dat.token = cdToken;
     console.log('BaseService::setEnvelope$()/this.postData:', this.postData)
   }
@@ -58,10 +63,11 @@ export class BaseService {
     }
   }
 
-  create$(q: any, cdToken: string, ctx: string | null = null, module: string | null = null, controller: string | null = null) {
+  create$(data: any, cdToken: string, ctx: string | null = null, module: string | null = null, controller: string | null = null) {
     console.log('BaseService::create$()/this.module:', this.module)
     console.log('BaseService::create$()/this.controller:', this.controller)
-    this.setEnvelope(DEFAULT_ENVELOPE_CREATE, q, cdToken);
+    console.log('BaseService::create$()/data:', data)
+    this.setEnvelope(DEFAULT_ENVELOPE_CREATE, data, cdToken);
     console.log('create$()/this.postData:', JSON.stringify(this.postData))
     return this.svServer.proc(this.postData);
   }
