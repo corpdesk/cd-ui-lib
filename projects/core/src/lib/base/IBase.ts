@@ -333,7 +333,7 @@ export interface ICdPushEnvelop {
         appId?: string;
         appSockets?: ISocketItem[];
         pushGuid: string;
-        m?: string;
+        m?: any;
         pushRecepients: ICommConversationSub[];
         triggerEvent: string;
         emittEvent: string;

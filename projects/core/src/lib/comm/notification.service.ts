@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { ServerService } from '@corpdesk/core/src/lib/base';
+import { ServerService, ICdPushEnvelop } from '@corpdesk/core/src/lib/base';
 import { UserService, SessService } from '@corpdesk/core/src/lib/user';
-import { SocketIoService, CdPushEnvelop } from '@corpdesk/core/src/lib/cd-push';
+import { SocketIoService } from '@corpdesk/core/src/lib/cd-push';
 
 @Injectable({
   providedIn: 'root'
@@ -84,7 +84,7 @@ export class NotificationService {
   //     req: null,
   //     resp: userDataResp
   //  };
-  emitNotif(cdEnvelop: CdPushEnvelop) {
+  emitNotif(cdEnvelop: ICdPushEnvelop) {
     console.log('startng NotificationService::emitNotif()')
     this.svSocket.emit('send-notif', cdEnvelop);
   }
