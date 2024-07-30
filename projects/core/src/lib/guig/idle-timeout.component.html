@@ -1,0 +1,6 @@
+<div [hidden]="isVisible">
+    <h1 >Hello {{name}}!</h1>
+    <button (click)="startTimer($event)">Start inactivity Timer</button>
+    <button (click)="stopTimer($event)">stop inactivity Timer</button>
+    {{minute}}  : {{seconds}}
+</div>

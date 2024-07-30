@@ -1,0 +1,2567 @@
+To build run:
+ng build --project core
+
+
+References :
+- https://tomastrajan.medium.com/the-best-way-to-architect-your-angular-libraries-87959301d3d3
+- https://medium.com/tunaiku-tech/creating-secondary-entry-points-for-your-angular-library-1d5c0e95600a
+- https://newbedev.com/rootdir-is-expected-to-contain-all-source-files
+- https://medium.com/@thearunmalik/angular-monorepo-multiple-libs-and-rootdir-issue-7b8270cbc167
+- https://github.com/ng-packagr/ng-packagr/issues/1841
+- https://stackoverflow.com/questions/51850063/rootdir-is-expected-to-contain-all-source-files
+- https://github.com/robisim74/angular-library-starter
+
+- created organization corpdesk 
+- publish npm package: @corpdesk/ui-lib
+- test consumption of @corpdesk/ui-lib component
+- test consumption of @corpdesk/ui-lib service
+
+- create core library
+- modules:
+    - user
+    - 
+
+setup module with providers:
+https://angular.io/guide/migration-module-with-providers
+https://angular.io/guide/providers
+https://stackoverflow.com/questions/43529920/passing-environment-variables-to-angular-library
+https://www.usefuldev.com/post/Angular:%20Creating%20configurable%20libraries%20with%20angular%20cli
+https://www.freelancermap.com/blog/using-forroot-and-forchild-to-configure-modules-in-angular/
+https://javascript.plainenglish.io/understand-angulars-forroot-and-forchild-f27fbc41cb7b
+
+lazy loading
+http://www.usefuldev.com/post/Angular:%20configurable%20lazy%20loaded%20libraries
+https://github.com/robisim74/angular-library-starter/blob/master/src/modules/arithmetic.module.ts
+https://tomastrajan.medium.com/why-and-how-to-lazy-load-angular-libraries-a3bf1489fe24
+
+
+- peer-dependencies for cd-core
+    protractor
+    moment
+    moment-timezone
+    ng2-file-upload
+    socket.io-client
+    rxjs-compat
+
+    "moment": "^2.29.1",
+    "moment-timezone": "^0.5.33",
+    "ng2-file-upload": "^1.4.0",
+    "rxjs-compat": "^6.6.7",
+    "socket.io-client": "^4.1.2",
+
+- Testing:
+- login
+- login with cd-push
+- create cd-user remote app
+- use cd-user as remote app to login the route to cd-comm
+
+- menu::init()
+- memo::init()
+- notif::init()
+
+////////////////
+- modify to connect via cd-api (node.js version) from laravel back-end
+    - create a new param in environment: CD_PORT
+    - set CD_PORT = 3000,
+    - modify ServerService::proc() for this.env.apiEndpoint to...
+    - `${this.env.apiEndpoint}:${this.env.CD_PORT || 80}`
+    - this allows library clients to set endpoints with port setting
+    - port setting defaults to 80 when CD_PORT is not set
+    - update 'username' to 'user_name'
+
+//////////
+npm portal for @corpdesk/core:
+    - branding
+    - documentation
+    - associated links
+
+- route guard
+- set routing to test guard:
+    - https://angular.io/guide/lazy-loading-ngmodules
+
+- upgrade canActivate() to check
+    - active session
+    - session timeout
+    - acl
+
+session timeout:
+    - https://www.npmjs.com/package/session-expiration-alert
+    - https://www.npmjs.com/package/idle-session-timeout
+
+localStorage, indexedDB:
+    - https://www.npmjs.com/package/idb
+    - (page 197): file:///Users/goremo/Downloads/Pro%20TypeScript%20Application-Scale%20JavaScript%20Development%20(%20PDFDrive%20).pdf
+
+Angular router query parameters:
+    - https://www.digitalocean.com/community/tutorials/angular-query-parameters
+
+//////////////
+- use back-end menu
+        - library/moduleman/menuservice/getMenu$()
+        - on login, library/session/createSession()
+            - getMenu$()
+            - use socket.io to sendMenu() to shell/sidebar
+        - shell/sidebar listen to 'push-menu'
+        - confirm menu is available on shell/sidebar
+
+////////////////////
+- set icons for cdMenu
+
+- Issues with some gui pages
+    - on screen change: "ERROR TypeError: this.minHandleElement is undefined"
+    - Ecommerce:
+        - products
+        - orders
+        - checkouts
+        - All product
+    - Email
+        - read email
+    - Kanban
+    - UI Elements
+        - progress bar
+        - range slider
+    - Forms
+        - forms advanced
+    - Tables
+        - Advanced tables
+
+- Issue: installing ng-bootstrap
+        - solution: npm i --save @ng-bootstrap/ng-bootstrap --legacy-peer-deps
+        
+- test raw and simple bootstrap templates 
+    - 
+- set up guig/idleTimeout()
+    - set config (timeoutValue, callback())
+
+
+- develop idletimeout in @corpdesk/core
+- create @corpdesk/naz library 
+- use --legacy-peer-deps flag for installations of @corpdesk/naz
+- develop consumable table in @corpdesk/naz 
+- test moduleman with table from @corpdesk/naz library
+
+- BaseService to depend on envinronment for 'env' data
+- remove unused projects besides core, naz and ui-lib-demo
+- move html menu construction methods from shell/sidbar to @corpdesk/naz/menu
+- transform above from specific menu to generic 'tree'
+
+- test naz-table with live modue data
+- develop naz adaptor that feeds cd-data to naz-table
+- pagination
+        - total rows
+        - rows per page
+        - number of pages
+        - maximum pages to show in paginator
+        - current page
+        - move to next page
+        - move to previous page
+        - scroll display pages
+
+//////////////////////
+- move naz-table from test bed in cd-moduleman to cd-ui-lib/naz
+- implement update for module
+- replicate module table for menu
+//////////////////
+- delete item
+- hide/show column
+
+to upgrade to "tslib": "^2.3.0",
+current ^2.1.0
+
+to upgrad to ~12.2.0
+current ~12.0.3
+
+- Track websocket message from signing to reception
+    - confirm message reaches websocket server 
+    - confirm relay confirmation is received by the sender
+    - confirm that the recepient is already registered
+    - flag relayed message at the server
+    - confirm that recepient has socket
+    - if recepient socket is not available, save message in server.
+    - flag undelivered messages as unsent.
+    - on socket connection, check for saved messages, then send qued messages
+    - flag saved messages as sent.
+    - confirm recepient receives the message
+    - recepient to confirm message reception, notify server and sender
+
+- issues:
+    - pushData.m is set wrongly
+
+- Optimization:
+- all messages sent to the server will be queued at the clent and the server
+- if server goes down, queueing system should not be interupted both at the client side and the recepient side.
+- the above cushions the server from avalanch of messages when server resumes after failure.
+
+
+Testing socket.io on login:
+    - event 'send-menu'
+    - pushEnvelop: {
+    "pushData": {
+        "pushGuid": "bcc18b79-9f35-4b3a-a0d4-c2a66339773e",
+        "m": [
+            {
+                "label": "cd_geo",
+                "id": 469,
+                "icon": "ri-map-pin-line",
+                "link": null,
+                "isTitle": null,
+                "badge": null,
+                "parentId": -1,
+                "isLayout": null,
+                "moduleIsPublic": 1,
+                "moduleGuid": "C620F2D8-A0AE-0406-7DB7-7ECE806722AA",
+                "subItems": [
+                    {
+                        "label": "location",
+                        "id": 470,
+                        "icon": null,
+                        "link": "/moduleman/module/list",
+                        "isTitle": null,
+                        "badge": null,
+                        "parentId": 469,
+                        "isLayout": null,
+                        "moduleIsPublic": 1,
+                        "moduleGuid": "C620F2D8-A0AE-0406-7DB7-7ECE806722AA",
+                        "subItems": []
+                    }
+                ]
+            },
+            {
+                "label": "Modman",
+                "id": 995,
+                "icon": "ri-user-settings-line",
+                "link": "./admin",
+                "isTitle": null,
+                "badge": null,
+                "parentId": -1,
+                "isLayout": null,
+                "moduleIsPublic": null,
+                "moduleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b",
+                "subItems": [
+                    {
+                        "label": "dashboard",
+                        "id": 996,
+                        "icon": null,
+                        "link": "admin/admin-dashboard",
+                        "isTitle": null,
+                        "badge": null,
+                        "parentId": 995,
+                        "isLayout": null,
+                        "moduleIsPublic": null,
+                        "moduleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b",
+                        "subItems": []
+                    },
+                    {
+                        "label": "cdobj",
+                        "id": 997,
+                        "icon": null,
+                        "link": "/moduleman/cd-obj/list",
+                        "isTitle": null,
+                        "badge": null,
+                        "parentId": 995,
+                        "isLayout": null,
+                        "moduleIsPublic": null,
+                        "moduleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b",
+                        "subItems": []
+                    },
+                    {
+                        "label": "company",
+                        "id": 998,
+                        "icon": null,
+                        "link": "/moduleman/company/list",
+                        "isTitle": null,
+                        "badge": null,
+                        "parentId": 995,
+                        "isLayout": null,
+                        "moduleIsPublic": null,
+                        "moduleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b",
+                        "subItems": []
+                    },
+                    {
+                        "label": "grus",
+                        "id": 999,
+                        "icon": null,
+                        "link": "admin/grus",
+                        "isTitle": null,
+                        "badge": null,
+                        "parentId": 995,
+                        "isLayout": null,
+                        "moduleIsPublic": null,
+                        "moduleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b",
+                        "subItems": []
+                    },
+                    {
+                        "label": "menu",
+                        "id": 1000,
+                        "icon": null,
+                        "link": "/moduleman/menu/list",
+                        "isTitle": null,
+                        "badge": null,
+                        "parentId": 995,
+                        "isLayout": null,
+                        "moduleIsPublic": null,
+                        "moduleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b",
+                        "subItems": []
+                    },
+                    {
+                        "label": "module",
+                        "id": 1001,
+                        "icon": null,
+                        "link": "/moduleman/module/list",
+                        "isTitle": null,
+                        "badge": null,
+                        "parentId": 995,
+                        "isLayout": null,
+                        "moduleIsPublic": null,
+                        "moduleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b",
+                        "subItems": []
+                    },
+                    {
+                        "label": "consumer",
+                        "id": 1269,
+                        "icon": null,
+                        "link": "/moduleman/consumer/list",
+                        "isTitle": null,
+                        "badge": null,
+                        "parentId": 995,
+                        "isLayout": null,
+                        "moduleIsPublic": null,
+                        "moduleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b",
+                        "subItems": []
+                    },
+                    {
+                        "label": "consumer-resource",
+                        "id": 1271,
+                        "icon": null,
+                        "link": null,
+                        "isTitle": null,
+                        "badge": null,
+                        "parentId": 995,
+                        "isLayout": null,
+                        "moduleIsPublic": null,
+                        "moduleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b",
+                        "subItems": []
+                    }
+                ]
+            },
+            {
+                "label": "MyDesk",
+                "id": 1,
+                "icon": "ri-user-line",
+                "link": null,
+                "isTitle": null,
+                "badge": null,
+                "parentId": -1,
+                "isLayout": null,
+                "moduleIsPublic": 0,
+                "moduleGuid": "-dkkm6",
+                "subItems": [
+                    {
+                        "label": "Users",
+                        "id": 2,
+                        "icon": null,
+                        "link": "",
+                        "isTitle": null,
+                        "badge": null,
+                        "parentId": 1,
+                        "isLayout": null,
+                        "moduleIsPublic": 0,
+                        "moduleGuid": "-dkkm6",
+                        "subItems": []
+                    },
+                    {
+                        "label": "Comm",
+                        "id": 3,
+                        "icon": null,
+                        "link": "",
+                        "isTitle": null,
+                        "badge": null,
+                        "parentId": 1,
+                        "isLayout": null,
+                        "moduleIsPublic": 0,
+                        "moduleGuid": "-dkkm6",
+                        "subItems": [
+                            {
+                                "label": "Emails",
+                                "id": 16,
+                                "icon": null,
+                                "link": null,
+                                "isTitle": null,
+                                "badge": null,
+                                "parentId": 3,
+                                "isLayout": null,
+                                "moduleIsPublic": 0,
+                                "moduleGuid": "-dkkm6",
+                                "subItems": []
+                            },
+                            {
+                                "label": "memo",
+                                "id": 221,
+                                "icon": null,
+                                "link": null,
+                                "isTitle": null,
+                                "badge": null,
+                                "parentId": 3,
+                                "isLayout": null,
+                                "moduleIsPublic": 0,
+                                "moduleGuid": "-dkkm6",
+                                "subItems": []
+                            }
+                        ]
+                    },
+                    {
+                        "label": "Settings",
+                        "id": 6,
+                        "icon": null,
+                        "link": null,
+                        "isTitle": null,
+                        "badge": null,
+                        "parentId": 1,
+                        "isLayout": null,
+                        "moduleIsPublic": 0,
+                        "moduleGuid": "-dkkm6",
+                        "subItems": [
+                            {
+                                "label": "notifications",
+                                "id": 4,
+                                "icon": null,
+                                "link": null,
+                                "isTitle": null,
+                                "badge": null,
+                                "parentId": 6,
+                                "isLayout": null,
+                                "moduleIsPublic": 0,
+                                "moduleGuid": "-dkkm6",
+                                "subItems": []
+                            },
+                            {
+                                "label": "logs",
+                                "id": 5,
+                                "icon": null,
+                                "link": "",
+                                "isTitle": null,
+                                "badge": null,
+                                "parentId": 6,
+                                "isLayout": null,
+                                "moduleIsPublic": 0,
+                                "moduleGuid": "-dkkm6",
+                                "subItems": []
+                            }
+                        ]
+                    },
+                    {
+                        "label": "Moduleman",
+                        "id": 7,
+                        "icon": null,
+                        "link": "/moduleman/module/list",
+                        "isTitle": null,
+                        "badge": null,
+                        "parentId": 1,
+                        "isLayout": null,
+                        "moduleIsPublic": 0,
+                        "moduleGuid": "-dkkm6",
+                        "subItems": []
+                    },
+                    {
+                        "label": "SyncGuig",
+                        "id": 8,
+                        "icon": null,
+                        "link": "/moduleman/menu/list",
+                        "isTitle": null,
+                        "badge": null,
+                        "parentId": 1,
+                        "isLayout": null,
+                        "moduleIsPublic": 0,
+                        "moduleGuid": "-dkkm6",
+                        "subItems": []
+                    },
+                    {
+                        "label": "CD-Scheduler",
+                        "id": 9,
+                        "icon": null,
+                        "link": null,
+                        "isTitle": null,
+                        "badge": null,
+                        "parentId": 1,
+                        "isLayout": null,
+                        "moduleIsPublic": 0,
+                        "moduleGuid": "-dkkm6",
+                        "subItems": [
+                            {
+                                "label": "Subscribe",
+                                "id": 10,
+                                "icon": null,
+                                "link": null,
+                                "isTitle": null,
+                                "badge": null,
+                                "parentId": 9,
+                                "isLayout": null,
+                                "moduleIsPublic": 0,
+                                "moduleGuid": "-dkkm6",
+                                "subItems": []
+                            },
+                            {
+                                "label": "MyCalendar",
+                                "id": 11,
+                                "icon": null,
+                                "link": null,
+                                "isTitle": null,
+                                "badge": null,
+                                "parentId": 9,
+                                "isLayout": null,
+                                "moduleIsPublic": 0,
+                                "moduleGuid": "-dkkm6",
+                                "subItems": []
+                            },
+                            {
+                                "label": "MyProgress",
+                                "id": 12,
+                                "icon": null,
+                                "link": null,
+                                "isTitle": null,
+                                "badge": null,
+                                "parentId": 9,
+                                "isLayout": null,
+                                "moduleIsPublic": 0,
+                                "moduleGuid": "-dkkm6",
+                                "subItems": []
+                            },
+                            {
+                                "label": "SchedulerBlogs",
+                                "id": 13,
+                                "icon": null,
+                                "link": null,
+                                "isTitle": null,
+                                "badge": null,
+                                "parentId": 9,
+                                "isLayout": null,
+                                "moduleIsPublic": 0,
+                                "moduleGuid": "-dkkm6",
+                                "subItems": []
+                            },
+                            {
+                                "label": "Admin",
+                                "id": 14,
+                                "icon": null,
+                                "link": null,
+                                "isTitle": null,
+                                "badge": null,
+                                "parentId": 9,
+                                "isLayout": null,
+                                "moduleIsPublic": 0,
+                                "moduleGuid": "-dkkm6",
+                                "subItems": []
+                            }
+                        ]
+                    },
+                    {
+                        "label": "Users&Groups",
+                        "id": 17,
+                        "icon": null,
+                        "link": null,
+                        "isTitle": null,
+                        "badge": null,
+                        "parentId": 1,
+                        "isLayout": null,
+                        "moduleIsPublic": 0,
+                        "moduleGuid": "-dkkm6",
+                        "subItems": []
+                    },
+                    {
+                        "label": "controller_mgr",
+                        "id": 18,
+                        "icon": null,
+                        "link": null,
+                        "isTitle": null,
+                        "badge": null,
+                        "parentId": 1,
+                        "isLayout": null,
+                        "moduleIsPublic": 0,
+                        "moduleGuid": "-dkkm6",
+                        "subItems": []
+                    },
+                    {
+                        "label": "Generic",
+                        "id": 19,
+                        "icon": null,
+                        "link": null,
+                        "isTitle": null,
+                        "badge": null,
+                        "parentId": 1,
+                        "isLayout": null,
+                        "moduleIsPublic": 0,
+                        "moduleGuid": "-dkkm6",
+                        "subItems": [
+                            {
+                                "label": "Generic Form",
+                                "id": 20,
+                                "icon": null,
+                                "link": null,
+                                "isTitle": null,
+                                "badge": null,
+                                "parentId": 19,
+                                "isLayout": null,
+                                "moduleIsPublic": 0,
+                                "moduleGuid": "-dkkm6",
+                                "subItems": []
+                            },
+                            {
+                                "label": "Generic Foo Table",
+                                "id": 21,
+                                "icon": null,
+                                "link": null,
+                                "isTitle": null,
+                                "badge": null,
+                                "parentId": 19,
+                                "isLayout": null,
+                                "moduleIsPublic": 0,
+                                "moduleGuid": "-dkkm6",
+                                "subItems": []
+                            },
+                            {
+                                "label": "Generic Tree",
+                                "id": 22,
+                                "icon": null,
+                                "link": null,
+                                "isTitle": null,
+                                "badge": null,
+                                "parentId": 19,
+                                "isLayout": null,
+                                "moduleIsPublic": 0,
+                                "moduleGuid": "-dkkm6",
+                                "subItems": []
+                            },
+                            {
+                                "label": "ProgressBar",
+                                "id": 23,
+                                "icon": null,
+                                "link": null,
+                                "isTitle": null,
+                                "badge": null,
+                                "parentId": 19,
+                                "isLayout": null,
+                                "moduleIsPublic": 0,
+                                "moduleGuid": "-dkkm6",
+                                "subItems": []
+                            },
+                            {
+                                "label": "controller-view",
+                                "id": 217,
+                                "icon": null,
+                                "link": null,
+                                "isTitle": null,
+                                "badge": null,
+                                "parentId": 19,
+                                "isLayout": null,
+                                "moduleIsPublic": 0,
+                                "moduleGuid": "-dkkm6",
+                                "subItems": []
+                            },
+                            {
+                                "label": "controller-view2",
+                                "id": 218,
+                                "icon": null,
+                                "link": null,
+                                "isTitle": null,
+                                "badge": null,
+                                "parentId": 19,
+                                "isLayout": null,
+                                "moduleIsPublic": 0,
+                                "moduleGuid": "-dkkm6",
+                                "subItems": []
+                            },
+                            {
+                                "label": "cd-memo",
+                                "id": 220,
+                                "icon": null,
+                                "link": null,
+                                "isTitle": null,
+                                "badge": null,
+                                "parentId": 19,
+                                "isLayout": null,
+                                "moduleIsPublic": 0,
+                                "moduleGuid": "-dkkm6",
+                                "subItems": []
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
+        "pushRecepients": [
+            {
+                "userId": 1010,
+                "subTypeId": 7,
+                "cdObjId": {
+                    "appId": "",
+                    "ngModule": "SharedModule",
+                    "resourceName": "SidebarComponent",
+                    "resourceGuid": "4947e79b-aa79-4960-a99d-775b24286e07",
+                    "jwtToken": "",
+                    "socket": null,
+                    "commTrack": {
+                        "initTime": 1654606466149,
+                        "relayTime": null,
+                        "relayed": false,
+                        "deliveryTime": null,
+                        "deliverd": false
+                    }
+                }
+            },
+            {
+                "userId": 1010,
+                "subTypeId": 1,
+                "cdObjId": {
+                    "ngModule": "UserModule",
+                    "resourceName": "SessService",
+                    "resourceGuid": "9ac6caf5-9eb5-4e6d-9555-2496a13eb86a",
+                    "jwtToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5YWM2Y2FmNS05ZWI1LTRlNmQtOTU1NS0yNDk2YTEzZWI4NmEiLCJ1c2VybmFtZSI6IlNlc3NTZXJ2aWNlIiwiaWF0IjoxNjU0NDY1OTc2LCJleHAiOjE2NTQ0NjY4NzZ9.nT1QqnjKx_MC4teXIVNrqXhU9FQYSUbEpEx8QhBhup0",
+                    "socket": null,
+                    "commTrack": {
+                        "initTime": 1654465976940,
+                        "relayTime": null,
+                        "relayed": false,
+                        "deliveryTime": null,
+                        "deliverd": false
+                    }
+                }
+            }
+        ],
+        "triggerEvent": "login",
+        "emittEvent": "push-menu",
+        "token": "78f8c78c-a0cf-4686-b62a-4fcc1a3f3b31",
+        "commTrack": {
+            "initTime": null,
+            "relayTime": null,
+            "relayed": false,
+            "deliveryTime": null,
+            "deliverd": false
+        }
+    },
+    "req": {
+        "ctx": "Sys",
+        "m": "User",
+        "c": "User",
+        "a": "Login",
+        "dat": {
+            "f_vals": [
+                {
+                    "data": null
+                }
+            ],
+            "token": "78f8c78c-a0cf-4686-b62a-4fcc1a3f3b31"
+        },
+        "args": null
+    },
+    "resp": {
+        "app_state": {
+            "success": true,
+            "info": {
+                "messages": [],
+                "code": "",
+                "app_msg": "Welcome karl!"
+            },
+            "sess": {
+                "cd_token": "78f8c78c-a0cf-4686-b62a-4fcc1a3f3b31",
+                "userId": 1010,
+                "jwt": null,
+                "ttl": 600,
+                "initUuid": "78f9827a-d865-4950-add3-c29e1cc7c1f5",
+                "initTime": "1654607143.532"
+            },
+            "cache": {},
+            "sConfig": {
+                "usePush": true,
+                "usePolling": true,
+                "useCacheStore": true
+            }
+        },
+        "data": {
+            "consumer": [
+                {
+                    "consumerId": 33,
+                    "consumerGuid": "B0B3DA99-1859-A499-90F6-1E3F69575DCD",
+                    "consumerName": "emp_services",
+                    "consumerEnabled": 1,
+                    "docId": 9276,
+                    "companyId": 85,
+                    "companyGuid": "8a7ee96e-6c76-11ec-a1b0-4184d18c49ca"
+                }
+            ],
+            "menuData": [
+                {
+                    "menuLabel": "cd_geo",
+                    "menuId": 469,
+                    "icon": "ri-map-pin-line",
+                    "path": null,
+                    "isTitle": null,
+                    "badge": null,
+                    "menuParentId": -1,
+                    "isLayout": null,
+                    "moduleIsPublic": 1,
+                    "moduleGuid": "C620F2D8-A0AE-0406-7DB7-7ECE806722AA",
+                    "children": [
+                        {
+                            "menuLabel": "location",
+                            "menuId": 470,
+                            "icon": null,
+                            "path": "/moduleman/module/list",
+                            "isTitle": null,
+                            "badge": null,
+                            "menuParentId": 469,
+                            "isLayout": null,
+                            "moduleIsPublic": 1,
+                            "moduleGuid": "C620F2D8-A0AE-0406-7DB7-7ECE806722AA",
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "menuLabel": "Modman",
+                    "menuId": 995,
+                    "icon": "ri-user-settings-line",
+                    "path": "./admin",
+                    "isTitle": null,
+                    "badge": null,
+                    "menuParentId": -1,
+                    "isLayout": null,
+                    "moduleIsPublic": null,
+                    "moduleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b",
+                    "children": [
+                        {
+                            "menuLabel": "dashboard",
+                            "menuId": 996,
+                            "icon": null,
+                            "path": "admin/admin-dashboard",
+                            "isTitle": null,
+                            "badge": null,
+                            "menuParentId": 995,
+                            "isLayout": null,
+                            "moduleIsPublic": null,
+                            "moduleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b",
+                            "children": []
+                        },
+                        {
+                            "menuLabel": "cdobj",
+                            "menuId": 997,
+                            "icon": null,
+                            "path": "/moduleman/cd-obj/list",
+                            "isTitle": null,
+                            "badge": null,
+                            "menuParentId": 995,
+                            "isLayout": null,
+                            "moduleIsPublic": null,
+                            "moduleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b",
+                            "children": []
+                        },
+                        {
+                            "menuLabel": "company",
+                            "menuId": 998,
+                            "icon": null,
+                            "path": "/moduleman/company/list",
+                            "isTitle": null,
+                            "badge": null,
+                            "menuParentId": 995,
+                            "isLayout": null,
+                            "moduleIsPublic": null,
+                            "moduleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b",
+                            "children": []
+                        },
+                        {
+                            "menuLabel": "grus",
+                            "menuId": 999,
+                            "icon": null,
+                            "path": "admin/grus",
+                            "isTitle": null,
+                            "badge": null,
+                            "menuParentId": 995,
+                            "isLayout": null,
+                            "moduleIsPublic": null,
+                            "moduleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b",
+                            "children": []
+                        },
+                        {
+                            "menuLabel": "menu",
+                            "menuId": 1000,
+                            "icon": null,
+                            "path": "/moduleman/menu/list",
+                            "isTitle": null,
+                            "badge": null,
+                            "menuParentId": 995,
+                            "isLayout": null,
+                            "moduleIsPublic": null,
+                            "moduleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b",
+                            "children": []
+                        },
+                        {
+                            "menuLabel": "module",
+                            "menuId": 1001,
+                            "icon": null,
+                            "path": "/moduleman/module/list",
+                            "isTitle": null,
+                            "badge": null,
+                            "menuParentId": 995,
+                            "isLayout": null,
+                            "moduleIsPublic": null,
+                            "moduleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b",
+                            "children": []
+                        },
+                        {
+                            "menuLabel": "consumer",
+                            "menuId": 1269,
+                            "icon": null,
+                            "path": "/moduleman/consumer/list",
+                            "isTitle": null,
+                            "badge": null,
+                            "menuParentId": 995,
+                            "isLayout": null,
+                            "moduleIsPublic": null,
+                            "moduleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b",
+                            "children": []
+                        },
+                        {
+                            "menuLabel": "consumer-resource",
+                            "menuId": 1271,
+                            "icon": null,
+                            "path": null,
+                            "isTitle": null,
+                            "badge": null,
+                            "menuParentId": 995,
+                            "isLayout": null,
+                            "moduleIsPublic": null,
+                            "moduleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b",
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "menuLabel": "MyDesk",
+                    "menuId": 1,
+                    "icon": "ri-user-line",
+                    "path": null,
+                    "isTitle": null,
+                    "badge": null,
+                    "menuParentId": -1,
+                    "isLayout": null,
+                    "moduleIsPublic": 0,
+                    "moduleGuid": "-dkkm6",
+                    "children": [
+                        {
+                            "menuLabel": "Users",
+                            "menuId": 2,
+                            "icon": null,
+                            "path": "",
+                            "isTitle": null,
+                            "badge": null,
+                            "menuParentId": 1,
+                            "isLayout": null,
+                            "moduleIsPublic": 0,
+                            "moduleGuid": "-dkkm6",
+                            "children": []
+                        },
+                        {
+                            "menuLabel": "Comm",
+                            "menuId": 3,
+                            "icon": null,
+                            "path": "",
+                            "isTitle": null,
+                            "badge": null,
+                            "menuParentId": 1,
+                            "isLayout": null,
+                            "moduleIsPublic": 0,
+                            "moduleGuid": "-dkkm6",
+                            "children": [
+                                {
+                                    "menuLabel": "Emails",
+                                    "menuId": 16,
+                                    "icon": null,
+                                    "path": null,
+                                    "isTitle": null,
+                                    "badge": null,
+                                    "menuParentId": 3,
+                                    "isLayout": null,
+                                    "moduleIsPublic": 0,
+                                    "moduleGuid": "-dkkm6",
+                                    "children": []
+                                },
+                                {
+                                    "menuLabel": "memo",
+                                    "menuId": 221,
+                                    "icon": null,
+                                    "path": null,
+                                    "isTitle": null,
+                                    "badge": null,
+                                    "menuParentId": 3,
+                                    "isLayout": null,
+                                    "moduleIsPublic": 0,
+                                    "moduleGuid": "-dkkm6",
+                                    "children": []
+                                }
+                            ]
+                        },
+                        {
+                            "menuLabel": "Settings",
+                            "menuId": 6,
+                            "icon": null,
+                            "path": null,
+                            "isTitle": null,
+                            "badge": null,
+                            "menuParentId": 1,
+                            "isLayout": null,
+                            "moduleIsPublic": 0,
+                            "moduleGuid": "-dkkm6",
+                            "children": [
+                                {
+                                    "menuLabel": "notifications",
+                                    "menuId": 4,
+                                    "icon": null,
+                                    "path": null,
+                                    "isTitle": null,
+                                    "badge": null,
+                                    "menuParentId": 6,
+                                    "isLayout": null,
+                                    "moduleIsPublic": 0,
+                                    "moduleGuid": "-dkkm6",
+                                    "children": []
+                                },
+                                {
+                                    "menuLabel": "logs",
+                                    "menuId": 5,
+                                    "icon": null,
+                                    "path": "",
+                                    "isTitle": null,
+                                    "badge": null,
+                                    "menuParentId": 6,
+                                    "isLayout": null,
+                                    "moduleIsPublic": 0,
+                                    "moduleGuid": "-dkkm6",
+                                    "children": []
+                                }
+                            ]
+                        },
+                        {
+                            "menuLabel": "Moduleman",
+                            "menuId": 7,
+                            "icon": null,
+                            "path": "/moduleman/module/list",
+                            "isTitle": null,
+                            "badge": null,
+                            "menuParentId": 1,
+                            "isLayout": null,
+                            "moduleIsPublic": 0,
+                            "moduleGuid": "-dkkm6",
+                            "children": []
+                        },
+                        {
+                            "menuLabel": "SyncGuig",
+                            "menuId": 8,
+                            "icon": null,
+                            "path": "/moduleman/menu/list",
+                            "isTitle": null,
+                            "badge": null,
+                            "menuParentId": 1,
+                            "isLayout": null,
+                            "moduleIsPublic": 0,
+                            "moduleGuid": "-dkkm6",
+                            "children": []
+                        },
+                        {
+                            "menuLabel": "CD-Scheduler",
+                            "menuId": 9,
+                            "icon": null,
+                            "path": null,
+                            "isTitle": null,
+                            "badge": null,
+                            "menuParentId": 1,
+                            "isLayout": null,
+                            "moduleIsPublic": 0,
+                            "moduleGuid": "-dkkm6",
+                            "children": [
+                                {
+                                    "menuLabel": "Subscribe",
+                                    "menuId": 10,
+                                    "icon": null,
+                                    "path": null,
+                                    "isTitle": null,
+                                    "badge": null,
+                                    "menuParentId": 9,
+                                    "isLayout": null,
+                                    "moduleIsPublic": 0,
+                                    "moduleGuid": "-dkkm6",
+                                    "children": []
+                                },
+                                {
+                                    "menuLabel": "MyCalendar",
+                                    "menuId": 11,
+                                    "icon": null,
+                                    "path": null,
+                                    "isTitle": null,
+                                    "badge": null,
+                                    "menuParentId": 9,
+                                    "isLayout": null,
+                                    "moduleIsPublic": 0,
+                                    "moduleGuid": "-dkkm6",
+                                    "children": []
+                                },
+                                {
+                                    "menuLabel": "MyProgress",
+                                    "menuId": 12,
+                                    "icon": null,
+                                    "path": null,
+                                    "isTitle": null,
+                                    "badge": null,
+                                    "menuParentId": 9,
+                                    "isLayout": null,
+                                    "moduleIsPublic": 0,
+                                    "moduleGuid": "-dkkm6",
+                                    "children": []
+                                },
+                                {
+                                    "menuLabel": "SchedulerBlogs",
+                                    "menuId": 13,
+                                    "icon": null,
+                                    "path": null,
+                                    "isTitle": null,
+                                    "badge": null,
+                                    "menuParentId": 9,
+                                    "isLayout": null,
+                                    "moduleIsPublic": 0,
+                                    "moduleGuid": "-dkkm6",
+                                    "children": []
+                                },
+                                {
+                                    "menuLabel": "Admin",
+                                    "menuId": 14,
+                                    "icon": null,
+                                    "path": null,
+                                    "isTitle": null,
+                                    "badge": null,
+                                    "menuParentId": 9,
+                                    "isLayout": null,
+                                    "moduleIsPublic": 0,
+                                    "moduleGuid": "-dkkm6",
+                                    "children": []
+                                }
+                            ]
+                        },
+                        {
+                            "menuLabel": "Users&Groups",
+                            "menuId": 17,
+                            "icon": null,
+                            "path": null,
+                            "isTitle": null,
+                            "badge": null,
+                            "menuParentId": 1,
+                            "isLayout": null,
+                            "moduleIsPublic": 0,
+                            "moduleGuid": "-dkkm6",
+                            "children": []
+                        },
+                        {
+                            "menuLabel": "controller_mgr",
+                            "menuId": 18,
+                            "icon": null,
+                            "path": null,
+                            "isTitle": null,
+                            "badge": null,
+                            "menuParentId": 1,
+                            "isLayout": null,
+                            "moduleIsPublic": 0,
+                            "moduleGuid": "-dkkm6",
+                            "children": []
+                        },
+                        {
+                            "menuLabel": "Generic",
+                            "menuId": 19,
+                            "icon": null,
+                            "path": null,
+                            "isTitle": null,
+                            "badge": null,
+                            "menuParentId": 1,
+                            "isLayout": null,
+                            "moduleIsPublic": 0,
+                            "moduleGuid": "-dkkm6",
+                            "children": [
+                                {
+                                    "menuLabel": "Generic Form",
+                                    "menuId": 20,
+                                    "icon": null,
+                                    "path": null,
+                                    "isTitle": null,
+                                    "badge": null,
+                                    "menuParentId": 19,
+                                    "isLayout": null,
+                                    "moduleIsPublic": 0,
+                                    "moduleGuid": "-dkkm6",
+                                    "children": []
+                                },
+                                {
+                                    "menuLabel": "Generic Foo Table",
+                                    "menuId": 21,
+                                    "icon": null,
+                                    "path": null,
+                                    "isTitle": null,
+                                    "badge": null,
+                                    "menuParentId": 19,
+                                    "isLayout": null,
+                                    "moduleIsPublic": 0,
+                                    "moduleGuid": "-dkkm6",
+                                    "children": []
+                                },
+                                {
+                                    "menuLabel": "Generic Tree",
+                                    "menuId": 22,
+                                    "icon": null,
+                                    "path": null,
+                                    "isTitle": null,
+                                    "badge": null,
+                                    "menuParentId": 19,
+                                    "isLayout": null,
+                                    "moduleIsPublic": 0,
+                                    "moduleGuid": "-dkkm6",
+                                    "children": []
+                                },
+                                {
+                                    "menuLabel": "ProgressBar",
+                                    "menuId": 23,
+                                    "icon": null,
+                                    "path": null,
+                                    "isTitle": null,
+                                    "badge": null,
+                                    "menuParentId": 19,
+                                    "isLayout": null,
+                                    "moduleIsPublic": 0,
+                                    "moduleGuid": "-dkkm6",
+                                    "children": []
+                                },
+                                {
+                                    "menuLabel": "controller-view",
+                                    "menuId": 217,
+                                    "icon": null,
+                                    "path": null,
+                                    "isTitle": null,
+                                    "badge": null,
+                                    "menuParentId": 19,
+                                    "isLayout": null,
+                                    "moduleIsPublic": 0,
+                                    "moduleGuid": "-dkkm6",
+                                    "children": []
+                                },
+                                {
+                                    "menuLabel": "controller-view2",
+                                    "menuId": 218,
+                                    "icon": null,
+                                    "path": null,
+                                    "isTitle": null,
+                                    "badge": null,
+                                    "menuParentId": 19,
+                                    "isLayout": null,
+                                    "moduleIsPublic": 0,
+                                    "moduleGuid": "-dkkm6",
+                                    "children": []
+                                },
+                                {
+                                    "menuLabel": "cd-memo",
+                                    "menuId": 220,
+                                    "icon": null,
+                                    "path": null,
+                                    "isTitle": null,
+                                    "badge": null,
+                                    "menuParentId": 19,
+                                    "isLayout": null,
+                                    "moduleIsPublic": 0,
+                                    "moduleGuid": "-dkkm6",
+                                    "children": []
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "userData": {
+                "userId": 1010,
+                "userGuid": "fe5b1a9d-df45-4fce-a181-65289c48ea00",
+                "userName": "karl",
+                "email": "karl.lulu@anon.com",
+                "companyId": 85,
+                "docId": 34,
+                "mobile": "895909",
+                "gender": 1,
+                "birthDate": "1976-03-10T06:53:37.000Z",
+                "postalAddr": "85849",
+                "fName": "Karl",
+                "mName": "D",
+                "lName": "Lulu",
+                "nationalId": "85909",
+                "passportId": "89599",
+                "userEnabled": true,
+                "zipCode": null,
+                "activationKey": "8968959",
+                "userTypeId": 1
+            }
+        }
+    }
+}
+
+
+10/06/2022
+- develop idletimeout in @corpdesk/core
+- create @corpdesk/naz library 
+- use --legacy-peer-deps flag for installations of @corpdesk/naz
+- develop consumable table in @corpdesk/naz 
+- test moduleman with table from @corpdesk/naz library
+
+- BaseService to depend on envinronment for 'env' data
+- remove unused projects besides core, naz and ui-lib-demo
+- move html menu construction methods from shell/sidbar to @corpdesk/naz/menu
+- transform above from specific menu to generic 'tree'
+
+- test naz-table with live modue data
+- develop naz adaptor that feeds cd-data to naz-table
+- pagination
+        - total rows
+        - rows per page
+        - number of pages
+        - maximum pages to show in paginator
+        - current page
+        - move to next page
+        - move to previous page
+        - scroll display pages
+
+//////////////////////
+- move naz-table from test bed in cd-moduleman to cd-ui-lib/naz
+- implement update for module
+- replicate module table for menu
+//////////////////
+- delete item
+- hide/show column
+
+to upgrade to "tslib": "^2.3.0",
+current ^2.1.0
+
+to upgrad to ~12.2.0
+current ~12.0.3
+
+- Track websocket message from signing to reception
+    - confirm message reaches websocket server 
+    - confirm relay confirmation is received by the sender
+    - confirm that the recepient is already registered
+    - flag relayed message at the server
+    - confirm that recepient has socket
+    - if recepient socket is not available, save message in server.
+    - flag undelivered messages as unsent.
+    - on socket connection, check for saved messages, then send qued messages
+    - flag saved messages as sent.
+    - confirm recepient receives the message
+    - recepient to confirm message reception, notify server and sender
+
+- issues:
+    - pushData.m is set wrongly
+
+- Optimization:
+- all messages sent to the server will be queued at the clent and the server
+- if server goes down, queueing system should not be interupted both at the client side and the recepient side.
+- the above cushions the server from avalanch of messages when server resumes after failure.
+
+
+Testing socket.io on login:
+    - event 'send-menu'
+    - pushEnvelop: {
+    "pushData": {
+        "pushGuid": "bcc18b79-9f35-4b3a-a0d4-c2a66339773e",
+        "m": [
+            {
+                "label": "cd_geo",
+                "id": 469,
+                "icon": "ri-map-pin-line",
+                "link": null,
+                "isTitle": null,
+                "badge": null,
+                "parentId": -1,
+                "isLayout": null,
+                "moduleIsPublic": 1,
+                "moduleGuid": "C620F2D8-A0AE-0406-7DB7-7ECE806722AA",
+                "subItems": [
+                    {
+                        "label": "location",
+                        "id": 470,
+                        "icon": null,
+                        "link": "/moduleman/module/list",
+                        "isTitle": null,
+                        "badge": null,
+                        "parentId": 469,
+                        "isLayout": null,
+                        "moduleIsPublic": 1,
+                        "moduleGuid": "C620F2D8-A0AE-0406-7DB7-7ECE806722AA",
+                        "subItems": []
+                    }
+                ]
+            },
+            {
+                "label": "Modman",
+                "id": 995,
+                "icon": "ri-user-settings-line",
+                "link": "./admin",
+                "isTitle": null,
+                "badge": null,
+                "parentId": -1,
+                "isLayout": null,
+                "moduleIsPublic": null,
+                "moduleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b",
+                "subItems": [
+                    {
+                        "label": "dashboard",
+                        "id": 996,
+                        "icon": null,
+                        "link": "admin/admin-dashboard",
+                        "isTitle": null,
+                        "badge": null,
+                        "parentId": 995,
+                        "isLayout": null,
+                        "moduleIsPublic": null,
+                        "moduleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b",
+                        "subItems": []
+                    },
+                    {
+                        "label": "cdobj",
+                        "id": 997,
+                        "icon": null,
+                        "link": "/moduleman/cd-obj/list",
+                        "isTitle": null,
+                        "badge": null,
+                        "parentId": 995,
+                        "isLayout": null,
+                        "moduleIsPublic": null,
+                        "moduleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b",
+                        "subItems": []
+                    },
+                    {
+                        "label": "company",
+                        "id": 998,
+                        "icon": null,
+                        "link": "/moduleman/company/list",
+                        "isTitle": null,
+                        "badge": null,
+                        "parentId": 995,
+                        "isLayout": null,
+                        "moduleIsPublic": null,
+                        "moduleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b",
+                        "subItems": []
+                    },
+                    {
+                        "label": "grus",
+                        "id": 999,
+                        "icon": null,
+                        "link": "admin/grus",
+                        "isTitle": null,
+                        "badge": null,
+                        "parentId": 995,
+                        "isLayout": null,
+                        "moduleIsPublic": null,
+                        "moduleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b",
+                        "subItems": []
+                    },
+                    {
+                        "label": "menu",
+                        "id": 1000,
+                        "icon": null,
+                        "link": "/moduleman/menu/list",
+                        "isTitle": null,
+                        "badge": null,
+                        "parentId": 995,
+                        "isLayout": null,
+                        "moduleIsPublic": null,
+                        "moduleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b",
+                        "subItems": []
+                    },
+                    {
+                        "label": "module",
+                        "id": 1001,
+                        "icon": null,
+                        "link": "/moduleman/module/list",
+                        "isTitle": null,
+                        "badge": null,
+                        "parentId": 995,
+                        "isLayout": null,
+                        "moduleIsPublic": null,
+                        "moduleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b",
+                        "subItems": []
+                    },
+                    {
+                        "label": "consumer",
+                        "id": 1269,
+                        "icon": null,
+                        "link": "/moduleman/consumer/list",
+                        "isTitle": null,
+                        "badge": null,
+                        "parentId": 995,
+                        "isLayout": null,
+                        "moduleIsPublic": null,
+                        "moduleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b",
+                        "subItems": []
+                    },
+                    {
+                        "label": "consumer-resource",
+                        "id": 1271,
+                        "icon": null,
+                        "link": null,
+                        "isTitle": null,
+                        "badge": null,
+                        "parentId": 995,
+                        "isLayout": null,
+                        "moduleIsPublic": null,
+                        "moduleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b",
+                        "subItems": []
+                    }
+                ]
+            },
+            {
+                "label": "MyDesk",
+                "id": 1,
+                "icon": "ri-user-line",
+                "link": null,
+                "isTitle": null,
+                "badge": null,
+                "parentId": -1,
+                "isLayout": null,
+                "moduleIsPublic": 0,
+                "moduleGuid": "-dkkm6",
+                "subItems": [
+                    {
+                        "label": "Users",
+                        "id": 2,
+                        "icon": null,
+                        "link": "",
+                        "isTitle": null,
+                        "badge": null,
+                        "parentId": 1,
+                        "isLayout": null,
+                        "moduleIsPublic": 0,
+                        "moduleGuid": "-dkkm6",
+                        "subItems": []
+                    },
+                    {
+                        "label": "Comm",
+                        "id": 3,
+                        "icon": null,
+                        "link": "",
+                        "isTitle": null,
+                        "badge": null,
+                        "parentId": 1,
+                        "isLayout": null,
+                        "moduleIsPublic": 0,
+                        "moduleGuid": "-dkkm6",
+                        "subItems": [
+                            {
+                                "label": "Emails",
+                                "id": 16,
+                                "icon": null,
+                                "link": null,
+                                "isTitle": null,
+                                "badge": null,
+                                "parentId": 3,
+                                "isLayout": null,
+                                "moduleIsPublic": 0,
+                                "moduleGuid": "-dkkm6",
+                                "subItems": []
+                            },
+                            {
+                                "label": "memo",
+                                "id": 221,
+                                "icon": null,
+                                "link": null,
+                                "isTitle": null,
+                                "badge": null,
+                                "parentId": 3,
+                                "isLayout": null,
+                                "moduleIsPublic": 0,
+                                "moduleGuid": "-dkkm6",
+                                "subItems": []
+                            }
+                        ]
+                    },
+                    {
+                        "label": "Settings",
+                        "id": 6,
+                        "icon": null,
+                        "link": null,
+                        "isTitle": null,
+                        "badge": null,
+                        "parentId": 1,
+                        "isLayout": null,
+                        "moduleIsPublic": 0,
+                        "moduleGuid": "-dkkm6",
+                        "subItems": [
+                            {
+                                "label": "notifications",
+                                "id": 4,
+                                "icon": null,
+                                "link": null,
+                                "isTitle": null,
+                                "badge": null,
+                                "parentId": 6,
+                                "isLayout": null,
+                                "moduleIsPublic": 0,
+                                "moduleGuid": "-dkkm6",
+                                "subItems": []
+                            },
+                            {
+                                "label": "logs",
+                                "id": 5,
+                                "icon": null,
+                                "link": "",
+                                "isTitle": null,
+                                "badge": null,
+                                "parentId": 6,
+                                "isLayout": null,
+                                "moduleIsPublic": 0,
+                                "moduleGuid": "-dkkm6",
+                                "subItems": []
+                            }
+                        ]
+                    },
+                    {
+                        "label": "Moduleman",
+                        "id": 7,
+                        "icon": null,
+                        "link": "/moduleman/module/list",
+                        "isTitle": null,
+                        "badge": null,
+                        "parentId": 1,
+                        "isLayout": null,
+                        "moduleIsPublic": 0,
+                        "moduleGuid": "-dkkm6",
+                        "subItems": []
+                    },
+                    {
+                        "label": "SyncGuig",
+                        "id": 8,
+                        "icon": null,
+                        "link": "/moduleman/menu/list",
+                        "isTitle": null,
+                        "badge": null,
+                        "parentId": 1,
+                        "isLayout": null,
+                        "moduleIsPublic": 0,
+                        "moduleGuid": "-dkkm6",
+                        "subItems": []
+                    },
+                    {
+                        "label": "CD-Scheduler",
+                        "id": 9,
+                        "icon": null,
+                        "link": null,
+                        "isTitle": null,
+                        "badge": null,
+                        "parentId": 1,
+                        "isLayout": null,
+                        "moduleIsPublic": 0,
+                        "moduleGuid": "-dkkm6",
+                        "subItems": [
+                            {
+                                "label": "Subscribe",
+                                "id": 10,
+                                "icon": null,
+                                "link": null,
+                                "isTitle": null,
+                                "badge": null,
+                                "parentId": 9,
+                                "isLayout": null,
+                                "moduleIsPublic": 0,
+                                "moduleGuid": "-dkkm6",
+                                "subItems": []
+                            },
+                            {
+                                "label": "MyCalendar",
+                                "id": 11,
+                                "icon": null,
+                                "link": null,
+                                "isTitle": null,
+                                "badge": null,
+                                "parentId": 9,
+                                "isLayout": null,
+                                "moduleIsPublic": 0,
+                                "moduleGuid": "-dkkm6",
+                                "subItems": []
+                            },
+                            {
+                                "label": "MyProgress",
+                                "id": 12,
+                                "icon": null,
+                                "link": null,
+                                "isTitle": null,
+                                "badge": null,
+                                "parentId": 9,
+                                "isLayout": null,
+                                "moduleIsPublic": 0,
+                                "moduleGuid": "-dkkm6",
+                                "subItems": []
+                            },
+                            {
+                                "label": "SchedulerBlogs",
+                                "id": 13,
+                                "icon": null,
+                                "link": null,
+                                "isTitle": null,
+                                "badge": null,
+                                "parentId": 9,
+                                "isLayout": null,
+                                "moduleIsPublic": 0,
+                                "moduleGuid": "-dkkm6",
+                                "subItems": []
+                            },
+                            {
+                                "label": "Admin",
+                                "id": 14,
+                                "icon": null,
+                                "link": null,
+                                "isTitle": null,
+                                "badge": null,
+                                "parentId": 9,
+                                "isLayout": null,
+                                "moduleIsPublic": 0,
+                                "moduleGuid": "-dkkm6",
+                                "subItems": []
+                            }
+                        ]
+                    },
+                    {
+                        "label": "Users&Groups",
+                        "id": 17,
+                        "icon": null,
+                        "link": null,
+                        "isTitle": null,
+                        "badge": null,
+                        "parentId": 1,
+                        "isLayout": null,
+                        "moduleIsPublic": 0,
+                        "moduleGuid": "-dkkm6",
+                        "subItems": []
+                    },
+                    {
+                        "label": "controller_mgr",
+                        "id": 18,
+                        "icon": null,
+                        "link": null,
+                        "isTitle": null,
+                        "badge": null,
+                        "parentId": 1,
+                        "isLayout": null,
+                        "moduleIsPublic": 0,
+                        "moduleGuid": "-dkkm6",
+                        "subItems": []
+                    },
+                    {
+                        "label": "Generic",
+                        "id": 19,
+                        "icon": null,
+                        "link": null,
+                        "isTitle": null,
+                        "badge": null,
+                        "parentId": 1,
+                        "isLayout": null,
+                        "moduleIsPublic": 0,
+                        "moduleGuid": "-dkkm6",
+                        "subItems": [
+                            {
+                                "label": "Generic Form",
+                                "id": 20,
+                                "icon": null,
+                                "link": null,
+                                "isTitle": null,
+                                "badge": null,
+                                "parentId": 19,
+                                "isLayout": null,
+                                "moduleIsPublic": 0,
+                                "moduleGuid": "-dkkm6",
+                                "subItems": []
+                            },
+                            {
+                                "label": "Generic Foo Table",
+                                "id": 21,
+                                "icon": null,
+                                "link": null,
+                                "isTitle": null,
+                                "badge": null,
+                                "parentId": 19,
+                                "isLayout": null,
+                                "moduleIsPublic": 0,
+                                "moduleGuid": "-dkkm6",
+                                "subItems": []
+                            },
+                            {
+                                "label": "Generic Tree",
+                                "id": 22,
+                                "icon": null,
+                                "link": null,
+                                "isTitle": null,
+                                "badge": null,
+                                "parentId": 19,
+                                "isLayout": null,
+                                "moduleIsPublic": 0,
+                                "moduleGuid": "-dkkm6",
+                                "subItems": []
+                            },
+                            {
+                                "label": "ProgressBar",
+                                "id": 23,
+                                "icon": null,
+                                "link": null,
+                                "isTitle": null,
+                                "badge": null,
+                                "parentId": 19,
+                                "isLayout": null,
+                                "moduleIsPublic": 0,
+                                "moduleGuid": "-dkkm6",
+                                "subItems": []
+                            },
+                            {
+                                "label": "controller-view",
+                                "id": 217,
+                                "icon": null,
+                                "link": null,
+                                "isTitle": null,
+                                "badge": null,
+                                "parentId": 19,
+                                "isLayout": null,
+                                "moduleIsPublic": 0,
+                                "moduleGuid": "-dkkm6",
+                                "subItems": []
+                            },
+                            {
+                                "label": "controller-view2",
+                                "id": 218,
+                                "icon": null,
+                                "link": null,
+                                "isTitle": null,
+                                "badge": null,
+                                "parentId": 19,
+                                "isLayout": null,
+                                "moduleIsPublic": 0,
+                                "moduleGuid": "-dkkm6",
+                                "subItems": []
+                            },
+                            {
+                                "label": "cd-memo",
+                                "id": 220,
+                                "icon": null,
+                                "link": null,
+                                "isTitle": null,
+                                "badge": null,
+                                "parentId": 19,
+                                "isLayout": null,
+                                "moduleIsPublic": 0,
+                                "moduleGuid": "-dkkm6",
+                                "subItems": []
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
+        "pushRecepients": [
+            {
+                "userId": 1010,
+                "subTypeId": 7,
+                "cdObjId": {
+                    "appId": "",
+                    "ngModule": "SharedModule",
+                    "resourceName": "SidebarComponent",
+                    "resourceGuid": "4947e79b-aa79-4960-a99d-775b24286e07",
+                    "jwtToken": "",
+                    "socket": null,
+                    "commTrack": {
+                        "initTime": 1654606466149,
+                        "relayTime": null,
+                        "relayed": false,
+                        "deliveryTime": null,
+                        "deliverd": false
+                    }
+                }
+            },
+            {
+                "userId": 1010,
+                "subTypeId": 1,
+                "cdObjId": {
+                    "ngModule": "UserModule",
+                    "resourceName": "SessService",
+                    "resourceGuid": "9ac6caf5-9eb5-4e6d-9555-2496a13eb86a",
+                    "jwtToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5YWM2Y2FmNS05ZWI1LTRlNmQtOTU1NS0yNDk2YTEzZWI4NmEiLCJ1c2VybmFtZSI6IlNlc3NTZXJ2aWNlIiwiaWF0IjoxNjU0NDY1OTc2LCJleHAiOjE2NTQ0NjY4NzZ9.nT1QqnjKx_MC4teXIVNrqXhU9FQYSUbEpEx8QhBhup0",
+                    "socket": null,
+                    "commTrack": {
+                        "initTime": 1654465976940,
+                        "relayTime": null,
+                        "relayed": false,
+                        "deliveryTime": null,
+                        "deliverd": false
+                    }
+                }
+            }
+        ],
+        "triggerEvent": "login",
+        "emittEvent": "push-menu",
+        "token": "78f8c78c-a0cf-4686-b62a-4fcc1a3f3b31",
+        "commTrack": {
+            "initTime": null,
+            "relayTime": null,
+            "relayed": false,
+            "deliveryTime": null,
+            "deliverd": false
+        }
+    },
+    "req": {
+        "ctx": "Sys",
+        "m": "User",
+        "c": "User",
+        "a": "Login",
+        "dat": {
+            "f_vals": [
+                {
+                    "data": null
+                }
+            ],
+            "token": "78f8c78c-a0cf-4686-b62a-4fcc1a3f3b31"
+        },
+        "args": null
+    },
+    "resp": {
+        "app_state": {
+            "success": true,
+            "info": {
+                "messages": [],
+                "code": "",
+                "app_msg": "Welcome karl!"
+            },
+            "sess": {
+                "cd_token": "78f8c78c-a0cf-4686-b62a-4fcc1a3f3b31",
+                "userId": 1010,
+                "jwt": null,
+                "ttl": 600,
+                "initUuid": "78f9827a-d865-4950-add3-c29e1cc7c1f5",
+                "initTime": "1654607143.532"
+            },
+            "cache": {},
+            "sConfig": {
+                "usePush": true,
+                "usePolling": true,
+                "useCacheStore": true
+            }
+        },
+        "data": {
+            "consumer": [
+                {
+                    "consumerId": 33,
+                    "consumerGuid": "B0B3DA99-1859-A499-90F6-1E3F69575DCD",
+                    "consumerName": "emp_services",
+                    "consumerEnabled": 1,
+                    "docId": 9276,
+                    "companyId": 85,
+                    "companyGuid": "8a7ee96e-6c76-11ec-a1b0-4184d18c49ca"
+                }
+            ],
+            "menuData": [
+                {
+                    "menuLabel": "cd_geo",
+                    "menuId": 469,
+                    "icon": "ri-map-pin-line",
+                    "path": null,
+                    "isTitle": null,
+                    "badge": null,
+                    "menuParentId": -1,
+                    "isLayout": null,
+                    "moduleIsPublic": 1,
+                    "moduleGuid": "C620F2D8-A0AE-0406-7DB7-7ECE806722AA",
+                    "children": [
+                        {
+                            "menuLabel": "location",
+                            "menuId": 470,
+                            "icon": null,
+                            "path": "/moduleman/module/list",
+                            "isTitle": null,
+                            "badge": null,
+                            "menuParentId": 469,
+                            "isLayout": null,
+                            "moduleIsPublic": 1,
+                            "moduleGuid": "C620F2D8-A0AE-0406-7DB7-7ECE806722AA",
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "menuLabel": "Modman",
+                    "menuId": 995,
+                    "icon": "ri-user-settings-line",
+                    "path": "./admin",
+                    "isTitle": null,
+                    "badge": null,
+                    "menuParentId": -1,
+                    "isLayout": null,
+                    "moduleIsPublic": null,
+                    "moduleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b",
+                    "children": [
+                        {
+                            "menuLabel": "dashboard",
+                            "menuId": 996,
+                            "icon": null,
+                            "path": "admin/admin-dashboard",
+                            "isTitle": null,
+                            "badge": null,
+                            "menuParentId": 995,
+                            "isLayout": null,
+                            "moduleIsPublic": null,
+                            "moduleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b",
+                            "children": []
+                        },
+                        {
+                            "menuLabel": "cdobj",
+                            "menuId": 997,
+                            "icon": null,
+                            "path": "/moduleman/cd-obj/list",
+                            "isTitle": null,
+                            "badge": null,
+                            "menuParentId": 995,
+                            "isLayout": null,
+                            "moduleIsPublic": null,
+                            "moduleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b",
+                            "children": []
+                        },
+                        {
+                            "menuLabel": "company",
+                            "menuId": 998,
+                            "icon": null,
+                            "path": "/moduleman/company/list",
+                            "isTitle": null,
+                            "badge": null,
+                            "menuParentId": 995,
+                            "isLayout": null,
+                            "moduleIsPublic": null,
+                            "moduleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b",
+                            "children": []
+                        },
+                        {
+                            "menuLabel": "grus",
+                            "menuId": 999,
+                            "icon": null,
+                            "path": "admin/grus",
+                            "isTitle": null,
+                            "badge": null,
+                            "menuParentId": 995,
+                            "isLayout": null,
+                            "moduleIsPublic": null,
+                            "moduleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b",
+                            "children": []
+                        },
+                        {
+                            "menuLabel": "menu",
+                            "menuId": 1000,
+                            "icon": null,
+                            "path": "/moduleman/menu/list",
+                            "isTitle": null,
+                            "badge": null,
+                            "menuParentId": 995,
+                            "isLayout": null,
+                            "moduleIsPublic": null,
+                            "moduleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b",
+                            "children": []
+                        },
+                        {
+                            "menuLabel": "module",
+                            "menuId": 1001,
+                            "icon": null,
+                            "path": "/moduleman/module/list",
+                            "isTitle": null,
+                            "badge": null,
+                            "menuParentId": 995,
+                            "isLayout": null,
+                            "moduleIsPublic": null,
+                            "moduleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b",
+                            "children": []
+                        },
+                        {
+                            "menuLabel": "consumer",
+                            "menuId": 1269,
+                            "icon": null,
+                            "path": "/moduleman/consumer/list",
+                            "isTitle": null,
+                            "badge": null,
+                            "menuParentId": 995,
+                            "isLayout": null,
+                            "moduleIsPublic": null,
+                            "moduleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b",
+                            "children": []
+                        },
+                        {
+                            "menuLabel": "consumer-resource",
+                            "menuId": 1271,
+                            "icon": null,
+                            "path": null,
+                            "isTitle": null,
+                            "badge": null,
+                            "menuParentId": 995,
+                            "isLayout": null,
+                            "moduleIsPublic": null,
+                            "moduleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b",
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "menuLabel": "MyDesk",
+                    "menuId": 1,
+                    "icon": "ri-user-line",
+                    "path": null,
+                    "isTitle": null,
+                    "badge": null,
+                    "menuParentId": -1,
+                    "isLayout": null,
+                    "moduleIsPublic": 0,
+                    "moduleGuid": "-dkkm6",
+                    "children": [
+                        {
+                            "menuLabel": "Users",
+                            "menuId": 2,
+                            "icon": null,
+                            "path": "",
+                            "isTitle": null,
+                            "badge": null,
+                            "menuParentId": 1,
+                            "isLayout": null,
+                            "moduleIsPublic": 0,
+                            "moduleGuid": "-dkkm6",
+                            "children": []
+                        },
+                        {
+                            "menuLabel": "Comm",
+                            "menuId": 3,
+                            "icon": null,
+                            "path": "",
+                            "isTitle": null,
+                            "badge": null,
+                            "menuParentId": 1,
+                            "isLayout": null,
+                            "moduleIsPublic": 0,
+                            "moduleGuid": "-dkkm6",
+                            "children": [
+                                {
+                                    "menuLabel": "Emails",
+                                    "menuId": 16,
+                                    "icon": null,
+                                    "path": null,
+                                    "isTitle": null,
+                                    "badge": null,
+                                    "menuParentId": 3,
+                                    "isLayout": null,
+                                    "moduleIsPublic": 0,
+                                    "moduleGuid": "-dkkm6",
+                                    "children": []
+                                },
+                                {
+                                    "menuLabel": "memo",
+                                    "menuId": 221,
+                                    "icon": null,
+                                    "path": null,
+                                    "isTitle": null,
+                                    "badge": null,
+                                    "menuParentId": 3,
+                                    "isLayout": null,
+                                    "moduleIsPublic": 0,
+                                    "moduleGuid": "-dkkm6",
+                                    "children": []
+                                }
+                            ]
+                        },
+                        {
+                            "menuLabel": "Settings",
+                            "menuId": 6,
+                            "icon": null,
+                            "path": null,
+                            "isTitle": null,
+                            "badge": null,
+                            "menuParentId": 1,
+                            "isLayout": null,
+                            "moduleIsPublic": 0,
+                            "moduleGuid": "-dkkm6",
+                            "children": [
+                                {
+                                    "menuLabel": "notifications",
+                                    "menuId": 4,
+                                    "icon": null,
+                                    "path": null,
+                                    "isTitle": null,
+                                    "badge": null,
+                                    "menuParentId": 6,
+                                    "isLayout": null,
+                                    "moduleIsPublic": 0,
+                                    "moduleGuid": "-dkkm6",
+                                    "children": []
+                                },
+                                {
+                                    "menuLabel": "logs",
+                                    "menuId": 5,
+                                    "icon": null,
+                                    "path": "",
+                                    "isTitle": null,
+                                    "badge": null,
+                                    "menuParentId": 6,
+                                    "isLayout": null,
+                                    "moduleIsPublic": 0,
+                                    "moduleGuid": "-dkkm6",
+                                    "children": []
+                                }
+                            ]
+                        },
+                        {
+                            "menuLabel": "Moduleman",
+                            "menuId": 7,
+                            "icon": null,
+                            "path": "/moduleman/module/list",
+                            "isTitle": null,
+                            "badge": null,
+                            "menuParentId": 1,
+                            "isLayout": null,
+                            "moduleIsPublic": 0,
+                            "moduleGuid": "-dkkm6",
+                            "children": []
+                        },
+                        {
+                            "menuLabel": "SyncGuig",
+                            "menuId": 8,
+                            "icon": null,
+                            "path": "/moduleman/menu/list",
+                            "isTitle": null,
+                            "badge": null,
+                            "menuParentId": 1,
+                            "isLayout": null,
+                            "moduleIsPublic": 0,
+                            "moduleGuid": "-dkkm6",
+                            "children": []
+                        },
+                        {
+                            "menuLabel": "CD-Scheduler",
+                            "menuId": 9,
+                            "icon": null,
+                            "path": null,
+                            "isTitle": null,
+                            "badge": null,
+                            "menuParentId": 1,
+                            "isLayout": null,
+                            "moduleIsPublic": 0,
+                            "moduleGuid": "-dkkm6",
+                            "children": [
+                                {
+                                    "menuLabel": "Subscribe",
+                                    "menuId": 10,
+                                    "icon": null,
+                                    "path": null,
+                                    "isTitle": null,
+                                    "badge": null,
+                                    "menuParentId": 9,
+                                    "isLayout": null,
+                                    "moduleIsPublic": 0,
+                                    "moduleGuid": "-dkkm6",
+                                    "children": []
+                                },
+                                {
+                                    "menuLabel": "MyCalendar",
+                                    "menuId": 11,
+                                    "icon": null,
+                                    "path": null,
+                                    "isTitle": null,
+                                    "badge": null,
+                                    "menuParentId": 9,
+                                    "isLayout": null,
+                                    "moduleIsPublic": 0,
+                                    "moduleGuid": "-dkkm6",
+                                    "children": []
+                                },
+                                {
+                                    "menuLabel": "MyProgress",
+                                    "menuId": 12,
+                                    "icon": null,
+                                    "path": null,
+                                    "isTitle": null,
+                                    "badge": null,
+                                    "menuParentId": 9,
+                                    "isLayout": null,
+                                    "moduleIsPublic": 0,
+                                    "moduleGuid": "-dkkm6",
+                                    "children": []
+                                },
+                                {
+                                    "menuLabel": "SchedulerBlogs",
+                                    "menuId": 13,
+                                    "icon": null,
+                                    "path": null,
+                                    "isTitle": null,
+                                    "badge": null,
+                                    "menuParentId": 9,
+                                    "isLayout": null,
+                                    "moduleIsPublic": 0,
+                                    "moduleGuid": "-dkkm6",
+                                    "children": []
+                                },
+                                {
+                                    "menuLabel": "Admin",
+                                    "menuId": 14,
+                                    "icon": null,
+                                    "path": null,
+                                    "isTitle": null,
+                                    "badge": null,
+                                    "menuParentId": 9,
+                                    "isLayout": null,
+                                    "moduleIsPublic": 0,
+                                    "moduleGuid": "-dkkm6",
+                                    "children": []
+                                }
+                            ]
+                        },
+                        {
+                            "menuLabel": "Users&Groups",
+                            "menuId": 17,
+                            "icon": null,
+                            "path": null,
+                            "isTitle": null,
+                            "badge": null,
+                            "menuParentId": 1,
+                            "isLayout": null,
+                            "moduleIsPublic": 0,
+                            "moduleGuid": "-dkkm6",
+                            "children": []
+                        },
+                        {
+                            "menuLabel": "controller_mgr",
+                            "menuId": 18,
+                            "icon": null,
+                            "path": null,
+                            "isTitle": null,
+                            "badge": null,
+                            "menuParentId": 1,
+                            "isLayout": null,
+                            "moduleIsPublic": 0,
+                            "moduleGuid": "-dkkm6",
+                            "children": []
+                        },
+                        {
+                            "menuLabel": "Generic",
+                            "menuId": 19,
+                            "icon": null,
+                            "path": null,
+                            "isTitle": null,
+                            "badge": null,
+                            "menuParentId": 1,
+                            "isLayout": null,
+                            "moduleIsPublic": 0,
+                            "moduleGuid": "-dkkm6",
+                            "children": [
+                                {
+                                    "menuLabel": "Generic Form",
+                                    "menuId": 20,
+                                    "icon": null,
+                                    "path": null,
+                                    "isTitle": null,
+                                    "badge": null,
+                                    "menuParentId": 19,
+                                    "isLayout": null,
+                                    "moduleIsPublic": 0,
+                                    "moduleGuid": "-dkkm6",
+                                    "children": []
+                                },
+                                {
+                                    "menuLabel": "Generic Foo Table",
+                                    "menuId": 21,
+                                    "icon": null,
+                                    "path": null,
+                                    "isTitle": null,
+                                    "badge": null,
+                                    "menuParentId": 19,
+                                    "isLayout": null,
+                                    "moduleIsPublic": 0,
+                                    "moduleGuid": "-dkkm6",
+                                    "children": []
+                                },
+                                {
+                                    "menuLabel": "Generic Tree",
+                                    "menuId": 22,
+                                    "icon": null,
+                                    "path": null,
+                                    "isTitle": null,
+                                    "badge": null,
+                                    "menuParentId": 19,
+                                    "isLayout": null,
+                                    "moduleIsPublic": 0,
+                                    "moduleGuid": "-dkkm6",
+                                    "children": []
+                                },
+                                {
+                                    "menuLabel": "ProgressBar",
+                                    "menuId": 23,
+                                    "icon": null,
+                                    "path": null,
+                                    "isTitle": null,
+                                    "badge": null,
+                                    "menuParentId": 19,
+                                    "isLayout": null,
+                                    "moduleIsPublic": 0,
+                                    "moduleGuid": "-dkkm6",
+                                    "children": []
+                                },
+                                {
+                                    "menuLabel": "controller-view",
+                                    "menuId": 217,
+                                    "icon": null,
+                                    "path": null,
+                                    "isTitle": null,
+                                    "badge": null,
+                                    "menuParentId": 19,
+                                    "isLayout": null,
+                                    "moduleIsPublic": 0,
+                                    "moduleGuid": "-dkkm6",
+                                    "children": []
+                                },
+                                {
+                                    "menuLabel": "controller-view2",
+                                    "menuId": 218,
+                                    "icon": null,
+                                    "path": null,
+                                    "isTitle": null,
+                                    "badge": null,
+                                    "menuParentId": 19,
+                                    "isLayout": null,
+                                    "moduleIsPublic": 0,
+                                    "moduleGuid": "-dkkm6",
+                                    "children": []
+                                },
+                                {
+                                    "menuLabel": "cd-memo",
+                                    "menuId": 220,
+                                    "icon": null,
+                                    "path": null,
+                                    "isTitle": null,
+                                    "badge": null,
+                                    "menuParentId": 19,
+                                    "isLayout": null,
+                                    "moduleIsPublic": 0,
+                                    "moduleGuid": "-dkkm6",
+                                    "children": []
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "userData": {
+                "userId": 1010,
+                "userGuid": "fe5b1a9d-df45-4fce-a181-65289c48ea00",
+                "userName": "karl",
+                "email": "karl.lulu@anon.com",
+                "companyId": 85,
+                "docId": 34,
+                "mobile": "895909",
+                "gender": 1,
+                "birthDate": "1976-03-10T06:53:37.000Z",
+                "postalAddr": "85849",
+                "fName": "Karl",
+                "mName": "D",
+                "lName": "Lulu",
+                "nationalId": "85909",
+                "passportId": "89599",
+                "userEnabled": true,
+                "zipCode": null,
+                "activationKey": "8968959",
+                "userTypeId": 1
+            }
+        }
+    }
+}
+
+
+31/12/2022
+- set up BaseService with CRUD
+- cd-obj CRUD
+- company CRUD
+- initial work on cd-cache...IN PROGRESS
+- socket-io issue
+- set up websocket as alternative...IN PROGRESS
+- harmonise interface for socket.io and websocket...IN PROGRESS
+
+
+15/12/2021
+- optimize modules CRUD
+
+29/11/2021
+- set field filter for different dispplays
+        eg this.fields = svForms.filterByFieldFor(ModuleModel,FieldFor.createForm)
+- set up menu - CRUD
+        - automate setting of next, prev, finnish buttons
+
+26/11/2021
+- enhance form builder for create menu
+- validation for save module
+- set form validation messages
+- save menu
+
+03/11/2021
+- support for create component
+
+17/10/2021
+- move naz-table from test bed in cd-moduleman to cd-ui-lib/naz
+- implement update for module
+- replicate module table for menu
+
+16/10/2021
+- replicate module table for menu
+
+13/10/2021
+- move naz-table from test bed in cd-moduleman to cd-ui-lib/naz
+- implement update for module
+
+06/10/2021
+- create @corpdesk/naz library 
+- use --legacy-peer-deps flag for installations of @corpdesk/naz
+- develop consumable table in @corpdesk/naz 
+- test moduleman with table from @corpdesk/naz library
+
+- BaseService to depend on envinronment for 'env' data
+- remove unused projects besides core, naz and ui-lib-demo
+- move html menu construction methods from shell/sidbar to @corpdesk/naz/menu
+- transform above from specific menu to generic 'tree'
+
+- test naz-table with live modue data
+- develop naz adaptor that feeds cd-data to naz-table
+- pagination
+        - total rows
+        - rows per page
+        - number of pages
+        - maximum pages to show in paginator
+        - current page
+        - move to next page
+        - move to previous page
+        - scroll display pages
+
+25/09/2021
+- develop idletimeout in @corpdesk/core
+- create @corpdesk/naz library 
+- develop consumable table in @corpdesk/naz 
+- test moduleman with table from @corpdesk/naz library
+
+15/09/2021
+- use back-end menu
+        - library/moduleman/menuservice/getMenu$()
+        - on login, library/session/createSession()
+            - getMenu$()
+            - use socket.io to sendMenu() to shell/sidebar
+        - shell/sidebar listen to 'push-menu'
+        - confirm menu is available on shell/sidebar
+
+09/09/2021
+- modify to connect via cd-api (node.js version) from laravel back-end
+    - create a new param in environment: CD_PORT
+    - set CD_PORT = 3000,
+    - modify ServerService::proc() for this.env.apiEndpoint to...
+    - `${this.env.apiEndpoint}:${this.env.CD_PORT || 80}`
+    - this allows library clients to set endpoints with port setting
+    - port setting defaults to 80 when CD_PORT is not set
+    - update 'username' to 'user_name'
+
+
+
