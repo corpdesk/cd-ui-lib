@@ -415,7 +415,7 @@ export class UserService {
     /*
     post login request to server
     */
-    return this.svServer.proc(this.postData)
+    return this.svServer.proc(this.postData);
   }
 
   /**
@@ -450,7 +450,7 @@ export class UserService {
       dat: {
         f_vals: [
           {
-            query: activationData,
+            query: { where: activationData },
           },
         ],
         docproc: {},
