@@ -42,6 +42,7 @@ export enum FieldFor {
 }
 
 export interface ControlFor {
+  name?: string;
   fieldFor: FieldFor;
   controlType: ControlType;
 }

@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@angular/core';
-import { ServerService, CdFilter, EnvConfig } from '../base';
+import { ServerService, CdFilter, EnvConfig, EnvelopFValItem } from '../base';
 // import { ServerService } from '../../moduleman/controllers/server.service';
 import { SessService } from './sess.service';
 import { Group } from './group-model';
@@ -87,6 +87,27 @@ export class GroupService {
     post request to server and return observable
     */
     return this.svServer.proc(this.postData);
+  }
+
+  getGroup$(reqQuery: EnvelopFValItem, sid: string) {
+    this.setEnvelopeGetGroup(reqQuery, sid);
+    return this.svServer.proc(this.postData)
+  }
+
+  setEnvelopeGetGroup(reqQuery: EnvelopFValItem, sid: string) {
+    this.postData = {
+      ctx: "Sys",
+      m: "User",
+      c: "Group",
+      a: "GetCount",
+      dat: {
+        f_vals: [
+          reqQuery
+        ],
+        token: sid
+      },
+      args: {}
+    };
   }
 
   // {

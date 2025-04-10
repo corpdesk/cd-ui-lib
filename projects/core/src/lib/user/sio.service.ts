@@ -11,6 +11,7 @@ export class SioService {
   env: any = null;
   socket: any = null;
   public message$: BehaviorSubject<string> = new BehaviorSubject('');
+  i = 0
   constructor(
     // @Inject('env') private env: EnvConfig,
   ) { }
@@ -20,6 +21,7 @@ export class SioService {
   }
 
   init() {
+    this.i++
     // socket = io('http://localhost:3200');
     this.socket = io(this.env.sioEndpoint, this.env.sioOptions);
   }
@@ -45,6 +47,10 @@ export class SioService {
       this.socket.emit('send-menu', this.getMsg());
     } else {
       console.error('SioService::testMessage(): error: socket is invalid')
+      if(this.i < 5){
+        this.init()
+      }
+      
     }
   }
 
@@ -52,7 +58,7 @@ export class SioService {
     // this.socket.on('message', (message) =>{
     //   this.message$.next(message);
     // });
-    
+
     this.socket.on('push-menu', (data: any) => {
       console.log('message:', data)
       console.log('JSON.stringify(message):', JSON.stringify(data))

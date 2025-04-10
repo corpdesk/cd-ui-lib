@@ -145,4 +145,11 @@ export interface CdSocialPost {
     cd_social_post_likes?: number;
 }
 
+export enum NotificationType {
+    Success = "success",
+    Error = "error",
+    Info = "info",
+    Warning = "warning",
+}
+
 

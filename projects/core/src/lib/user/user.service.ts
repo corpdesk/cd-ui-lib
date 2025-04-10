@@ -1,14 +1,24 @@
 import { Injectable, Input, Inject, OnChanges } from '@angular/core';
 import { v4 as uuidv4 } from 'uuid';
 import { Observable } from 'rxjs';
-import { AppStateService, ICdResponse, EnvConfig, CdFilter, ServerService, ICdPushEnvelop, IUserData, ILoginData } from '../base';
+import {
+  AppStateService,
+  ICdResponse,
+  EnvConfig,
+  CdFilter,
+  ServerService,
+  ICdPushEnvelop,
+  IUserData,
+  ILoginData,
+  IQuery,
+  EnvelopFValItem,
+} from '../base';
 import { User, UserData, IAuthData } from './user-model';
 import { SocketIoService, CdPushEnvelop } from '../cd-push';
 import { SioClientService } from './sio-client.service';
 
-
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserService {
   // env: EnvConfig;
@@ -22,7 +32,10 @@ export class UserService {
   allUsers = [];
   cuidAvatar = '';
   currentUser: any;
-  currentProfile: any = { name: 'Login/Register', picture: 'assets/cd/branding/coop/avatarCircle.svg' };
+  currentProfile: any = {
+    name: 'Login/Register',
+    picture: 'assets/cd/branding/coop/avatarCircle.svg',
+  };
   pals: any;
   public usersData$: Observable<UserData[]>;
   // CdResponse
@@ -38,7 +51,7 @@ export class UserService {
     // private svMessages: MessagesService,
     public svSocket: SocketIoService,
     public svSio: SioClientService,
-    @Inject('env') private env: EnvConfig,
+    @Inject('env') private env: EnvConfig
   ) {
     console.log('core/UserService::constructor()/this.env:', this.env);
     this.svSio.setEnv(this.env);
@@ -100,7 +113,6 @@ export class UserService {
         }
       }
     }
-
   }
 
   // authObsv(authData: AuthData) {
@@ -118,7 +130,7 @@ export class UserService {
     delete authData.rememberMe;
     this.setEnvelopeAuth(authData);
     // console.log('Submit()/this.postData:', JSON.stringify(this.postData))
-    this.svServer.setEnv(this.env)
+    this.svServer.setEnv(this.env);
     return this.svServer.proc(this.postData);
   }
 
@@ -131,15 +143,14 @@ export class UserService {
       dat: {
         f_vals: [
           {
-            data: authData
-          }
+            data: authData,
+          },
         ],
-        token: null
+        token: null,
       },
-      args: null
+      args: null,
     };
   }
-
 
   // getUserData(loginResp: CdResponse) {
   //   // console.log('starting UserService::getUserData()');
@@ -147,7 +158,11 @@ export class UserService {
   //   this.setUserData(loginResp);
   // }
 
-  configPushPayload(triggerEvent: string, emittEvent: string, cuid: number | string): ICdPushEnvelop {
+  configPushPayload(
+    triggerEvent: string,
+    emittEvent: string,
+    cuid: number | string
+  ): ICdPushEnvelop {
     console.log('starting cdUiLib::UserService::configPushPayload()');
     const pushEnvelope: ICdPushEnvelop = {
       pushData: {
@@ -167,12 +182,12 @@ export class UserService {
           deliveryTime: null,
           delivered: false,
           completed: false,
-          completedTime: null
+          completedTime: null,
         },
       },
       req: null,
-      resp: null
-    }
+      resp: null,
+    };
 
     const users = [
       {
@@ -195,7 +210,7 @@ export class UserService {
             deliveryTime: null,
             delivered: false,
             completed: false,
-            completedTime: null
+            completedTime: null,
           },
         },
       },
@@ -223,27 +238,28 @@ export class UserService {
       //     },
       //   },
       // }
-    ]
+    ];
 
     const envl: ICdPushEnvelop = { ...pushEnvelope };
     envl.pushData.triggerEvent = triggerEvent;
     envl.pushData.emittEvent = emittEvent;
 
     // set sender
-    const uSender: any = { ...users[0] }
+    const uSender: any = { ...users[0] };
     uSender.subTypeId = 1;
-    envl.pushData.pushRecepients.push(uSender)
-
+    envl.pushData.pushRecepients.push(uSender);
 
     // set recepient
-    const uRecepient: any = { ...users[0] }
+    const uRecepient: any = { ...users[0] };
     uRecepient.subTypeId = 7;
-    envl.pushData.pushRecepients.push(uRecepient)
+    envl.pushData.pushRecepients.push(uRecepient);
 
-    console.log('starting cdUiLib::UserService::configPushPayload()/envl:', envl);
+    console.log(
+      'starting cdUiLib::UserService::configPushPayload()/envl:',
+      envl
+    );
 
     return envl;
-
   }
 
   setUserData(loginResp: any) {
@@ -259,7 +275,7 @@ export class UserService {
       // this.svNotif.init(userDataResp);
       this.svAppState.setMode('anon');
       // this.svMessages.init(userDataResp);
-      const loginData: ILoginData = loginResp['data']
+      const loginData: ILoginData = loginResp['data'];
       if (loginResp.app_state.success) {
         this.env.consumer = loginData.consumer[0].consumerGuid;
         // const cdEnvelop = { req: this.postData, resp: loginResp };
@@ -281,7 +297,6 @@ export class UserService {
         // this.emitLogin(pushEnvelop);
         // this.svSio.sendPayLoad(pushEnvelop);
       }
-
     });
   }
 
@@ -298,13 +313,11 @@ export class UserService {
       a: 'GetModuleUserData',
       dat: {
         fields: null,
-        token: loginResp.app_state.sess!.cd_token
+        token: loginResp.app_state.sess!.cd_token,
       },
-      args: null
-    }
+      args: null,
+    };
   }
-
-
 
   getUsersObsv(f: CdFilter[] | null) {
     // console.log('starting getUsersObsv()');
@@ -321,9 +334,9 @@ export class UserService {
     if (f) {
       flt = [
         {
-          filter: f
-        }
-      ]
+          filter: f,
+        },
+      ];
     } else {
       flt = null;
     }
@@ -334,9 +347,9 @@ export class UserService {
       a: 'actionGet',
       dat: {
         f_vals: flt,
-        token: this.cd_token
+        token: this.cd_token,
       },
-      args: null
+      args: null,
     };
   }
 
@@ -347,11 +360,10 @@ export class UserService {
     /*
     post login request to server
     */
-    this.svServer.proc(this.postData)
-      .subscribe((res: any) => {
-        console.log(res);
-        this.setRespRegUser(res.data);
-      });
+    this.svServer.proc(this.postData).subscribe((res: any) => {
+      console.log(res);
+      this.setRespRegUser(res.data);
+    });
   }
 
   /**
@@ -388,12 +400,63 @@ export class UserService {
           {
             data: regData,
             clientContext: this.env.clientContext,
-          }
+          },
         ],
         docproc: {},
-        token: this.svServer.token
+        token: this.svServer.token,
       },
-      args: null
+      args: null,
+    };
+  }
+
+  activateUser$(activationData: any) {
+    console.log(activationData);
+    this.setEnvelopeActivateUser(activationData);
+    /*
+    post login request to server
+    */
+    return this.svServer.proc(this.postData)
+  }
+
+  /**
+   * 
+   * @param data 
+   * {
+          "ctx": "Sys",
+          "m": "User",
+          "c": "User",
+          "a": "ActivateUser",
+          "dat": {
+              "f_vals": [
+                  {
+                      "data": {
+                          "activationKey": "459bc3d0-c10e-4264-9e37-5175c379b620"
+                          "userId": 13,
+                          "sid": 23
+                      }
+                  }
+              ],
+              "token": "mT6blaIfqWhzNXQLG8ksVbc1VodSxRZ8lu5cMgda"
+          },
+          "args": null
+      }
+   */
+  setEnvelopeActivateUser(activationData: any) {
+    this.postData = {
+      ctx: 'Sys',
+      m: 'User',
+      c: 'User',
+      a: 'ActivateUser',
+      dat: {
+        f_vals: [
+          {
+            query: activationData,
+          },
+        ],
+        docproc: {},
+        token: this.svServer.token,
+      },
+      args: null,
     };
   }
 
@@ -406,12 +469,11 @@ export class UserService {
     /*
     post login request to server
     */
-    this.svServer.proc(this.postData)
-      .subscribe((res) => {
-        console.log('UserService::getAllUsers()/subscribe/res>>');
-        console.log(res);
-        this.setRespAllUsers(res);
-      });
+    this.svServer.proc(this.postData).subscribe((res) => {
+      console.log('UserService::getAllUsers()/subscribe/res>>');
+      console.log(res);
+      this.setRespAllUsers(res);
+    });
   }
 
   /**
@@ -443,19 +505,16 @@ export class UserService {
       dat: {
         f_vals: [],
         docproc: {},
-        token: this.svServer.token
+        token: this.svServer.token,
       },
-      args: null
+      args: null,
     };
   }
 
-  getUser$(reqQuery: any, sid: string) {
+  getUser$(reqQuery: EnvelopFValItem, sid: string) {
     this.setEnvelopeGetUser(reqQuery, sid);
-    return this.svServer.proc(this.postData)
+    return this.svServer.proc(this.postData);
   }
-
-  
-
 
   /**
    * ToDo: sort the token riddle...when being fetched for veryfying the user the 1st time
@@ -481,19 +540,17 @@ export class UserService {
             "args": null
         }
    */
-  setEnvelopeGetUser(reqQuery: any, sid: string) {
+  setEnvelopeGetUser(reqQuery: EnvelopFValItem, sid: string) {
     this.postData = {
-      ctx: "Sys",
-      m: "User",
-      c: "User",
-      a: "Get",
+      ctx: 'Sys',
+      m: 'User',
+      c: 'User',
+      a: 'GetCount',
       dat: {
-        f_vals: [
-          reqQuery
-        ],
-        token: 'fc9ef956-7b81-45e4-aeb3-ae66f50b1ce5'
+        f_vals: [reqQuery],
+        token: sid,
       },
-      args: {}
+      args: {},
     };
   }
 
@@ -506,9 +563,9 @@ export class UserService {
     console.log('starting cdUiLib::UserService::emitLogin()');
     // this.svSocket.emit('login', cdEnvelop);
 
-    cdEnvelop.pushData.triggerEvent = 'login'
-    cdEnvelop.pushData.emittEvent = 'push-menu'
-    this.svSio.sendPayLoad(cdEnvelop)
+    cdEnvelop.pushData.triggerEvent = 'login';
+    cdEnvelop.pushData.emittEvent = 'push-menu';
+    this.svSio.sendPayLoad(cdEnvelop);
   }
 
   /**
@@ -570,14 +627,14 @@ export class UserService {
         f_vals: [
           {
             data: {
-              group_guid_parent: groupGuidParent
-            }
-          }
+              group_guid_parent: groupGuidParent,
+            },
+          },
         ],
         docproc: {},
-        token: this.svServer.token
+        token: this.svServer.token,
       },
-      args: null
+      args: null,
     };
   }
 
@@ -596,16 +653,9 @@ export class UserService {
   //   };
   // }
 
-  list() {
+  list() {}
 
-  }
+  joinGroup(user: any) {}
 
-  joinGroup(user: any) {
-
-  }
-
-  getUserGroups() {
-
-  }
-
+  getUserGroups() {}
 }

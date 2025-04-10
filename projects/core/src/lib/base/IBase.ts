@@ -34,6 +34,7 @@ export interface EnvConfig {
     wsOptions?:any;
     initialPage?: string;
     firebaseConfig?: any;
+    logLevel?:any // configure debug as per ngx-logger configurations
 }
 
 // export interface CdResponse {
@@ -63,14 +64,7 @@ export interface EnvConfig {
 //     ],
 //     token: ''
 // }
-export interface EnvelopFValItem {
-    query?: any,
-    data?: any,
-}
-export interface EnvelopDat {
-    f_vals: EnvelopFValItem[];
-    token: string | null;
-}
+
 export const SYS_CTX = 'Sys';
 export const DEFAULT_DAT: EnvelopDat = {
     f_vals: [
@@ -268,7 +262,17 @@ export interface ICdRequest {
     args: any | null;
 }
 
+export interface EnvelopDat {
+    f_vals: EnvelopFValItem[];
+    token: string | null;
+}
 
+export interface EnvelopFValItem {
+    query?: IQuery,
+    data?: any,
+    extData?:any,
+    jsonUpdate?:any,
+}
 
 export enum ModuleScope {
     Sys = 0,
@@ -620,6 +624,8 @@ export interface IUserData {
     activationKey: string | null;
     userTypeId: number | string | null;
 }
+
+export type SearchTerm = { term: string } | string;
 
 
 

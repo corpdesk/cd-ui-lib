@@ -56,6 +56,7 @@ export class FormsService {
   }
 
   setInput() {
+    // console.log("FormsService::setInput()")
     this.fFields.forEach(field => {
       if (field.type == 'input') {
         field.fieldValue = this.getInpuVal(field.name);
@@ -65,6 +66,7 @@ export class FormsService {
   }
 
   debounceInput$(elemInput: HTMLInputElement) {
+    // console.log("FormsService::debounceInput$()")
     return fromEvent(elemInput, 'keyup')
       .pipe(
         // get value
@@ -83,18 +85,22 @@ export class FormsService {
   }
 
   getInpuVal(inputID: string) {
+    // console.log("FormsService::getInpuVal()")
     const elem = document.getElementById(inputID) as HTMLInputElement;
     return elem.value;
   }
 
   validateForm() {
+    console.log("FormsService::validateForm/01")
     this.vOutput = [];
     this.fFields.forEach(field => {
+      // console.log("FormsService::validateForm/field.name:", field.name)
       this.validateField(field);
     });
   }
 
   validateField(field: any) {
+    // console.log("FormsService::validateField/field.name:", field.name)
     for (const rule of Object.keys(field.rules)) {
       const ret = this.runRules(field, rule);
       this.vOutput.push({ fName: field.fieldName, valid: ret.valid, errMsg: ret.errMsg });
@@ -102,6 +108,7 @@ export class FormsService {
   }
 
   runRules(field: any, rule: any): FvOutput {
+    console.log("FormsService::runRules()")
     const ruleValue = field.rules[rule];
     let ret: any = {
       fName: field.fieldName,
@@ -128,6 +135,7 @@ export class FormsService {
   }
 
   minChars(field: any, rule: any) {
+    // console.log("FormsService::minChars()")
     const ruleValue = field.rules[rule];
     let ret: any = {
       fName: field.name,
@@ -146,6 +154,7 @@ export class FormsService {
   }
 
   maxChars(field: any, rule: any) {
+    // console.log("FormsService::maxChars()")
     const ruleValue = field.rules[rule];
     let ret = {
       fName: field.name,
@@ -164,7 +173,7 @@ export class FormsService {
   }
 
   mustChars(field: any) {
-    console.log('starting mustChars()');
+    // console.log('starting mustChars()');
     // const ruleValue = field.rules[rule];
     let valididity;
     let msg = '';
@@ -187,6 +196,7 @@ export class FormsService {
   }
 
   minSelItems(field: any, rule: any) {
+    // console.log("FormsService::minSelItems()")
     const ruleValue = field.rules[rule];
     let ret = {
       fName: field.name,
@@ -221,42 +231,60 @@ export class FormsService {
   }
 
   useSelect(controls: ControlFor[]) {
+    // console.log("FormsService::useSelect()")
     return this.createFormControl(controls) === ControlType.select;
   }
 
-  useSearchDropDown(controls: ControlFor[]) {
+  useSearchDropDown(controls: ControlFor[], controlName = null) {
+    console.log("FormsService::useSearchDropDown()")
+    console.log("FormsService::useSearchDropDown()/controls:", controls)
     return this.createFormControl(controls) === ControlType.searchDropDown;
   }
+//   useSearchDropDown(controls: ControlFor[], controlName: string | null = null) {
+//     console.log("FormsService::useSearchDropDown()");
+//     console.log("FormsService::useSearchDropDown()/controls:", controls);
+    
+//     // Pass controlName to createFormControl for specific control targeting
+//     return this.createFormControl(controls, controlName) === ControlType.searchDropDown;
+// }
 
   useSelectMultiple(controls: ControlFor[]) {
+    // console.log("FormsService::useSelectMultiple()")
     return this.createFormControl(controls) === ControlType.selectMultiple;
   }
 
   useTextArea(controls: ControlFor[]) {
+    // console.log("FormsService::useTextArea()")
     return this.createFormControl(controls) === ControlType.textArea;
   }
 
   useText(controls: ControlFor[]) {
+    // console.log("FormsService::useText()")
     return this.createFormControl(controls) === ControlType.text;
   }
 
   useUpload(controls: ControlFor[]) {
+    // console.log("FormsService::useUpload()")
     return this.createFormControl(controls) === ControlType.upload;
   }
 
   useToggleSwitch(controls: ControlFor[]) {
+    // console.log("FormsService::useToggleSwitch()")
     return this.createFormControl(controls) === ControlType.toggleSwitch;
   }
 
   useNgToggle(controls: ControlFor[]) {
+    // console.log("FormsService::useNgToggle()")
     return this.createFormControl(controls) === ControlType.ngToggle;
   }
 
   useDualSwitch(controls: ControlFor[]) {
+    // console.log("FormsService::useDualSwitch()")
     return this.createFormControl(controls) === ControlType.dualSwitch;
   }
 
   useDualRadio(controls: ControlFor[]) {
+    // console.log("FormsService::useDualRadio()")
     return this.createFormControl(controls) === ControlType.dualRaido;
   }
 
@@ -265,14 +293,17 @@ export class FormsService {
   }
 
   useDdlCountries(controls: ControlFor[]) {
+    // console.log("FormsService::useDdlCountries()")
     return this.createFormControl(controls) === ControlType.ddlCountries;
   }
 
   useDdlIcons(controls: ControlFor[]) {
+    // console.log("FormsService::useDdlIcons()")
     return this.createFormControl(controls) === ControlType.ddlIcons;
   }
 
   useDdlNotifications(controls: ControlFor[]) {
+    // console.log("FormsService::useDdlNotifications()")
     return this.createFormControl(controls) === ControlType.ddlNotifications;
   }
 
@@ -360,6 +391,7 @@ export class FormsService {
   }
 
   getFormValidationErrors(form: FormGroup): ValidationError[] {
+    // console.log("FormsService::getFormValidationErrors()")
     const result: any = [];
     Object.keys(form.controls).forEach(key => {
       const controlErrors: ValidationErrors = form.get(key)!.errors!;
@@ -383,6 +415,7 @@ export class FormsService {
    * @returns 
    */
   filterByFieldFor(model: FieldInfo[], ff: FieldFor) {
+    // console.log("FormsService::filterByFieldFor()")
     // console.log('starting FormService::filterByFieldFor()')
     // return model.filter(f => f.controls.every(c => c.fieldFor === ff));
     return model.filter(f => model.filter((f: FieldInfo) => {
@@ -443,56 +476,50 @@ export class FormsService {
     return model.filter((f => f[attr])).map(f => f['name'])
   }
 
-  // /**
-  //  * extract fields required for create form
-  //  * @param model 
-  //  * @returns 
-  //  */
-  //   createFields(model: FieldInfo[]): FieldInfo[] {
-  //     // return model.filter(f => f.controls.filter(cf => cf.fieldFor === FieldFor.createForm));
-  //     return this.filterByFieldFor(model, FieldFor.createForm)
-  //   }
 
-  //   tableDisplayFields(model: FieldInfo[]): FieldInfo[] {
-  //     // return model.filter(f => f.controls.filter(cf => cf.fieldFor === FieldFor.createForm));
-  //     return this.filterByFieldFor(model, FieldFor.tableDisplay)
-  //   }
-
-  //   isTableDisplayField(field: FieldInfo){
-  //     return field.controls.filter(c => c.fieldFor === FieldFor.tableDisplay).length > 0;
-  //   }
-
-  //   editFields(model: FieldInfo[]): FieldInfo[] {
-  //     // return model.filter(f => f.controls.filter(cf => cf.fieldFor === FieldFor.createForm));
-  //     return this.filterByFieldFor(model, FieldFor.editForm)
-  //   }
-
-  //   deleteFields(model: FieldInfo[]): FieldInfo[] {
-  //     // return model.filter(f => f.controls.filter(cf => cf.fieldFor === FieldFor.createForm));
-  //     return this.filterByFieldFor(model, FieldFor.deleteForm)
-  //   }
-
-  //   tableDisplayControl(controls: ControlFor[]) {
-  //     return controls.filter(c => c.fieldFor === FieldFor.tableDisplay)
-  //       .map(c => c.controlType)[0];
-  //   }
 
   createFormControl(controls: ControlFor[]): ControlType {
+    console.log("FormsService::createFormControl()")
+    console.log("FormsService::createFormControl()/controls:", controls)
     return controls.filter(c => c.fieldFor === FieldFor.createForm)
       .map(c => c.controlType)[0];
   }
 
-  // editFormControl(controls: ControlFor[]): ControlType {
-  //   return controls.filter(c => c.fieldFor === FieldFor.editForm)
-  //     .map(c => c.controlType)[0];
-  // }
+//   createFormControl(controls: ControlFor[], controlName: string | null = null): ControlType | undefined {
+//     console.log("FormsService::createFormControl() - Start");
+//     console.log("FormsService::createFormControl() - Input controls:", controls);
+
+//     // Step 1: Filter controls for items with matching fieldFor and controlName
+//     const createFormControls = controls.filter((control) => {
+//         const matchesField = control.fieldFor === FieldFor.createForm;
+//         const matchesControlName = !controlName || control.name === controlName;
+//         const nunNullName = controlName !== "null";
+//         console.log(`FormsService::createFormControl() - Checking control:`, control);
+//         console.log(`FormsService::createFormControl() - Matches FieldFor.createForm: ${matchesField}`);
+//         console.log(`FormsService::createFormControl() - Matches controlName "${controlName}": ${matchesControlName}`);
+//         return matchesField && matchesControlName && nunNullName;
+//     });
+
+//     // Step 2: Map to controlType and get the first controlType found (if any)
+//     const controlTypes = createFormControls.map((control) => control.controlType);
+//     const firstControlType = controlTypes[0];
+//     console.log("FormsService::createFormControl() - First controlType found:", firstControlType);
+
+//     console.log("FormsService::createFormControl() - End");
+//     return firstControlType;
+// }
+
+
+
 
   filterControlsByFieldFor(controls: ControlFor[], ff: FieldFor): ControlType {
+    // console.log("FormsService::filterControlsByFieldFor()")
     return controls.filter(c => c.fieldFor === ff)
       .map(c => c.controlType)[0];
   }
 
   filterStepsByController(wizardModel: AWizardModel, controllerName: string): AWizardStep[] {
+    // console.log("FormsService::filterStepsByController()")
     return wizardModel.steps!.filter(s => s.controller === controllerName)
   }
 
@@ -502,6 +529,7 @@ export class FormsService {
    * @returns 
    */
   getFormControlConfig(model: FieldInfo[]): { [key: string]: any } {
+    // console.log("FormsService::getFormControlConfig()")
     const formControlsConfig = model
       .filter(f => f.formControlsConfig)
       .map(f => { return { field: f.name, value: f.formControlsConfig }; });
@@ -514,6 +542,7 @@ export class FormsService {
   }
 
   setDdlData(ddlId: string, data: any, model: FieldInfo[]) {
+    // console.log("FormsService::setDdlData()")
     model.forEach((f) => {
       if (f.name === ddlId) {
         f.ddlInfo!.data = data;
@@ -522,8 +551,8 @@ export class FormsService {
   }
 
   getDdlData(ddlId: string, model: FieldInfo[]): any[] {
-    console.log('cd-ui-lib/FormService::getDdlData()/ddlId:', ddlId)
-    console.log('cd-ui-lib/FormService::getDdlData()/model:', model)
+    // console.log('cd-ui-lib/FormService::getDdlData()/ddlId:', ddlId)
+    // console.log('cd-ui-lib/FormService::getDdlData()/model:', model)
     return model
       .filter((f: FieldInfo) => {
         if (f.name === ddlId) {
@@ -536,6 +565,7 @@ export class FormsService {
   }
 
   setSelectedIcon(emittedDdlSelection: EmittedDdlSelection, baseModel: BaseModel, step: AWizardStep) {
+    // console.log("FormsService::setSelectedIcon()")
     const selectedIcon = emittedDdlSelection.step!.fields.filter((f => f.controls
       .filter(cf => cf.controlType === ControlType.ddlIcons)))
       .filter(f => f.name === emittedDdlSelection.controlName)
@@ -626,7 +656,7 @@ export class FormsService {
       console.log('invalid fields:', invalids)
 
       /////////////////////////
-      
+
       const errMsg = `validation error on:${JSON.stringify(invalids)}`;
       let response: ICdResponse = DEFAULT_CD_RESPONSE;
       response.app_state.success = false;

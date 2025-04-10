@@ -1,6 +1,8 @@
 export * from './guig.module';
 export * from './guig.service';
 export * from './guig.model';
+export * from './models/guig-tree.model';
+export * from './tree-adapter.service';
 // export * from '../base/guig-context';
 export * from './html-elem.service';
 export * from './models/html.model';
