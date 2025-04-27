@@ -1,6 +1,6 @@
 {
   "name": "@corpdesk/core",
-  "version": "0.2.165",
+  "version": "0.2.167",
   "peerDependencies": {
     "@angular/common": "^15.2.0",
     "@angular/core": "^15.2.0"

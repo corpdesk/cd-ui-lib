@@ -86,3 +86,71 @@ export interface Resp {
     app_state: any;
     data: any;
 }
+
+export class UserModel {
+    userId?: number;
+    userGuid?: string;
+    userName: string;
+    password?: string;
+    email?: string;
+    companyId?: number;
+    docId?: number;
+    mobile?: string;
+    gender?: number;
+    birthDate?: Date;
+    postalAddr?: string;
+    fName?: string;
+    mName?: string;
+    lName?: string;
+    nationalId?: number;
+    passportId?: number;
+    userEnabled?: boolean;
+    zipCode?: string;
+    activationKey?: string;
+    userTypeId?: number;
+    userProfile?: string;
+
+}
+
+
+export interface IUserProfileAccess {
+    userPermissions: IProfileUserAccess[],
+    groupPermissions: IProfileGroupAccess[]
+}
+
+/**
+ * Improved versin should have just one interface and 
+ * instead of userId or groupId, cdObjId is applied.
+ * This would then allow any object permissions to be set
+ * Automation and 'role' concept can then be used to manage permission process
+ */
+export interface IProfileUserAccess {
+    userId: number,
+    hidden: boolean,
+    field: string,
+    read: boolean,
+    write: boolean,
+    execute: boolean
+}
+
+export interface IProfileGroupAccess {
+    groupId: number,
+    field: string,
+    hidden: boolean,
+    read: boolean,
+    write: boolean,
+    execute: boolean
+}
+
+export interface IUserProfile {
+    fieldPermissions: IUserProfileAccess;
+    avatar?: string; // URL or base64-encoded image
+    userData: UserModel;
+    areasOfInterest?: string[];
+    bio?: string;
+    affiliatedInstitutions?: string[];
+    following?: string[]; // Limit to X entries (e.g., 1000) to avoid abuse
+    followers?: string[]; // Limit to X entries (e.g., 1000)
+    friends?: string[];   // Limit to X entries (e.g., 500)
+    groups?: string[];    // Limit to X entries (e.g., 100)
+}
