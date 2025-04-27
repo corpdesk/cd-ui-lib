@@ -450,7 +450,8 @@ export class UserService {
       dat: {
         f_vals: [
           {
-            query: { where: activationData },
+            query: { where: activationData[0] },
+            consumer: activationData[1],
           },
         ],
         docproc: {},
@@ -549,6 +550,67 @@ export class UserService {
       dat: {
         f_vals: [reqQuery],
         token: sid,
+      },
+      args: {},
+    };
+  }
+  /**
+   * In the future, userId will be depricated.
+   * At the backend, userId will be derived from cdToken
+   * @param cdToken 
+   * @param userId 
+   * @returns 
+   */
+  getUserProfile$(cdToken: string, userId?: number,) {
+    this.setEnvelopeGetUserProfile(cdToken, userId,);
+    return this.svServer.proc(this.postData);
+  }
+
+  /**
+   * ToDo: sort the token riddle...when being fetched for veryfying the user the 1st time
+   * During registration, the sid retrieved should be able to allow verification of user.
+   * At the moment a static one is used below. Not secure or tanable.
+   * 
+   * {
+            "ctx": "Sys",
+            "m": "User",
+            "c": "User",
+            "a": "GetUserProfile",
+            "dat": {
+                "f_vals": [
+                    {
+                        "data": {
+                            "userId": 1010
+                        }
+                    }
+                ],
+                "token": "mT6blaIfqWhzNXQLG8ksVbc1VodSxRZ8lu5cMgda"
+            },
+            "args": null
+        }
+   */
+  setEnvelopeGetUserProfile(cdToken: string, userId?: number,) {
+    /**
+     * In the future, userId will not be required but just the sid.
+     * At the backend userId will be derived using cdToken
+     */
+    if(!userId){
+      userId = -1
+    }
+    this.postData = {
+      ctx: 'Sys',
+      m: 'User',
+      c: 'User',
+      a: 'GetUserProfile',
+      dat: {
+        f_vals: [
+          {
+            data: {
+              userId: userId,
+            },
+          },
+        ],
+        token: cdToken,
       },
       args: {},
     };
