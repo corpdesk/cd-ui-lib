@@ -545,6 +545,7 @@ export interface IQuery {
   jFilters?: IJFilter[];
   order?: any;
   class?: string;
+  extData?:any;
 }
 
 export interface IQueryWhere {
